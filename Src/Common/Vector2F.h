@@ -1,0 +1,16 @@
+#pragma once
+class Vector2F
+{
+	float x;
+	float y;
+
+	// コンストラクタ
+	Vector2F(void);
+
+	// コンストラクタ
+	Vector2F(float vX, float vY);
+
+	// デストラクタ
+	~Vector2F(void);
+};
+
