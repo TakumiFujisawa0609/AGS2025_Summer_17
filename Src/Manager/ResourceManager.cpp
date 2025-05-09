@@ -31,6 +31,10 @@ void ResourceManager::Init(void)
 
 	std::unique_ptr<Resource> res;
 
+	//‰æ‘œ‚Ì“Ç‚İ‚İ
+	//ƒuƒƒbƒN	
+	//res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "LineBlock.png");
+	//resourcesMap_.emplace(SRC::BLOCK, std::move(res));
 	
 }
 

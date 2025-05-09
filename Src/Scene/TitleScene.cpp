@@ -19,7 +19,14 @@ TitleScene::~TitleScene(void)
 
 void TitleScene::Init(void)
 {
-	
+	//‰æ‘œ“Ç‚İ‚İ
+	//int ret;
+	//ret = img_;
+	//img_ = res.Load(ResourceManager::SRC::BLOCK).handleId_;
+	//if (img_ == -1)
+	//{
+	//	return;
+	//}
 	
 
 }
