@@ -1,0 +1,9 @@
+diff a/Src/Manager/ResourceManager.cpp b/Src/Manager/ResourceManager.cpp	(rejected hunks)
+@@ -35,7 +35,6 @@
+ 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Title.png");
+ 	resourcesMap_.emplace(SRC::TITLE, std::move(res));
+ 
+-	resourcesMap_.emplace(SRC::PUSH_SPACE, std::move(res));
+ 	//�u���b�N	
+ 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "LineBlock.png");
+ 	resourcesMap_.emplace(SRC::BLOCK,std::move(res));
