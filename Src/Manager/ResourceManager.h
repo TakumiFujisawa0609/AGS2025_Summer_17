@@ -12,6 +12,7 @@ public:
 	// ƒŠƒ\[ƒX–¼
 	enum class SRC
 	{
+		PLAYERS,
 		//‰æ‘œ‚Ì—ñ‹“
 		//BLOCK,
 	};

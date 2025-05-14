@@ -48,5 +48,7 @@ void TitleScene::Update(void)
 void TitleScene::Draw(void)
 {
 	
+	DrawFormatString(0, 0, 0x000000, "TitleScene");
+
 }
 

@@ -3,11 +3,21 @@
 #include "../Common/Vector2.h"
 #include <vector>
 
+class Player;
+
 class GameScene : public SceneBase
 {
 
 public:
 	
+	
+private:
+
+	// プレイヤー
+	Player* player_;
+
+
+public:
 	// コンストラクタ
 	GameScene(void);
 
@@ -18,6 +28,4 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 
-private:
-	
 };

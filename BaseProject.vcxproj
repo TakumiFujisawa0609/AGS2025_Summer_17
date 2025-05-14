@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Player\Player.h" />
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Common\Fader.h" />
     <ClInclude Include="Src\Common\Vector2.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Src\Common\Vector2F.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Player\Player.cpp" />
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Common\Fader.cpp" />
     <ClCompile Include="Src\Common\Vector2.cpp" />
