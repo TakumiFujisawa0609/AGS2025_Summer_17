@@ -23,7 +23,7 @@ public:
 	void Draw();
 
 	//ä÷êî
-
+	void Move();
 
 };
 
