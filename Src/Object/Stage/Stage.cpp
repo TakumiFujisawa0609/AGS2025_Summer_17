@@ -11,7 +11,10 @@
 #include "../../Utility/AsoUtility.h"
 #include "../../Manager/ResourceManager.h"
 #include "../../Common/Vector2.h"
+
 #include "../../Scene/GameScene.h"
+#include "../Player/Player.h"
+
 #include "Stage.h"
 
 Stage::Stage(void)
@@ -22,10 +25,12 @@ Stage::~Stage(void)
 {
 }
 
-void Stage::Init(GameScene* scene)
+void Stage::Init(GameScene* scene,Player*player)
 {
 	// ゲームシーンの機能を使えるようにする
 	gameScene_ = scene;
+	// プレイヤーの機能を使えるようにする
+	player_ = player;
 
 	// 分割された画像を読み込み
 	ResourceManager& res = ResourceManager::GetInstance();
@@ -131,3 +136,23 @@ int Stage::GetChipNo(Vector2 mapPos)
 
 	return groundMap_[mapPos.y][mapPos.x];
 }
+
+bool Stage::IsCollisionStage(Vector2 worldPos)
+{
+	// ワールド座標からマップ座標へ変換する
+	Vector2 mapPos = player_->World2MapPos(worldPos);
+
+	// プレイヤーがいる位置のマップチップ番号を取得する
+	int chipNo = GetChipNo(mapPos);
+
+	// 障害物のチップ番号と当たっていたら真を返す
+	if (chipNo == 1
+		|| chipNo == 2
+		|| chipNo == 3)
+	{
+		return true;
+	}
+
+	return false;
+}
+

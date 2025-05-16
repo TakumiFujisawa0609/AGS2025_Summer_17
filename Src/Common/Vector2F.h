@@ -1,6 +1,8 @@
 #pragma once
 class Vector2F
 {
+public:
+
 	float x;
 	float y;
 
@@ -12,5 +14,7 @@ class Vector2F
 
 	// デストラクタ
 	~Vector2F(void);
+
+
 };
 

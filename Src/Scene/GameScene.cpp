@@ -6,6 +6,7 @@
 #include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
 #include "../Object/Stage/Stage.h"
+#include "../Object/Camera/Camera.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -22,11 +23,14 @@ void GameScene::Init(void)
 {
 	//プレイヤー
 	player_ = new Player();
-	player_->Init();
+	player_->Init(camera_,stage_);
 
 	// ステージ
 	stage_ = new Stage();
-	stage_->Init(this);
+	stage_->Init(this,player_);
+	// カメラ
+	camera_ = new Camera();
+	camera_->Init(player_);
 }
 
 void GameScene::Update(void)
@@ -38,6 +42,10 @@ void GameScene::Update(void)
 
 	// プレイヤーの更新
 	player_->Update();
+
+	// カメラの更新
+	camera_->Update();
+	
 	// シーン遷移
 	if (ins.IsTrgDown(KEY_INPUT_R))
 	{

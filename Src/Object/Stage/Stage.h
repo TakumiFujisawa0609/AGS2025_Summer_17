@@ -1,4 +1,6 @@
-class Vector2;
+#pragma once
+
+class Player;
 class GameScene;
 
 class Stage
@@ -23,7 +25,7 @@ public:
 	Stage();
 	~Stage();
 
-	void Init(GameScene* scene);
+	void Init(GameScene* scene,Player*player);
 	void Update();
 	void Draw();
 	void Release();
@@ -36,6 +38,8 @@ public:
 	// マップチップ番号を取得する
 	int GetChipNo(Vector2 mapPos);
 
+	bool IsCollisionStage(Vector2 worldPos);
+
 private:
 
 	// マップ画像
@@ -47,5 +51,7 @@ private:
 	// ゲームシーンのポインタ変数
 	GameScene* gameScene_;
 
+	// プレイヤーのポインタ変数
+	Player* player_;
 };
 

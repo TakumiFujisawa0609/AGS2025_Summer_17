@@ -5,6 +5,7 @@
 
 class Player;
 class Stage;
+class Camera;
 
 class GameScene : public SceneBase
 {
@@ -18,6 +19,8 @@ private:
 	Player* player_;
 	// ステージ
 	Stage* stage_;
+	// カメラ
+	Camera* camera_;
 
 
 public:
