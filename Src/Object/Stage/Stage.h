@@ -2,6 +2,7 @@
 #include "../../Common/Vector2.h"
 class Player;
 class GameScene;
+class Camera;
 
 class Stage
 {
@@ -13,19 +14,19 @@ public:
 	static constexpr int NUM_MAP_CHIPS = NUM_MAP_CHIPS_X * NUM_MAP_CHIPS_Y;	// 合計
 
 	// マップチップのサイズ
-	static constexpr int CHIP_SIZE_X = 32;	// 横
-	static constexpr int CHIP_SIZE_Y = 32;	// 縦
+	static constexpr int CHIP_SIZE_X = 32*2;	// 横
+	static constexpr int CHIP_SIZE_Y = 32*2;	// 縦
 	static constexpr int CHIP_HALF_SIZE_X = CHIP_SIZE_X / 2;	// 横半分
 	static constexpr int CHIP_HALF_SIZE_Y = CHIP_SIZE_Y / 2;	// 縦半分
 
 	// 地上マップのサイズ(縦枚数×横枚数)
-	static constexpr int MAP_GROUND_SIZE_X = 70;
+	static constexpr int MAP_GROUND_SIZE_X = 60;
 	static constexpr int MAP_GROUND_SIZE_Y = 10;
 
 	Stage();
 	~Stage();
 
-	void Init(GameScene* scene,Player*player);
+	void Init(GameScene* scene,Player*player,Camera*camera);
 	void Update();
 	void Draw();
 	void Release();
@@ -53,5 +54,8 @@ private:
 
 	// プレイヤーのポインタ変数
 	Player* player_;
+
+	// カメラのポインタ変数
+	Camera* camera_;
 };
 

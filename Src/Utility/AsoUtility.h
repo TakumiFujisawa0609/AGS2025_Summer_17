@@ -3,6 +3,7 @@
 #include <vector>
 #include <DxLib.h>
 #include "../Common/Vector2.h"
+#include "../Common/Vector2F.h"
 
 class AsoUtility
 {
@@ -33,6 +34,10 @@ public:
 
 	// ŽlŽÌŒÜ“ü
 	static int Round(float v);
+
+	static Vector2 Raund(Vector2F value);
+
+	static Vector2 Raund(float x, float y);
 
 	// •¶Žš—ñ‚Ì•ªŠ„
 	static std::vector <std::string> Split(std::string& line, char delimiter);

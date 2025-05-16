@@ -12,6 +12,7 @@
 #include "../../Manager/ResourceManager.h"
 #include "../../Scene/GameScene.h"
 #include "../Player/Player.h"
+#include "../Camera/Camera.h"
 #include "Stage.h"
 
 Stage::Stage(void)
@@ -22,12 +23,14 @@ Stage::~Stage(void)
 {
 }
 
-void Stage::Init(GameScene* scene,Player*player)
+void Stage::Init(GameScene* scene,Player*player,Camera*camera)
 {
 	// ゲームシーンの機能を使えるようにする
 	gameScene_ = scene;
 	// プレイヤーの機能を使えるようにする
 	player_ = player;
+	// カメラの機能を使えるようにする
+	camera_ = camera;
 
 	// 分割された画像を読み込み
 	ResourceManager& res = ResourceManager::GetInstance();
@@ -52,16 +55,31 @@ void Stage::Draw()
 		{
 			// マップチップ番号を取得
 			int chipNo = groundMap_[y][x];
+			//マップチップのワールド座標
+			int mapChipWorldPosX = x * CHIP_SIZE_X;
+			int mapChipWorldPosY = y * CHIP_SIZE_Y;
+
+			//カメラ座標の取得
+			Vector2 cameraPos = camera_->GetCameraPos();
+
+			//マップチップ番号から画像のハンドルIDを取得
+			int imgHandle = mapChip_[chipNo];
+
+
+			//マップチップのスクリーン座標
+			//２Dでは「スクリーン座標＝ワールド座標ーカメラ座標」
+			int mapChipScreenPosX = mapChipWorldPosX ;
+			int mapChipScreenPosY = mapChipWorldPosY ;
 
 			// マップチップ番号が-1でなければ描画する
 			if (chipNo != -1)
 			{
 				
-				DrawRotaGraphF(x * CHIP_SIZE_X, y * CHIP_SIZE_Y, 1.0, 0.0, mapChip_[chipNo], true);
+				DrawRotaGraphF(mapChipScreenPosX, mapChipScreenPosY, 1.0, 0.0, imgHandle, true);
 
 				
 				
-				//DrawGraph(x * CHIP_SIZE_X, y * CHIP_SIZE_Y, mapChip_[chipNo], TRUE);
+				//DrawGraph(mapChipScreenPosX, mapChipScreenPosY,imgHandle, true);
 			}
 		}
 	}
@@ -89,7 +107,7 @@ void Stage::LoadGroundCsvData(void)
 	}
 
 	// ファイルの読み込み
-	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage1.csv");
+	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage2.csv");
 	if (!ifs)
 	{
 		// エラーが発生

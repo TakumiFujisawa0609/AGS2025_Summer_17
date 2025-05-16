@@ -533,3 +533,21 @@ void AsoUtility::DrawLineXYZ(const VECTOR& pos, const MATRIX& rot, float len)
     DrawLineDir(pos, dir, 0x0000ff, len);
 
 }
+
+Vector2 AsoUtility::Raund(Vector2F value)
+{
+    Vector2 ret;
+    ret.x = static_cast<int>(Round(value.x));
+    ret.y = static_cast<int>(Round(value.y));
+
+    return ret;
+}
+
+Vector2 AsoUtility::Raund(float x, float y)
+{
+    Vector2 ret;
+    ret.x = static_cast<int>(Round(x));
+    ret.y = static_cast<int>(Round(y));
+
+    return ret;
+}

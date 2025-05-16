@@ -1,6 +1,5 @@
 #include <DxLib.h>
 #include "../../Application.h"
-
 #include "../Stage/Stage.h"
 #include "../Camera/Camera.h"
 #include "../../Manager/ResourceManager.h"
