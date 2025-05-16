@@ -24,19 +24,17 @@ void GameScene::Init(void)
 {
 	//プレイヤー
 	player_ = new Player();
-<<<<<<< HEAD
+
 	player_->Init();
-<<<<<<< HEAD
+
 	//エネミー
 	enemy_ = new Enemy();
 	enemy_->Init();
-=======
 
 	// ステージ
 	stage_ = new Stage();
 	stage_->Init(this);
->>>>>>> 0eb14c3af250a85def310bbf5bc90111ef407bd3
-=======
+
 	// ステージ
 	stage_ = new Stage();
 	// カメラ
@@ -47,7 +45,7 @@ void GameScene::Init(void)
 	player_->Init(camera_, stage_);
 	stage_->Init(this, player_);
 	camera_->Init(player_);
->>>>>>> ado_Player
+
 }
 
 void GameScene::Update(void)
@@ -59,15 +57,14 @@ void GameScene::Update(void)
 
 	// プレイヤーの更新
 	player_->Update();
-<<<<<<< HEAD
+
 	// エネミーの更新
 	enemy_->Update();
-=======
 
 	// カメラの更新
 	camera_->Update();
 	
->>>>>>> ado_Player
+
 	// シーン遷移
 	if (ins.IsTrgDown(KEY_INPUT_R))
 	{
