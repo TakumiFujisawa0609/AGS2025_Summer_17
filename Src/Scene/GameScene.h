@@ -8,7 +8,11 @@ class Player;
 class Enemy;
 =======
 class Stage;
+<<<<<<< HEAD
 >>>>>>> 0eb14c3af250a85def310bbf5bc90111ef407bd3
+=======
+class Camera;
+>>>>>>> ado_Player
 
 class GameScene : public SceneBase
 {
@@ -26,6 +30,8 @@ private:
 =======
 	// ステージ
 	Stage* stage_;
+	// カメラ
+	Camera* camera_;
 
 >>>>>>> 0eb14c3af250a85def310bbf5bc90111ef407bd3
 
