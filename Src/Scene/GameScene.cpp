@@ -5,6 +5,7 @@
 #include "../Manager/ResourceManager.h"
 #include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
+#include "../Object/Enemy/Enemy.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -22,6 +23,9 @@ void GameScene::Init(void)
 	//プレイヤー
 	player_ = new Player();
 	player_->Init();
+	//エネミー
+	enemy_ = new Enemy();
+	enemy_->Init();
 }
 
 void GameScene::Update(void)
@@ -31,6 +35,8 @@ void GameScene::Update(void)
 
 	// プレイヤーの更新
 	player_->Update();
+	// エネミーの更新
+	enemy_->Update();
 	// シーン遷移
 	if (ins.IsTrgDown(KEY_INPUT_R))
 	{
@@ -44,6 +50,8 @@ void GameScene::Draw(void)
 
 	// プレイヤーの描画
 	player_->Draw();
+	// エネミーの描画
+	enemy_->Draw();
 
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 	

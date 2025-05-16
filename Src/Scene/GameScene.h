@@ -4,6 +4,7 @@
 #include <vector>
 
 class Player;
+class Enemy;
 
 class GameScene : public SceneBase
 {
@@ -15,7 +16,8 @@ private:
 
 	// プレイヤー
 	Player* player_;
-
+	// プレイヤー
+	Enemy* enemy_;
 
 public:
 	// コンストラクタ
