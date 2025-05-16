@@ -12,22 +12,7 @@ Player::Player()
 {
 	
 
-	//当たり判定の初期化
-	footPosC_ = Vector2(0, 0);
-	footPosL_ = Vector2(0, 0);
-	footPosR_ = Vector2(0, 0);
-
-	headPosC_ = Vector2(0, 0);
-	headPosL_ = Vector2(0, 0);
-	headPosR_ = Vector2(0, 0);
-
-	rightPosC_ = Vector2(0, 0);
-	rightPosU_ = Vector2(0, 0);
-	rightPosD_ = Vector2(0, 0);
-
-	leftPosC_ = Vector2(0, 0);
-	leftPosU_ = Vector2(0, 0);
-	leftPosD_ = Vector2(0, 0);
+	
 
 	isHitFoot_ = false;
 	isHitHead_ = false;
@@ -54,7 +39,8 @@ void Player::Init(Camera*camera,Stage*stage)
 
 	
 	// 初期位置設定
-	pos_ = { 100.0f,100.0f };
+	pos_.x = 100.0f;
+	pos_.y = 100.0f;
 	
 	
 	
@@ -62,6 +48,24 @@ void Player::Init(Camera*camera,Stage*stage)
 void Player::Update()
 {
 	Move();
+	//（デバッグ表紙のために計算処理と衝突判定を別にしておく）
+	CalcFootPos();
+	CalcHeadPos();
+	CalcRightSidePos();
+	CalcLeftSidePos();
+
+	//（デバック表示のために計算処理と衝突判定を別にしておく）
+	IsHitFootPos();
+	IsHitHeadPos();
+	IsHitRightPos();
+	IsHitLeftPos();
+
+	//衝突判定
+	CollisionFoot();
+	CollisionRightSide();
+	CollisionLeftSide();
+
+
 }
 void Player::Draw()
 {

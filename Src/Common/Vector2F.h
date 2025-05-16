@@ -9,8 +9,8 @@ public:
 	// コンストラクタ
 	Vector2F(void);
 
-	// コンストラクタ
-	Vector2F(float vX, float vY);
+	//// コンストラクタ
+	//Vector2F(float vX, float vY);
 
 	// デストラクタ
 	~Vector2F(void);

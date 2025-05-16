@@ -10,7 +10,7 @@ public:
 	Vector2(void);
 
 	// コンストラクタ
-	Vector2(int vX, int vY);
+	//Vector2(int vX, int vY);
 
 	// デストラクタ
 	~Vector2(void);

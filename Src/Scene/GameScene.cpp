@@ -23,13 +23,15 @@ void GameScene::Init(void)
 {
 	//プレイヤー
 	player_ = new Player();
-	player_->Init(camera_,stage_);
-
 	// ステージ
 	stage_ = new Stage();
-	stage_->Init(this,player_);
 	// カメラ
 	camera_ = new Camera();
+	
+
+
+	player_->Init(camera_, stage_);
+	stage_->Init(this, player_);
 	camera_->Init(player_);
 }
 

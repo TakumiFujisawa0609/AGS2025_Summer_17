@@ -14,7 +14,7 @@ Camera::~Camera()
 }
 void Camera::Init(Player*player)
 {
-	
+	player_ = player;
 	cameraPos_.x = Application::SCREEN_SIZE_X / 2;
 	cameraPos_.y = Application::SCREEN_SIZE_Y / 2;
 	
