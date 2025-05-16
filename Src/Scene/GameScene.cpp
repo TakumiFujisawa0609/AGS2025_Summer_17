@@ -24,17 +24,10 @@ void GameScene::Init(void)
 {
 	//プレイヤー
 	player_ = new Player();
-
-	player_->Init();
-
 	//エネミー
 	enemy_ = new Enemy();
-	enemy_->Init();
-
 	// ステージ
 	stage_ = new Stage();
-	stage_->Init(this);
-
 	// ステージ
 	stage_ = new Stage();
 	// カメラ
@@ -45,6 +38,7 @@ void GameScene::Init(void)
 	player_->Init(camera_, stage_);
 	stage_->Init(this, player_);
 	camera_->Init(player_);
+	enemy_->Init();
 
 }
 
