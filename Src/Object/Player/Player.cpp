@@ -1,6 +1,6 @@
 #include <DxLib.h>
 #include "../../Application.h"
-#include "../../Utility/AsoUtility.h"
+
 #include "../Stage/Stage.h"
 #include "../Camera/Camera.h"
 #include "../../Manager/ResourceManager.h"
@@ -48,30 +48,13 @@ void Player::Init(Camera*camera,Stage*stage)
 void Player::Update()
 {
 	Move();
-	//（デバッグ表紙のために計算処理と衝突判定を別にしておく）
-	CalcFootPos();
-	CalcHeadPos();
-	CalcRightSidePos();
-	CalcLeftSidePos();
-
-	//（デバック表示のために計算処理と衝突判定を別にしておく）
-	IsHitFootPos();
-	IsHitHeadPos();
-	IsHitRightPos();
-	IsHitLeftPos();
-
-	//衝突判定
-	CollisionFoot();
-	CollisionRightSide();
-	CollisionLeftSide();
-
-
+	
 }
 void Player::Draw()
 {
 	// 画像の描画
 	
-	DrawGraph(pos_.x, pos_.y, img_[0], TRUE);
+	DrawGraph(pos_.x-COL_SIZE_X, pos_.y-COL_SIZE_Y, img_[0], TRUE);
 
 #ifdef _DEBUG
 	//当たり判定の可視化
@@ -85,7 +68,7 @@ void Player::Move()
 	InputManager& ins = InputManager::GetInstance();
 
 	
-	if (ins.IsNew(KEY_INPUT_W))
+	/*if (ins.IsNew(KEY_INPUT_W))
 	{
 		pos_.y -= 5;
 	}
@@ -100,7 +83,153 @@ void Player::Move()
 	if (ins.IsNew(KEY_INPUT_D))
 	{
 		pos_.x += 5;
+	}*/
+
+
+
+
+	//前回の座標を持っておく
+	Vector2F prePos = pos_;
+
+	// 移動処理
+	// ジャンプボタンを押したら
+	if (ins.IsNew(KEY_INPUT_SPACE) && !isJump_)
+	{
+		//ジャンプ力を設定する
+		movePosY_ = JUMP_POW;
+
+		//ジャンプフラグ
+		isJump_ = true;
+		//ジャンプアニメーション再生
+		//ChangeAnimState(ANIM_STATE::JUNP, true);
 	}
+	//上限移動増加量
+	pos_.y += movePosY_;
+
+	//重力加算
+	movePosY_ += GRAVITY;
+
+	//上下移動量が最大重力にならないようにする
+	if (movePosY_ > MAX_GRAVITY)
+	{
+		movePosY_ = MAX_GRAVITY;
+	}
+
+	//上への移動処理
+	//デバッグ表示用に一回計算する
+	//完成品では消してよし
+	CalcHeadPos();
+	isHitHead_ = IsHitHeadPos();
+
+	//上に移動していたら頭と衝突判定
+	if (prePos.y > pos_.y)CollisionHead();
+
+
+
+	//下への移動処理
+	//デバッグ表示用に一回計算する
+	//完成品では消してよし
+	CalcFootPos();
+	isHitFoot_ = IsHitFootPos();
+
+	//下に移動していたら足元と衝突判定
+	if (prePos.y < pos_.y)CollisionFoot();
+
+
+	//左への移動処理
+	if (ins.IsNew(KEY_INPUT_A))
+	{
+
+		//左を向ける
+		dir_ = AsoUtility::DIR::LEFT;
+		//加速量を加算する
+		movePosX_ -= MOVE_ACC_POW;
+
+		//移動量
+		if (movePosX_ < -MAX_MOVE_SPEED)
+		{
+			movePosX_ = -MAX_MOVE_SPEED;
+		}
+		pos_.x += movePosX_;
+		//地上にいるときは走るアニメモーション再生
+		if (!isJump_)
+		{
+			//ChangeAnimState(ANIM_STATE::RUN, false);
+		}
+	}
+	//地上にいるときに移動ボタンが離されたら待機アニメーション再生
+	//if (ins.IsNew(KEY_INPUT_A) && !isJump_)
+	//{
+		//ChangeAnimState(ANIM_STATE::IDLE, true);
+	//}
+	//スピードが出ているときは原則も同時に行う
+	if (movePosX_ < 0.0f)
+	{
+		movePosX_ += MOVE_DEC_POW;
+
+		//原則を０以下にはしない
+		if (movePosX_ > 0.0f)
+		{
+			movePosX_ = 0.0f;
+		}
+		pos_.x += movePosX_;
+	}
+
+	//デバッグ表示用に一回計算する
+	//完成品では消してよし
+	CalcLeftSidePos();
+	isHitLeftSide_ = IsHitLeftPos();
+
+	//左に移動していたら左と衝突判定
+	if (prePos.x > pos_.x)CollisionLeftSide();
+
+
+	//右への移動処理
+	if (ins.IsNew(KEY_INPUT_D))
+	{
+		//右を向ける
+		dir_ = AsoUtility::DIR::RIGHT;
+
+		//加速量を加算する
+		movePosX_ += MOVE_ACC_POW;
+
+		//移動量
+		if (movePosX_ > MAX_MOVE_SPEED)
+		{
+			movePosX_ = MAX_MOVE_SPEED;
+		}
+		pos_.x += movePosX_;
+		//地上にいるときは走るアニメモーション再生
+		if (!isJump_)
+		{
+			//ChangeAnimState(ANIM_STATE::RUN, false);
+		}
+	}
+	//地上にいるときに移動ボタンが離されたら待機アニメーション再生
+	/*if (InputManager::GetInstance()->IsTrgUp(KEY_INPUT_D) && !isJump_)
+	{
+		ChangeAnimState(ANIM_STATE::IDLE, true);
+	}*/
+	//スピードが出ているときは原則も同時に行う
+	if (movePosX_ > 0.0f)
+	{
+		movePosX_ -= MOVE_DEC_POW;
+
+		//原則を０以下にはしない
+		if (movePosX_ < 0.0f)
+		{
+			movePosX_ = 0.0f;
+		}
+		pos_.x += movePosX_;
+	}
+
+	//デバッグ表示用に一回計算する
+	//完成品では消してよし
+	CalcRightSidePos();
+	isHitRightSide_ = IsHitRightPos();
+
+	//右に移動していたら右と衝突判定
+	if (prePos.x < pos_.x)CollisionRightSide();
 
 }
 void Player::CalcFootPos(void)
@@ -226,29 +355,29 @@ void Player::CollisionFoot(void)
 		//当たっているマップチップの上側の座標を計算する
 		int mapChipUpSideY = mapPos.y * Stage::CHIP_SIZE_Y;
 		//プレイヤーの足元がマップチップの上側になるように設定する
-		pos_.y = static_cast<float>(mapChipUpSideY) - HALF_COL_SIZE_Y - COL_OFFSET - 3;
+		pos_.y = static_cast<float>(mapChipUpSideY) - HALF_COL_SIZE_Y - COL_OFFSET- 3;
 
-		////ジャンプフラグを切る
-		//if (isJump_)
-		//{
-		//	//着地（待機）アニメーション再生
-		//	ChangeAnimState(ANIM_STATE::IDLE, true);
-		//	//ジャンプフラグを折る
-		//	isJump_ = false;
-		//}
+		//ジャンプフラグを切る
+		if (isJump_)
+		{
+			//着地（待機）アニメーション再生
+			//ChangeAnimState(ANIM_STATE::IDLE, true);
+			//ジャンプフラグを折る
+			isJump_ = false;
+		}
 	}
-	//else if (!isJump_)
-	//{
-	//	//ジャンプフラグを立てる
-	//	isJump_ = true;
-	//	//ジャンプ力を０にする
-	//	//（常にかかっている重力をいったんリセットして
-	//	//自然な落下にする
-	//	movePosY_ = 0.0f;
-	//	//落下（ジャンプ）アニメーション再生
-	//	ChangeAnimState(ANIM_STATE::JUNP, true);
+	else if (!isJump_)
+	{
+		//ジャンプフラグを立てる
+		isJump_ = true;
+		//ジャンプ力を０にする
+		//（常にかかっている重力をいったんリセットして
+		//自然な落下にする
+		movePosY_ = 0.0f;
+		//落下（ジャンプ）アニメーション再生
+		//ChangeAnimState(ANIM_STATE::JUNP, true);
 
-	//}
+	}
 }
 void Player::CollisionHead(void)
 {
@@ -271,7 +400,7 @@ void Player::CollisionHead(void)
 		pos_.y = static_cast<float>(mapChipDownSideY) + HALF_COL_SIZE_Y + COL_OFFSET + 3;
 
 		//頭がぶつかったの
-		//movePosY_ = 0.0f;
+		movePosY_ = 0.0f;
 	}
 }
 void Player::CollisionRightSide(void)
@@ -315,7 +444,7 @@ void Player::CollisionLeftSide(void)
 		//プレイヤーの左側がマップチップの左側になるように設定する
 		pos_.x = static_cast<float>(mapChipRightSideX) + HALF_COL_SIZE_X + COL_OFFSET;
 		//左に移動録があるときは移動量をなくす
-		///if (movePosX_ < 0.0f)movePosX_ = 0.0f;
+		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
 	}
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "../../Common/Vector2.h"
 #include "../../Common/Vector2F.h"
-
+#include "../../Utility/AsoUtility.h"
 class Stage;
 class Camera;
 
@@ -16,13 +16,37 @@ public:
 	static constexpr int HALF_COL_SIZE_X = COL_SIZE_X / 2;	//横半分
 	static constexpr int HALF_COL_SIZE_Y = COL_SIZE_Y / 2;	//縦半分
 	static constexpr int COL_OFFSET = 1;						//補正値
+	// 移動速度
+	static constexpr float MOVE_SPEED = 1.5f;
 
+	//重力
+	static constexpr float GRAVITY = 0.3f;
+
+	//重力最大値
+	static constexpr float MAX_GRAVITY = 8.5f;
+
+	//ジャンプ力
+	static constexpr float JUMP_POW = -8.5f;
+
+	//加速度
+	static constexpr float MOVE_ACC_POW = 0.5f;
+
+	//減速度
+	static constexpr float MOVE_DEC_POW = 0.05f;
+
+	//移動速度最大値
+	static constexpr float MAX_MOVE_SPEED = 1.5f;
 
 private:
 	//変数
 	int* img_;
 	
 	Vector2F pos_;//位置
+
+	float movePosX_;
+	float movePosY_;
+
+	bool isJump_;//ジャンプ中かどうか
 
 	//足元
 	//（デバッグ表示のためメンバー変数化）
@@ -60,6 +84,7 @@ private:
 	//ステージ
 	Stage* stage_;
 
+	AsoUtility::DIR dir_;
 public:
 	
 	//プロトタイプ宣言

@@ -114,5 +114,16 @@ public:
 	static void DrawLineDir(const VECTOR& pos, const VECTOR& dir, int color, float len = 50.0f);
 	static void DrawLineXYZ(const VECTOR& pos, const MATRIX& rot, float len = 50.0f);
 
+
+	// ˆÚ“®•ûŒü
+	enum class DIR
+	{
+		UP,
+		RIGHT,
+		DOWN,
+		LEFT,
+		MAX
+	};
+
 };
 

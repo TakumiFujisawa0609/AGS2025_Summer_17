@@ -10,11 +10,8 @@
 #include "../../Application.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Manager/ResourceManager.h"
-#include "../../Common/Vector2.h"
-
 #include "../../Scene/GameScene.h"
 #include "../Player/Player.h"
-
 #include "Stage.h"
 
 Stage::Stage(void)
@@ -60,7 +57,7 @@ void Stage::Draw()
 			if (chipNo != -1)
 			{
 				
-				DrawRotaGraphF(x * CHIP_SIZE_X*2, y * CHIP_SIZE_Y*2, 2.0, 0.0, mapChip_[chipNo], true);
+				DrawRotaGraphF(x * CHIP_SIZE_X, y * CHIP_SIZE_Y, 1.0, 0.0, mapChip_[chipNo], true);
 
 				
 				
@@ -146,9 +143,7 @@ bool Stage::IsCollisionStage(Vector2 worldPos)
 	int chipNo = GetChipNo(mapPos);
 
 	// 障害物のチップ番号と当たっていたら真を返す
-	if (chipNo == 1
-		|| chipNo == 2
-		|| chipNo == 3)
+	if (chipNo==0|| chipNo == 1|| chipNo == 2)
 	{
 		return true;
 	}
