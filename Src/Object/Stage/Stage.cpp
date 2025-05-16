@@ -1,0 +1,133 @@
+//==============================
+
+// Stage.cpp
+
+//===============================
+#include <DxLib.h>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include "../../Application.h"
+#include "../../Utility/AsoUtility.h"
+#include "../../Manager/ResourceManager.h"
+#include "../../Common/Vector2.h"
+#include "../../Scene/GameScene.h"
+#include "Stage.h"
+
+Stage::Stage(void)
+{
+}
+
+Stage::~Stage(void)
+{
+}
+
+void Stage::Init(GameScene* scene)
+{
+	// ゲームシーンの機能を使えるようにする
+	gameScene_ = scene;
+
+	// 分割された画像を読み込み
+	ResourceManager& res = ResourceManager::GetInstance();
+	mapChip_ = res.Load(ResourceManager::SRC::MAPCHIP).handleIds_;
+
+	
+
+	// 外部ファイルからマップデータを読み込む
+	LoadGroundCsvData();
+}
+
+void Stage::Update()
+{
+}
+
+void Stage::Draw()
+{
+	// マップチップの描画
+	for (int y = 0; y < MAP_GROUND_SIZE_Y; y++)
+	{
+		for (int x = 0; x < MAP_GROUND_SIZE_X; x++)
+		{
+			// マップチップ番号を取得
+			int chipNo = groundMap_[y][x];
+
+			// マップチップ番号が-1でなければ描画する
+			if (chipNo != -1)
+			{
+				
+				DrawRotaGraphF(x * CHIP_SIZE_X*2, y * CHIP_SIZE_Y*2, 2.0, 0.0, mapChip_[chipNo], true);
+
+				
+				
+				//DrawGraph(x * CHIP_SIZE_X, y * CHIP_SIZE_Y, mapChip_[chipNo], TRUE);
+			}
+		}
+	}
+
+}
+
+void Stage::Release()
+{
+	// 読み込んだ画像の解放
+	for (int i = 0; i < NUM_MAP_CHIPS; i++)
+	{
+		DeleteGraph(mapChip_[i]);
+	}
+}
+
+void Stage::LoadGroundCsvData(void)
+{
+	// 地上データの初期化
+	for (int y = 0; y < MAP_GROUND_SIZE_Y; y++)
+	{
+		for (int x = 0; x < MAP_GROUND_SIZE_X; x++)
+		{
+			groundMap_[y][x] = -1;
+		}
+	}
+
+	// ファイルの読み込み
+	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage1.csv");
+	if (!ifs)
+	{
+		// エラーが発生
+		return;
+	}
+
+	// ファイルを１行ずつ読み込む
+	std::string line;
+	std::string c;
+	int chipNo = 0;
+	int x = 0;
+	int y = 0;
+	while (getline(ifs, line))
+	{
+		// 1行情報 string を ifstream の仲間に変換
+		std::istringstream stream(line);
+
+		// 1文字ずつ読み込み(カンマ区切り)
+		x = 0;
+		while (getline(stream, c, ','))
+		{
+			// stringからintに変換
+			chipNo = stoi(c);
+
+			// 2次元配列にマップチップ番号を格納
+			groundMap_[y][x] = chipNo;
+
+			++x;
+		}
+		++y;
+	}
+}
+
+int Stage::GetChipNo(Vector2 mapPos)
+{
+	// マップ範囲外であれば判定しない
+	if (mapPos.x < 0 || MAP_GROUND_SIZE_X <= mapPos.x
+		|| mapPos.y < 0 || MAP_GROUND_SIZE_Y <= mapPos.y) {
+		return -1;
+	}
+
+	return groundMap_[mapPos.y][mapPos.x];
+}
