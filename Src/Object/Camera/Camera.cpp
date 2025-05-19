@@ -73,20 +73,20 @@ void Camera::Update()
 	//カメラの右枠処理
 	//カメラの右側よりプレイヤーが→に行ったらカメラを動かす
 	
-	if (cameraPos_.x + Application::SCREEN_SIZE_X - FOCAS_X < playerPos.x)
+	if (cameraRightSidePosX - FOCAS_X < playerPos.x)
 	{
 		cameraPos_.x = (playerPos.x - Application::SCREEN_SIZE_X) + FOCAS_X;
-		if (cameraPos_.x + Application::SCREEN_SIZE_X > (32 * 30))
+		if (cameraPos_.x + Application::SCREEN_SIZE_X > ((32*2) * 60))
 		{
-			cameraPos_.x= (32 * 30)-Application::SCREEN_SIZE_X;
+			cameraPos_.x= ((32 * 2) * 60)-Application::SCREEN_SIZE_X;
 		}
 	}
 	if (cameraRightSidePosX - FOCAS_X < playerPos.x)
 	{
 		cameraPos_.x = (playerPos.x - Application::SCREEN_SIZE_X) + FOCAS_X;
-		if (cameraRightSidePosX > (32 * 30))
+		if (cameraRightSidePosX > ((32 * 2) * 60))
 		{
-			cameraPos_.x = (32 * 30) - Application::SCREEN_SIZE_X;
+			cameraPos_.x = ((32 * 2) * 60) - Application::SCREEN_SIZE_X;
 		}
 	}
 
@@ -134,3 +134,4 @@ Vector2 Camera::GetCameraPos(void)
 {
 	return cameraPos_;
 }
+

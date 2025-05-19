@@ -52,8 +52,9 @@ void Player::Update()
 void Player::Draw()
 {
 	// ‰æ‘œ‚Ì•`‰æ
-	
-	DrawGraph(pos_.x-COL_SIZE_X, pos_.y-COL_SIZE_Y, img_[0], TRUE);
+	Vector2 cpos= camera_->GetCameraPos();
+
+	DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[0], TRUE);
 
 #ifdef _DEBUG
 	//“–‚½‚è”»’è‚Ì‰ÂŽ‹‰»

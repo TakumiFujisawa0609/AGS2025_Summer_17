@@ -49,6 +49,10 @@ void Stage::Update()
 
 void Stage::Draw()
 {
+
+	//カメラ座標の取得
+	Vector2 cameraPos = camera_->GetCameraPos();
+
 	// マップチップの描画
 	for (int y = 0; y < MAP_GROUND_SIZE_Y; y++)
 	{
@@ -56,32 +60,29 @@ void Stage::Draw()
 		{
 			// マップチップ番号を取得
 			int chipNo = groundMap_[y][x];
-			//マップチップのワールド座標
-			int mapChipWorldPosX = x * CHIP_SIZE_X;
-			int mapChipWorldPosY = y * CHIP_SIZE_Y;
-
-			//カメラ座標の取得
-			Vector2 cameraPos = camera_->GetCameraPos();
 
 			//マップチップ番号から画像のハンドルIDを取得
 			int imgHandle = mapChip_[chipNo];
 
+
+			//マップチップのワールド座標
+			int mapChipWorldPosX = x * CHIP_SIZE_X;
+			int mapChipWorldPosY = y * CHIP_SIZE_Y;
+
+			
 
 			//マップチップのスクリーン座標
 			//２Dでは「スクリーン座標＝ワールド座標ーカメラ座標」
 			int mapChipScreenPosX = mapChipWorldPosX -cameraPos.x;
 			int mapChipScreenPosY = mapChipWorldPosY ;
 
-			// マップチップ番号が-1でなければ描画する
-			if (chipNo != -1)
-			{
-				
-				DrawRotaGraphF(mapChipScreenPosX, mapChipScreenPosY, 1.0, 0.0, imgHandle, true);
+			
+				//DrawRotaGraphF(mapChipScreenPosX, mapChipScreenPosY, 1.0, 0.0, imgHandle, true);
 
 				
 				
-				//DrawGraph(mapChipScreenPosX, mapChipScreenPosY,imgHandle, true);
-			}
+				DrawGraph(mapChipScreenPosX, mapChipScreenPosY,imgHandle, true);
+			
 		}
 	}
 
@@ -146,7 +147,8 @@ int Stage::GetChipNo(Vector2 mapPos)
 {
 	// マップ範囲外であれば判定しない
 	if (mapPos.x < 0 || MAP_GROUND_SIZE_X <= mapPos.x
-		|| mapPos.y < 0 || MAP_GROUND_SIZE_Y <= mapPos.y) {
+		|| mapPos.y < 0 || MAP_GROUND_SIZE_Y <= mapPos.y) 
+	{
 		return -1;
 	}
 
