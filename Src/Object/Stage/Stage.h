@@ -42,6 +42,8 @@ public:
 	bool IsCollisionStage(Vector2 worldPos);
 
 private:
+	
+
 
 	// ƒ}ƒbƒv‰æ‘œ
 	int* mapChip_;

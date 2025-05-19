@@ -40,6 +40,10 @@ public:
 private:
 	//変数
 	int* img_;
+
+	//アニメーション
+	float animationTime_;
+	int animationCount_;
 	
 	Vector2F pos_;//位置
 

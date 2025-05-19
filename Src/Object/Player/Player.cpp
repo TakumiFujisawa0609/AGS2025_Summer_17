@@ -41,21 +41,39 @@ void Player::Init(Camera*camera,Stage*stage)
 	pos_.x = 100.0f;
 	pos_.y = 100.0f;
 	
-	
+	//アニメーション初期化
+	animationTime_ = 0.0f;
+	animationCount_ = 0;
+
+
 	
 }
 void Player::Update()
 {
 	Move();
+	//アニメーションの更新
+	
+	if (animationTime_ >= 1.0f)
+	{
+		animationCount_++;
+		//アニメーションのカウントが画像の枚数を超えたら
+		if (animationCount_ >= 5)
+		{
+			//アニメーションのカウントを０に戻す
+			animationCount_ = 0;
+		}
+		//アニメーションの時間をリセット
+		animationTime_ = 0.0f;
+	}
 	
 }
 void Player::Draw()
 {
 	// 画像の描画
 	Vector2 cpos= camera_->GetCameraPos();
-
-	DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[0], TRUE);
-
+	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
+	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
+	
 #ifdef _DEBUG
 	//当たり判定の可視化
 	DrawHitCollision();
@@ -139,7 +157,7 @@ void Player::Move()
 	//左への移動処理
 	if (ins.IsNew(KEY_INPUT_A))
 	{
-
+		animationTime_ += 0.1f;
 		//左を向ける
 		dir_ = AsoUtility::DIR::LEFT;
 		//加速量を加算する
@@ -157,6 +175,8 @@ void Player::Move()
 			//ChangeAnimState(ANIM_STATE::RUN, false);
 		}
 	}
+	
+
 	//地上にいるときに移動ボタンが離されたら待機アニメーション再生
 	//if (ins.IsNew(KEY_INPUT_A) && !isJump_)
 	//{
@@ -187,6 +207,7 @@ void Player::Move()
 	//右への移動処理
 	if (ins.IsNew(KEY_INPUT_D))
 	{
+		animationTime_ += 0.1f;
 		//右を向ける
 		dir_ = AsoUtility::DIR::RIGHT;
 
@@ -205,6 +226,7 @@ void Player::Move()
 			//ChangeAnimState(ANIM_STATE::RUN, false);
 		}
 	}
+	
 	//地上にいるときに移動ボタンが離されたら待機アニメーション再生
 	/*if (InputManager::GetInstance()->IsTrgUp(KEY_INPUT_D) && !isJump_)
 	{
@@ -230,7 +252,10 @@ void Player::Move()
 
 	//右に移動していたら右と衝突判定
 	if (prePos.x < pos_.x)CollisionRightSide();
-
+	if(!ins.IsNew(KEY_INPUT_D) && !ins.IsNew(KEY_INPUT_A))
+	{
+		animationCount_ = 0;
+	}
 }
 void Player::CalcFootPos(void)
 {
