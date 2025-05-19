@@ -44,6 +44,7 @@ void Stage::Init(GameScene* scene,Player*player,Camera*camera)
 
 void Stage::Update()
 {
+	//
 }
 
 void Stage::Draw()
@@ -68,7 +69,7 @@ void Stage::Draw()
 
 			//マップチップのスクリーン座標
 			//２Dでは「スクリーン座標＝ワールド座標ーカメラ座標」
-			int mapChipScreenPosX = mapChipWorldPosX ;
+			int mapChipScreenPosX = mapChipWorldPosX -cameraPos.x;
 			int mapChipScreenPosY = mapChipWorldPosY ;
 
 			// マップチップ番号が-1でなければ描画する
