@@ -41,6 +41,7 @@ void Player::Init(Camera*camera,Stage*stage)
 	pos_.y = 100.0f;
 	
 	//アニメーション初期化
+	armAngle_= 0.0f;
 	animationTime_ = 0.0f;
 	animationCount_ = 0;
 
@@ -57,6 +58,15 @@ void Player::Update()
 
 	Move();
 	//アニメーションの更新
+
+	if (CheckHitKey(KEY_INPUT_K))
+	{
+		armAngle_ += 0.1f;
+	}
+	else
+		{
+		armAngle_ = 0.0f;
+	}
 	
 	
 	
@@ -66,7 +76,7 @@ void Player::Draw()
 	// 画像の描画
 	Vector2 cpos= camera_->GetCameraPos();
 	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
-	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, 0.0f, armImg_, TRUE);
+	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, armAngle_, armImg_, TRUE);
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
 	
 #ifdef _DEBUG

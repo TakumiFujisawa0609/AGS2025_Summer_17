@@ -52,6 +52,7 @@ private:
 	int armImg_;
 
 	//アニメーション
+	float armAngle_;
 	float animationTime_;
 	int animationCount_;
 	MOVE_TYPE moveType_;//移動タイプ
