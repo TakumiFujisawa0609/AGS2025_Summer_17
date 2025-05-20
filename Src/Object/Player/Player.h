@@ -17,6 +17,15 @@ public:
 		MOVE,
 	};
 
+	enum class ELEMENT_TYPE
+	{
+		NONE,
+		FIRE,
+		WATER,
+		PLANT,
+		NORMAL,
+	};
+
 
 	//定数
 	// 当たり判定サイズ
@@ -51,6 +60,11 @@ private:
 	int* img_;
 	int armImg_;
 
+	int cr;
+
+	//属性
+	ELEMENT_TYPE elementType_;//属性タイプ
+
 	//アニメーション
 	float armAngle_;
 	float animationTime_;
@@ -59,6 +73,7 @@ private:
 	
 	Vector2F pos_;//位置
 
+	//移動量
 	float movePosX_;
 	float movePosY_;
 
@@ -112,6 +127,8 @@ public:
 
 	//関数
 	void Move();
+	void Anime();
+	void Attack();
 	
 
 	//（デバッグ表紙のために計算処理と衝突判定を別にしておく）
@@ -132,12 +149,19 @@ public:
 	void CollisionRightSide(void);
 	void CollisionLeftSide(void);
 
+	//衝突判定描画
 	void DrawHitCollision(void);
 
+	
 	Vector2 World2MapPos(Vector2 worldPos);
 
+	//プレイヤーの位置を取得
 	Vector2F GetPlayerPos(void);
 
-	void MOVETYPE(void);
+	//移動状態管理
+	void MoveChange(void);
+
+	//属性管理
+	void ElementChange(void);
 };
 

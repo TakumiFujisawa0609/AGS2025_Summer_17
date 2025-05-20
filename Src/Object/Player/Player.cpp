@@ -48,15 +48,22 @@ void Player::Init(Camera*camera,Stage*stage)
 	//移動タイプ
 	moveType_ = MOVE_TYPE::STOP;
 	
-
+	cr = 0xffffff;
 
 	
 }
 void Player::Update()
 {
-	MOVETYPE();
+	MoveChange();
 
 	Move();
+
+	Anime();
+
+	Attack();
+
+	ElementChange();
+
 	//アニメーションの更新
 
 	if (CheckHitKey(KEY_INPUT_K))
@@ -76,7 +83,14 @@ void Player::Draw()
 	// 画像の描画
 	Vector2 cpos= camera_->GetCameraPos();
 	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
+
+	//腕の描画
+	//色変更
+
+
 	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, armAngle_, armImg_, TRUE);
+
+
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
 	
 #ifdef _DEBUG
@@ -247,14 +261,25 @@ void Player::Move()
 	CalcRightSidePos();
 	isHitRightSide_ = IsHitRightPos();
 
-	if (moveType_==MOVE_TYPE::MOVE)
+	
+	//右に移動していたら右と衝突判定
+	if (prePos.x < pos_.x)CollisionRightSide();
+	if(!ins.IsNew(KEY_INPUT_D) && !ins.IsNew(KEY_INPUT_A))
+	{
+		moveType_ = MOVE_TYPE::STOP;
+	}
+}
+
+void Player::Anime()
+{
+	if (moveType_ == MOVE_TYPE::MOVE)
 	{
 		animationTime_ += 0.1f;
 		if (animationTime_ >= 1.0f)
 		{
 			animationCount_++;
 			//アニメーションのカウントが画像の枚数を超えたら
-			if (animationCount_ >= 10)
+			if (animationCount_ > 11)
 			{
 				//アニメーションのカウントを０に戻す
 				animationCount_ = 6;
@@ -280,13 +305,39 @@ void Player::Move()
 		}
 	}
 
-	//右に移動していたら右と衝突判定
-	if (prePos.x < pos_.x)CollisionRightSide();
-	if(!ins.IsNew(KEY_INPUT_D) && !ins.IsNew(KEY_INPUT_A))
-	{
-		moveType_ = MOVE_TYPE::STOP;
-	}
 }
+void Player::Attack()
+{
+	//攻撃処理
+	InputManager& ins = InputManager::GetInstance();
+	if (ins.IsTrgDown(KEY_INPUT_1))
+	{
+		elementType_ = ELEMENT_TYPE::FIRE;
+		cr = 0xff0000;
+	}
+	if (ins.IsTrgDown(KEY_INPUT_2))
+	{
+		elementType_ = ELEMENT_TYPE::WATER;
+		cr = 0x0000ff;
+	}
+	if (ins.IsTrgDown(KEY_INPUT_3))
+	{
+		elementType_ = ELEMENT_TYPE::PLANT;
+		cr = 0x00ff00;
+	}
+	if (ins.IsTrgDown(KEY_INPUT_4))
+	{
+		elementType_ = ELEMENT_TYPE::NORMAL;
+		cr = 0xffffff;
+	}
+
+
+	
+}
+
+
+
+
 void Player::CalcFootPos(void)
 {
 	//足元座標を計算（中心
@@ -551,7 +602,7 @@ Vector2F Player::GetPlayerPos()
 	return pos_;
 }
 
-void Player::MOVETYPE(void)
+void Player::MoveChange(void)
 {
 	switch (moveType_)
 	{
@@ -568,4 +619,21 @@ void Player::MOVETYPE(void)
 
 	}
 
+}
+
+void Player::ElementChange()
+{
+	switch (elementType_)
+	{
+
+	case ELEMENT_TYPE::FIRE:
+
+		break;
+	case ELEMENT_TYPE::WATER:
+		break;
+	case ELEMENT_TYPE::PLANT:
+		break;
+	case ELEMENT_TYPE::NORMAL:
+		break;
+	}
 }
