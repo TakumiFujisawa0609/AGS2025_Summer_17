@@ -9,10 +9,6 @@
 
 Player::Player()
 {
-	
-
-	
-
 	isHitFoot_ = false;
 	isHitHead_ = false;
 	isHitRightSide_ = false;
@@ -36,6 +32,9 @@ void Player::Init(Camera*camera,Stage*stage)
 	ResourceManager& res = ResourceManager::GetInstance();
 	img_ = res.Load(ResourceManager::SRC::PLAYERS).handleIds_;
 
+	armImg_ = res.Load(ResourceManager::SRC::PLAYERARM).handleId_;
+
+
 	
 	// 初期位置設定
 	pos_.x = 100.0f;
@@ -45,26 +44,21 @@ void Player::Init(Camera*camera,Stage*stage)
 	animationTime_ = 0.0f;
 	animationCount_ = 0;
 
+	//移動タイプ
+	moveType_ = MOVE_TYPE::STOP;
+	
+
 
 	
 }
 void Player::Update()
 {
+	MOVETYPE();
+
 	Move();
 	//アニメーションの更新
 	
-	if (animationTime_ >= 1.0f)
-	{
-		animationCount_++;
-		//アニメーションのカウントが画像の枚数を超えたら
-		if (animationCount_ >= 5)
-		{
-			//アニメーションのカウントを０に戻す
-			animationCount_ = 0;
-		}
-		//アニメーションの時間をリセット
-		animationTime_ = 0.0f;
-	}
+	
 	
 }
 void Player::Draw()
@@ -72,6 +66,7 @@ void Player::Draw()
 	// 画像の描画
 	Vector2 cpos= camera_->GetCameraPos();
 	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
+	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, 0.0f, armImg_, TRUE);
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
 	
 #ifdef _DEBUG
@@ -85,26 +80,12 @@ void Player::Move()
 	//移動処理
 	InputManager& ins = InputManager::GetInstance();
 
-	
-	/*if (ins.IsNew(KEY_INPUT_W))
+	if (ins.IsTrgDown(KEY_INPUT_D) || ins.IsTrgDown(KEY_INPUT_A))
 	{
-		pos_.y -= 5;
-	}
-	if (ins.IsNew(KEY_INPUT_S))
-	{
-		pos_.y += 5;
-	}
-	if (ins.IsNew(KEY_INPUT_A))
-	{
-		pos_.x -= 5;
-	}
-	if (ins.IsNew(KEY_INPUT_D))
-	{
-		pos_.x += 5;
-	}*/
+		animationCount_ = 6                                  ;
+		moveType_ = MOVE_TYPE::MOVE;
 
-
-
+	}
 
 	//前回の座標を持っておく
 	Vector2F prePos = pos_;
@@ -157,7 +138,9 @@ void Player::Move()
 	//左への移動処理
 	if (ins.IsNew(KEY_INPUT_A))
 	{
-		animationTime_ += 0.1f;
+		
+
+		
 		//左を向ける
 		dir_ = AsoUtility::DIR::LEFT;
 		//加速量を加算する
@@ -175,7 +158,7 @@ void Player::Move()
 			//ChangeAnimState(ANIM_STATE::RUN, false);
 		}
 	}
-	
+
 
 	//地上にいるときに移動ボタンが離されたら待機アニメーション再生
 	//if (ins.IsNew(KEY_INPUT_A) && !isJump_)
@@ -207,7 +190,9 @@ void Player::Move()
 	//右への移動処理
 	if (ins.IsNew(KEY_INPUT_D))
 	{
-		animationTime_ += 0.1f;
+
+		
+		
 		//右を向ける
 		dir_ = AsoUtility::DIR::RIGHT;
 
@@ -226,35 +211,70 @@ void Player::Move()
 			//ChangeAnimState(ANIM_STATE::RUN, false);
 		}
 	}
-	
+
 	//地上にいるときに移動ボタンが離されたら待機アニメーション再生
 	/*if (InputManager::GetInstance()->IsTrgUp(KEY_INPUT_D) && !isJump_)
 	{
 		ChangeAnimState(ANIM_STATE::IDLE, true);
 	}*/
 	//スピードが出ているときは原則も同時に行う
-	if (movePosX_ > 0.0f)
-	{
-		movePosX_ -= MOVE_DEC_POW;
+	
 
-		//原則を０以下にはしない
-		if (movePosX_ < 0.0f)
+		if (movePosX_ > 0.0f)
 		{
-			movePosX_ = 0.0f;
-		}
-		pos_.x += movePosX_;
-	}
+			movePosX_ -= MOVE_DEC_POW;
 
+			//原則を０以下にはしない
+			if (movePosX_ < 0.0f)
+			{
+				movePosX_ = 0.0f;
+			}
+			pos_.x += movePosX_;
+		}
+	
 	//デバッグ表示用に一回計算する
 	//完成品では消してよし
 	CalcRightSidePos();
 	isHitRightSide_ = IsHitRightPos();
 
+	if (moveType_==MOVE_TYPE::MOVE)
+	{
+		animationTime_ += 0.1f;
+		if (animationTime_ >= 1.0f)
+		{
+			animationCount_++;
+			//アニメーションのカウントが画像の枚数を超えたら
+			if (animationCount_ >= 10)
+			{
+				//アニメーションのカウントを０に戻す
+				animationCount_ = 6;
+			}
+			//アニメーションの時間をリセット
+			animationTime_ = 0.0f;
+		}
+	}
+	if (moveType_ == MOVE_TYPE::STOP)
+	{
+		animationTime_ += 0.05f;
+		if (animationTime_ >= 1.0f)
+		{
+			animationCount_++;
+			//アニメーションのカウントが画像の枚数を超えたら
+			if (animationCount_ >= 2)
+			{
+				//アニメーションのカウントを０に戻す
+				animationCount_ = 0;
+			}
+			//アニメーションの時間をリセット
+			animationTime_ = 0.0f;
+		}
+	}
+
 	//右に移動していたら右と衝突判定
 	if (prePos.x < pos_.x)CollisionRightSide();
 	if(!ins.IsNew(KEY_INPUT_D) && !ins.IsNew(KEY_INPUT_A))
 	{
-		animationCount_ = 0;
+		moveType_ = MOVE_TYPE::STOP;
 	}
 }
 void Player::CalcFootPos(void)
@@ -519,4 +539,23 @@ Vector2 Player::World2MapPos(Vector2 worldPos)
 Vector2F Player::GetPlayerPos()
 {
 	return pos_;
+}
+
+void Player::MOVETYPE(void)
+{
+	switch (moveType_)
+	{
+	case MOVE_TYPE::STOP:
+		//移動量を０にする
+
+		
+
+		break;
+	case MOVE_TYPE::MOVE:
+		
+
+		break;
+
+	}
+
 }

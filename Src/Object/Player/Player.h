@@ -9,10 +9,19 @@ class Camera;
 class Player
 {
 public:
+
+	enum class MOVE_TYPE
+	{
+		NONE,
+		STOP,
+		MOVE,
+	};
+
+
 	//定数
 	// 当たり判定サイズ
-	static constexpr int COL_SIZE_X = 32;						// 横
-	static constexpr int COL_SIZE_Y = 32;						// 縦
+	static constexpr int COL_SIZE_X = 58;						// 横
+	static constexpr int COL_SIZE_Y = 58;						// 縦
 	static constexpr int HALF_COL_SIZE_X = COL_SIZE_X / 2;	//横半分
 	static constexpr int HALF_COL_SIZE_Y = COL_SIZE_Y / 2;	//縦半分
 	static constexpr int COL_OFFSET = 1;						//補正値
@@ -40,10 +49,12 @@ public:
 private:
 	//変数
 	int* img_;
+	int armImg_;
 
 	//アニメーション
 	float animationTime_;
 	int animationCount_;
+	MOVE_TYPE moveType_;//移動タイプ
 	
 	Vector2F pos_;//位置
 
@@ -125,5 +136,7 @@ public:
 	Vector2 World2MapPos(Vector2 worldPos);
 
 	Vector2F GetPlayerPos(void);
+
+	void MOVETYPE(void);
 };
 
