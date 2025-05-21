@@ -48,6 +48,8 @@ void Player::Init(Camera*camera,Stage*stage)
 	//移動タイプ
 	moveType_ = MOVE_TYPE::STOP;
 	
+	//属性タイプ
+	elementType_ = ELEMENT_TYPE::NORMAL;
 	cr = 0xffffff;
 
 	
@@ -86,10 +88,10 @@ void Player::Draw()
 
 	//腕の描画
 	//色変更
-
-
-	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, armAngle_, armImg_, TRUE);
-
+	//GraphFilter(armImg_, DX_GRAPH_FILTER_HSB, cr, cr,cr,cr);
+	SetDrawBlendMode(DX_BLENDMODE_ADD, cr);
+ 	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, armAngle_, armImg_, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
 	
@@ -313,22 +315,22 @@ void Player::Attack()
 	if (ins.IsTrgDown(KEY_INPUT_1))
 	{
 		elementType_ = ELEMENT_TYPE::FIRE;
-		cr = 0xff0000;
+		
 	}
 	if (ins.IsTrgDown(KEY_INPUT_2))
 	{
 		elementType_ = ELEMENT_TYPE::WATER;
-		cr = 0x0000ff;
+		
 	}
 	if (ins.IsTrgDown(KEY_INPUT_3))
 	{
 		elementType_ = ELEMENT_TYPE::PLANT;
-		cr = 0x00ff00;
+		
 	}
 	if (ins.IsTrgDown(KEY_INPUT_4))
 	{
 		elementType_ = ELEMENT_TYPE::NORMAL;
-		cr = 0xffffff;
+		
 	}
 
 
@@ -627,13 +629,16 @@ void Player::ElementChange()
 	{
 
 	case ELEMENT_TYPE::FIRE:
-
+		cr = 0xff0000;
 		break;
 	case ELEMENT_TYPE::WATER:
+		cr = 0x0000ff;
 		break;
 	case ELEMENT_TYPE::PLANT:
+		cr = 0x00ff00;
 		break;
 	case ELEMENT_TYPE::NORMAL:
+		cr = 0xffffff;
 		break;
 	}
 }
