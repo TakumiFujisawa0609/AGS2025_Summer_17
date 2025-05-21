@@ -32,7 +32,7 @@ void Player::Init(Camera*camera,Stage*stage)
 	ResourceManager& res = ResourceManager::GetInstance();
 	img_ = res.Load(ResourceManager::SRC::PLAYERS).handleIds_;
 
-	armImg_ = res.Load(ResourceManager::SRC::PLAYERARM).handleId_;
+	armImg_ = res.Load(ResourceManager::SRC::PLAYERARM).handleIds_;
 
 
 	
@@ -41,7 +41,7 @@ void Player::Init(Camera*camera,Stage*stage)
 	pos_.y = 100.0f;
 	
 	//アニメーション初期化
-	armAngle_= 0.0f;
+	armAngle_= AsoUtility::Deg2RadF(0.0f);
 	animationTime_ = 0.0f;
 	animationCount_ = 0;
 
@@ -52,6 +52,8 @@ void Player::Init(Camera*camera,Stage*stage)
 	elementType_ = ELEMENT_TYPE::NORMAL;
 	cr = 0xffffff;
 
+	//攻撃
+	isAttack_ = false;
 	
 }
 void Player::Update()
@@ -68,14 +70,6 @@ void Player::Update()
 
 	//アニメーションの更新
 
-	if (CheckHitKey(KEY_INPUT_K))
-	{
-		armAngle_ += 0.1f;
-	}
-	else
-		{
-		armAngle_ = 0.0f;
-	}
 	
 	
 	
@@ -89,9 +83,9 @@ void Player::Draw()
 	//腕の描画
 	//色変更
 	//GraphFilter(armImg_, DX_GRAPH_FILTER_HSB, cr, cr,cr,cr);
-	SetDrawBlendMode(DX_BLENDMODE_ADD, cr);
- 	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, armAngle_, armImg_, TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	
+ 	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, armAngle_, armImg_[animaAem_], TRUE);
+	
 
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
 	
@@ -314,23 +308,152 @@ void Player::Attack()
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_1))
 	{
+		animaAem_ = 3;
 		elementType_ = ELEMENT_TYPE::FIRE;
 		
 	}
 	if (ins.IsTrgDown(KEY_INPUT_2))
 	{
+		animaAem_ = 1;
 		elementType_ = ELEMENT_TYPE::WATER;
 		
 	}
 	if (ins.IsTrgDown(KEY_INPUT_3))
 	{
+		animaAem_ = 2;
 		elementType_ = ELEMENT_TYPE::PLANT;
 		
 	}
 	if (ins.IsTrgDown(KEY_INPUT_4))
 	{
+		animaAem_ = 0;
 		elementType_ = ELEMENT_TYPE::NORMAL;
 		
+	}
+
+	
+
+
+
+	if (elementType_ == ELEMENT_TYPE::FIRE)
+	{
+		if (dir_ == AsoUtility::DIR::RIGHT)
+		{
+			if (ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
+				if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(-120.0f);
+				}
+			}
+			else if(!ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+			}
+
+		}
+		else if (dir_ == AsoUtility::DIR::LEFT)
+		{
+			if (ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ += AsoUtility::Deg2RadF(5.0f);
+				if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(120.0f);
+				}
+			}
+			else if (!ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+			}
+			
+		}
+		
+	}
+
+	if (elementType_ == ELEMENT_TYPE::WATER)
+	{
+		if (dir_ == AsoUtility::DIR::RIGHT)
+		{
+			if (ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
+				if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(-120.0f);
+				}
+			}
+			else if (!ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+			}
+			
+		}
+		else if (dir_ == AsoUtility::DIR::LEFT)
+		{
+			if (ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ += AsoUtility::Deg2RadF(5.0f);
+				if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(120.0f);
+				}
+			}
+			else if (!ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+			}
+						
+		}
+
+
+	}
+	if (elementType_ == ELEMENT_TYPE::PLANT)
+	{
+		if (dir_ == AsoUtility::DIR::RIGHT)
+		{
+			if (ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
+				if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(-120.0f);
+				}
+			}
+			else if (!ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+			}
+			
+		}
+		else if (dir_ == AsoUtility::DIR::LEFT)
+		{
+			if (ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ += AsoUtility::Deg2RadF(5.0f);
+				if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(120.0f);
+				}
+			}
+			else if (!ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+			}
+			
+		}
+	}
+	if (elementType_ == ELEMENT_TYPE::NORMAL)
+	{
+		if (dir_ == AsoUtility::DIR::RIGHT)
+		{
+
+		}
+		else if (dir_ == AsoUtility::DIR::LEFT)
+		{
+
+		}
 	}
 
 

@@ -34,7 +34,7 @@ void ResourceManager::Init(void)
 	res= std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Player/Player1.png",6,2,64,64);
 	resourcesMap_.emplace(SRC::PLAYERS, std::move(res));
 
-	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Player/PlayerArm.png");
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Player/PlayerArm.png",4,1,64,64);
 	resourcesMap_.emplace(SRC::PLAYERARM, std::move(res));
 
 	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Stage/Map2.png", 3, 1, 64, 64);

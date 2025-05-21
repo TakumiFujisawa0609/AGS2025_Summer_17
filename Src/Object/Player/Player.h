@@ -58,7 +58,7 @@ public:
 private:
 	//変数
 	int* img_;
-	int armImg_;
+	int* armImg_;
 
 	int cr;
 
@@ -69,6 +69,7 @@ private:
 	float armAngle_;
 	float animationTime_;
 	int animationCount_;
+	int animaAem_;
 	MOVE_TYPE moveType_;//移動タイプ
 	
 	Vector2F pos_;//位置
@@ -78,6 +79,14 @@ private:
 	float movePosY_;
 
 	bool isJump_;//ジャンプ中かどうか
+
+	//ATTACK//==================================================================================================================
+	//攻撃中かどうか
+	bool isAttack_;//攻撃中かどうか
+
+
+	
+	//==========================================================================================================================
 
 	//足元
 	//（デバッグ表示のためメンバー変数化）
