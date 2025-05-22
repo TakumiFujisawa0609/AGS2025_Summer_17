@@ -3,6 +3,7 @@
 #include "Manager/InputManager.h"
 #include "Manager/ResourceManager.h"
 #include "Manager/SceneManager.h"
+#include "Fps/FpsControll.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -66,6 +67,7 @@ void Application::Run(void)
 	// ÉQÅ[ÉÄÉãÅ[Év
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
+		FpsControll_Update();
 		inputManager.Update();
 		sceneManager.Update();
 
@@ -73,7 +75,7 @@ void Application::Run(void)
 
 
 		ScreenFlip();
-
+		FpsControll_Wait();
 	}
 
 }

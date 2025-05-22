@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include <math.h>
 #include "../../Application.h"
 #include "../Stage/Stage.h"
 #include "../Camera/Camera.h"
@@ -54,10 +55,22 @@ void Player::Init(Camera*camera,Stage*stage)
 
 	//攻撃
 	isAttack_ = false;
+
+	//攻撃ポイント(Init)
+	attckAnglePoint_.x = pos_.x + sinf(armAngle_) * 100;
+	attckAnglePoint_.y = pos_.y + sinf(armAngle_) * 100;
+
+	attckPoint_.x = pos_.x + cosf(armAngle_) * 100;
+	attckPoint_.y = pos_.y + cosf(armAngle_) * 100;
+
 	
 }
 void Player::Update()
 {
+	
+
+
+
 	MoveChange();
 
 	Move();
@@ -68,11 +81,6 @@ void Player::Update()
 
 	ElementChange();
 
-	//アニメーションの更新
-
-	
-	
-	
 }
 void Player::Draw()
 {
@@ -92,6 +100,10 @@ void Player::Draw()
 #ifdef _DEBUG
 	//当たり判定の可視化
 	DrawHitCollision();
+
+	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y, 5, 0x0000ff);
+	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y, 5, 0x0000ff);
+
 #endif // DEBUG
 
 }
@@ -337,36 +349,15 @@ void Player::Attack()
 
 	if (elementType_ == ELEMENT_TYPE::FIRE)
 	{
+		AttackChange();
+
 		if (dir_ == AsoUtility::DIR::RIGHT)
 		{
-			if (ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
-				if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
-				{
-					armAngle_ = AsoUtility::Deg2RadF(-120.0f);
-				}
-			}
-			else if(!ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ = AsoUtility::Deg2RadF(0.0f);
-			}
+			
 
 		}
 		else if (dir_ == AsoUtility::DIR::LEFT)
 		{
-			if (ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ += AsoUtility::Deg2RadF(5.0f);
-				if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
-				{
-					armAngle_ = AsoUtility::Deg2RadF(120.0f);
-				}
-			}
-			else if (!ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ = AsoUtility::Deg2RadF(0.0f);
-			}
 			
 		}
 		
@@ -374,90 +365,125 @@ void Player::Attack()
 
 	if (elementType_ == ELEMENT_TYPE::WATER)
 	{
+		AttackChange();
 		if (dir_ == AsoUtility::DIR::RIGHT)
 		{
-			if (ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
-				if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
-				{
-					armAngle_ = AsoUtility::Deg2RadF(-120.0f);
-				}
-			}
-			else if (!ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ = AsoUtility::Deg2RadF(0.0f);
-			}
 			
 		}
 		else if (dir_ == AsoUtility::DIR::LEFT)
 		{
-			if (ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ += AsoUtility::Deg2RadF(5.0f);
-				if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
-				{
-					armAngle_ = AsoUtility::Deg2RadF(120.0f);
-				}
-			}
-			else if (!ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ = AsoUtility::Deg2RadF(0.0f);
-			}
-						
+					
 		}
 
 
 	}
 	if (elementType_ == ELEMENT_TYPE::PLANT)
 	{
+		AttackChange();
 		if (dir_ == AsoUtility::DIR::RIGHT)
 		{
-			if (ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
-				if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
-				{
-					armAngle_ = AsoUtility::Deg2RadF(-120.0f);
-				}
-			}
-			else if (!ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ = AsoUtility::Deg2RadF(0.0f);
-			}
-			
+
 		}
 		else if (dir_ == AsoUtility::DIR::LEFT)
 		{
-			if (ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ += AsoUtility::Deg2RadF(5.0f);
-				if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
-				{
-					armAngle_ = AsoUtility::Deg2RadF(120.0f);
-				}
-			}
-			else if (!ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ = AsoUtility::Deg2RadF(0.0f);
-			}
-			
+
 		}
 	}
 	if (elementType_ == ELEMENT_TYPE::NORMAL)
 	{
 		if (dir_ == AsoUtility::DIR::RIGHT)
 		{
+			if (ins.IsNew(KEY_INPUT_K))
+			{
+				
+				if (armAngle_ <= AsoUtility::Deg2RadF(0.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(180.0f);
+				}
 
+				armAngle_ += AsoUtility::Deg2RadF(5.0f);
+
+				if (armAngle_ >= AsoUtility::Deg2RadF(360.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(180.0f);
+				}
+				//
+				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
+				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
+
+				attckPoint_.x = pos_.x - cosf(armAngle_);
+				attckPoint_.y = pos_.y + sinf(armAngle_);
+			}
+			else if(!ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+			}
 		}
 		else if (dir_ == AsoUtility::DIR::LEFT)
 		{
+			if (ins.IsNew(KEY_INPUT_K))
+			{
 
+				if (armAngle_ >= AsoUtility::Deg2RadF(0.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
+				}
+
+				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
+
+				if (armAngle_ <= AsoUtility::Deg2RadF(-360.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
+				}
+				//
+				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
+				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
+				attckPoint_.x = pos_.x - cosf(armAngle_);
+				attckPoint_.y = pos_.y + sinf(armAngle_);
+			}
+			else if (!ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+			}
 		}
 	}
 
+}
+void Player::AttackChange(void)
+{
+	InputManager& ins = InputManager::GetInstance();
+	if (dir_ == AsoUtility::DIR::RIGHT)
+	{
+		if (ins.IsNew(KEY_INPUT_K))
+		{
+			armAngle_ -= AsoUtility::Deg2RadF(5.0f);
+			if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(-120.0f);
+			}
+		}
+		else if (!ins.IsNew(KEY_INPUT_K))
+		{
+			armAngle_ = AsoUtility::Deg2RadF(0.0f);
+		}
 
-	
+	}
+	else if (dir_ == AsoUtility::DIR::LEFT)
+	{
+		if (ins.IsNew(KEY_INPUT_K))
+		{
+			armAngle_ += AsoUtility::Deg2RadF(5.0f);
+			if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(120.0f);
+			}
+		}
+		else if (!ins.IsNew(KEY_INPUT_K))
+		{
+			armAngle_ = AsoUtility::Deg2RadF(0.0f);
+		}
+
+	}
 }
 
 
@@ -684,24 +710,24 @@ void Player::DrawHitCollision(void)
 	//足元の当たり判定の可視化
 	constexpr unsigned int FOOT_HIT_POS_COLOR = 0xff0000;
 	constexpr int CHIRCLE_SIZE = 2;
-	DrawCircle(footPosC_.x, footPosC_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
-	DrawCircle(footPosL_.x, footPosL_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
-	DrawCircle(footPosR_.x, footPosR_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
+	DrawCircle(footPosC_.x+camera_->GetCameraPos().x, footPosC_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
+	DrawCircle(footPosL_.x + camera_->GetCameraPos().x, footPosL_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
+	DrawCircle(footPosR_.x + camera_->GetCameraPos().x, footPosR_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
 	//頭側の当たり判定の可視化
 	constexpr unsigned int HEAD_HIT_POS_COLOR = 0x000000;
-	DrawCircle(headPosC_.x, headPosC_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
-	DrawCircle(headPosL_.x, headPosL_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
-	DrawCircle(headPosR_.x, headPosR_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
+	DrawCircle(headPosC_.x + camera_->GetCameraPos().x, headPosC_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
+	DrawCircle(headPosL_.x + camera_->GetCameraPos().x, headPosL_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
+	DrawCircle(headPosR_.x + camera_->GetCameraPos().x, headPosR_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
 	//右側の当たり判定の可視化
 	constexpr unsigned int RIGHT_HIT_POS_COLOR = 0x0000FF;
-	DrawCircle(rightPosC_.x, rightPosC_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
-	DrawCircle(rightPosD_.x, rightPosD_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
-	DrawCircle(rightPosU_.x, rightPosU_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
+	DrawCircle(rightPosC_.x + camera_->GetCameraPos().x, rightPosC_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
+	DrawCircle(rightPosD_.x + camera_->GetCameraPos().x, rightPosD_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
+	DrawCircle(rightPosU_.x + camera_->GetCameraPos().x, rightPosU_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
 	//左側の当たり判定の可視化
 	constexpr unsigned int LEFT_HIT_POS_COLOR = 0xFF00FF;
-	DrawCircle(leftPosC_.x, leftPosC_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
-	DrawCircle(leftPosD_.x, leftPosD_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
-	DrawCircle(leftPosU_.x, leftPosU_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
+	DrawCircle(leftPosC_.x + camera_->GetCameraPos().x, leftPosC_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
+	DrawCircle(leftPosD_.x + camera_->GetCameraPos().x, leftPosD_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
+	DrawCircle(leftPosU_.x + camera_->GetCameraPos().x, leftPosU_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
 	//当たり判定確認用デバッグ文字
 	constexpr unsigned int STRING_COLOR = 0x000000;
 	if (isHitFoot_) DrawString(45, 0, "下側が当たっている", STRING_COLOR);

@@ -125,6 +125,17 @@ private:
 	Stage* stage_;
 
 	AsoUtility::DIR dir_;
+
+	
+
+
+	//デバック表示==============================================================================
+	Vector2F attckPoint_;
+	Vector2F attckAnglePoint_;
+
+
+
+
 public:
 	
 	//プロトタイプ宣言
@@ -172,5 +183,7 @@ public:
 
 	//属性管理
 	void ElementChange(void);
+
+	void AttackChange(void);
 };
 
