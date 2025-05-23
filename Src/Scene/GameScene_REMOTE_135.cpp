@@ -5,9 +5,7 @@
 #include "../Manager/ResourceManager.h"
 #include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
-#include "../Object/Enemy/EnemyManager.h"
 #include "../Object/Stage/Stage.h"
-#include "../Object/Camera/Camera.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -17,28 +15,18 @@ GameScene::GameScene(void)
 
 GameScene::~GameScene(void)
 {
+	
 }
 
 void GameScene::Init(void)
 {
 	//プレイヤー
 	player_ = new Player();
-	//エネミー
-	enemyManager_ = new EnemyManager();
+	player_->Init();
+
 	// ステージ
 	stage_ = new Stage();
-	// ステージ
-	stage_ = new Stage();
-	// カメラ
-	camera_ = new Camera();
-	
-
-
-	player_->Init(camera_, stage_);
-	stage_->Init(this, player_,camera_);
-	camera_->Init(player_,this);
-	enemyManager_->Init();
-
+	stage_->Init(this);
 }
 
 void GameScene::Update(void)
@@ -50,14 +38,6 @@ void GameScene::Update(void)
 
 	// プレイヤーの更新
 	player_->Update();
-
-	// エネミーの更新
-	enemyManager_->Update();
-
-	// カメラの更新
-	camera_->Update();
-	
-
 	// シーン遷移
 	if (ins.IsTrgDown(KEY_INPUT_R))
 	{
@@ -72,8 +52,6 @@ void GameScene::Draw(void)
 	stage_->Draw();
 	// プレイヤーの描画
 	player_->Draw();
-	// エネミーの描画
-	enemyManager_->Draw();
 
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 	

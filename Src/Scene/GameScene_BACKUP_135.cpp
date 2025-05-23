@@ -5,9 +5,11 @@
 #include "../Manager/ResourceManager.h"
 #include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
-#include "../Object/Enemy/EnemyManager.h"
+<<<<<<< HEAD
+#include "../Object/Enemy/Enemy.h"
+=======
 #include "../Object/Stage/Stage.h"
-#include "../Object/Camera/Camera.h"
+>>>>>>> 0eb14c3af250a85def310bbf5bc90111ef407bd3
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -17,28 +19,24 @@ GameScene::GameScene(void)
 
 GameScene::~GameScene(void)
 {
+	
 }
 
 void GameScene::Init(void)
 {
 	//プレイヤー
 	player_ = new Player();
+	player_->Init();
+<<<<<<< HEAD
 	//エネミー
-	enemyManager_ = new EnemyManager();
+	enemy_ = new Enemy();
+	enemy_->Init();
+=======
+
 	// ステージ
 	stage_ = new Stage();
-	// ステージ
-	stage_ = new Stage();
-	// カメラ
-	camera_ = new Camera();
-	
-
-
-	player_->Init(camera_, stage_);
-	stage_->Init(this, player_,camera_);
-	camera_->Init(player_,this);
-	enemyManager_->Init();
-
+	stage_->Init(this);
+>>>>>>> 0eb14c3af250a85def310bbf5bc90111ef407bd3
 }
 
 void GameScene::Update(void)
@@ -50,14 +48,8 @@ void GameScene::Update(void)
 
 	// プレイヤーの更新
 	player_->Update();
-
 	// エネミーの更新
-	enemyManager_->Update();
-
-	// カメラの更新
-	camera_->Update();
-	
-
+	enemy_->Update();
 	// シーン遷移
 	if (ins.IsTrgDown(KEY_INPUT_R))
 	{
@@ -73,7 +65,7 @@ void GameScene::Draw(void)
 	// プレイヤーの描画
 	player_->Draw();
 	// エネミーの描画
-	enemyManager_->Draw();
+	enemy_->Draw();
 
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 	

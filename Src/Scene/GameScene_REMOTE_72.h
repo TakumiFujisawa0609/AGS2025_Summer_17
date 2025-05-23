@@ -1,13 +1,10 @@
 //#pragma once
 #include "SceneBase.h"
 #include "../Common/Vector2.h"
-#include "../Object/Enemy/EnemyManager.h"
 #include <vector>
 
 class Player;
-class EnemyManager;
 class Stage;
-class Camera;
 
 class GameScene : public SceneBase
 {
@@ -19,15 +16,11 @@ private:
 
 	// プレイヤー
 	Player* player_;
-	// エネミー
-	EnemyManager* enemyManager_;
 	// ステージ
 	Stage* stage_;
-	// カメラ
-	Camera* camera_;
+
 
 public:
-
 	// コンストラクタ
 	GameScene(void);
 
