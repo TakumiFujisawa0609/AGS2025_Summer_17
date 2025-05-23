@@ -9,10 +9,28 @@ class Camera;
 class Player
 {
 public:
+
+	enum class MOVE_TYPE
+	{
+		NONE,
+		STOP,
+		MOVE,
+	};
+
+	enum class ELEMENT_TYPE
+	{
+		NONE,
+		FIRE,
+		WATER,
+		PLANT,
+		NORMAL,
+	};
+
+
 	//定数
 	// 当たり判定サイズ
-	static constexpr int COL_SIZE_X = 32;						// 横
-	static constexpr int COL_SIZE_Y = 32;						// 縦
+	static constexpr int COL_SIZE_X = 58;						// 横
+	static constexpr int COL_SIZE_Y = 58;						// 縦
 	static constexpr int HALF_COL_SIZE_X = COL_SIZE_X / 2;	//横半分
 	static constexpr int HALF_COL_SIZE_Y = COL_SIZE_Y / 2;	//縦半分
 	static constexpr int COL_OFFSET = 1;						//補正値
@@ -40,13 +58,35 @@ public:
 private:
 	//変数
 	int* img_;
+	int* armImg_;
+
+	int cr;
+
+	//属性
+	ELEMENT_TYPE elementType_;//属性タイプ
+
+	//アニメーション
+	float armAngle_;
+	float animationTime_;
+	int animationCount_;
+	int animaAem_;
+	MOVE_TYPE moveType_;//移動タイプ
 	
 	Vector2F pos_;//位置
 
+	//移動量
 	float movePosX_;
 	float movePosY_;
 
 	bool isJump_;//ジャンプ中かどうか
+
+	//ATTACK//==================================================================================================================
+	//攻撃中かどうか
+	bool isAttack_;//攻撃中かどうか
+
+
+	
+	//==========================================================================================================================
 
 	//足元
 	//（デバッグ表示のためメンバー変数化）
@@ -85,6 +125,17 @@ private:
 	Stage* stage_;
 
 	AsoUtility::DIR dir_;
+
+	
+
+
+	//デバック表示==============================================================================
+	Vector2F attckPoint_;
+	Vector2F attckAnglePoint_;
+
+
+
+
 public:
 	
 	//プロトタイプ宣言
@@ -96,6 +147,8 @@ public:
 
 	//関数
 	void Move();
+	void Anime();
+	void Attack();
 	
 
 	//（デバッグ表紙のために計算処理と衝突判定を別にしておく）
@@ -116,10 +169,21 @@ public:
 	void CollisionRightSide(void);
 	void CollisionLeftSide(void);
 
+	//衝突判定描画
 	void DrawHitCollision(void);
 
+	
 	Vector2 World2MapPos(Vector2 worldPos);
 
+	//プレイヤーの位置を取得
 	Vector2F GetPlayerPos(void);
+
+	//移動状態管理
+	void MoveChange(void);
+
+	//属性管理
+	void ElementChange(void);
+
+	void AttackChange(void);
 };
 

@@ -34,10 +34,11 @@ void InputManager::Init(void)
 	InputManager::GetInstance().Add(KEY_INPUT_S);
 	InputManager::GetInstance().Add(KEY_INPUT_D);
 	InputManager::GetInstance().Add(KEY_INPUT_R);
-	InputManager::GetInstance().Add(KEY_INPUT_I);
-	InputManager::GetInstance().Add(KEY_INPUT_J);
 	InputManager::GetInstance().Add(KEY_INPUT_K);
-	InputManager::GetInstance().Add(KEY_INPUT_L);
+	InputManager::GetInstance().Add(KEY_INPUT_1);
+	InputManager::GetInstance().Add(KEY_INPUT_2);
+	InputManager::GetInstance().Add(KEY_INPUT_3);
+	InputManager::GetInstance().Add(KEY_INPUT_4);
 	
 
 

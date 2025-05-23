@@ -40,8 +40,18 @@ public:
 	int GetChipNo(Vector2 mapPos);
 
 	bool IsCollisionStage(Vector2 worldPos);
+	
+
+	
+
+	
+
+
+
 
 private:
+	
+
 
 	// ƒ}ƒbƒv‰æ‘œ
 	int* mapChip_;

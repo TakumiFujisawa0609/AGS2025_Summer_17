@@ -13,6 +13,7 @@ public:
 	enum class SRC
 	{
 		PLAYERS,
+		PLAYERARM,
 		MAPCHIP,
 		//‰æ‘œ‚Ì—ñ‹“
 		//BLOCK,

@@ -3,6 +3,7 @@
 #include "Manager/InputManager.h"
 #include "Manager/ResourceManager.h"
 #include "Manager/SceneManager.h"
+#include "Fps/FpsControll.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -33,7 +34,7 @@ void Application::Init(void)
 
 	// ウィンドウサイズ
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);
-	ChangeWindowMode(true);
+	ChangeWindowMode(false);
 
 	// DxLibの初期化
 	SetUseDirect3DVersion(DX_DIRECT3D_11);
@@ -66,6 +67,7 @@ void Application::Run(void)
 	// ゲームループ
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
+		FpsControll_Update();
 		inputManager.Update();
 		sceneManager.Update();
 
@@ -73,7 +75,7 @@ void Application::Run(void)
 
 
 		ScreenFlip();
-
+		FpsControll_Wait();
 	}
 
 }
