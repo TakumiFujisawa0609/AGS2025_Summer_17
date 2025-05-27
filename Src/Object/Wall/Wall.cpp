@@ -103,19 +103,19 @@ void Wall::Draw()
 	//êAï®ÇÃï`âÊ
 	if (isPlantsAlive_)
 	{
-		DrawRotaGraphF(plantsPos_.x, plantsPos_.y,  0.75f, 0.0f, plantsImg_, TRUE);
+		DrawGraph(plantsPos_.x, plantsPos_.y, plantsImg_, TRUE);
 	}
 
 	//ÉtÉåÉAÇÃï`âÊ
 	if (isFlareAlive_)
 	{
-		DrawRotaGraphF(flarePos_.x, flarePos_.y, 0.75f, 0.0f, flareImg_[flareNo_], TRUE);
+		DrawGraph(flarePos_.x, flarePos_.y, flareImg_[flareNo_], TRUE);
 	}
 
 	//êÖÇÃï`âÊ
 	if (isWaterAlive_)
 	{
-		DrawRotaGraphF(waterPos_.x, waterPos_.y,0.75f, 0.0f, waterImg_[waterNo_], TRUE);
+		DrawGraph(waterPos_.x, waterPos_.y, waterImg_[waterNo_], TRUE);
 	}
 	
 }

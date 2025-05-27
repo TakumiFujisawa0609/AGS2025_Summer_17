@@ -18,8 +18,8 @@ void Camera::Init(Player*player,GameScene*gameScene)
 	
 	gameScene_ = gameScene;
 	player_ = player;
-	cameraPos_.x = Application::SCREEN_SIZE_X / 2;
-	cameraPos_.y = Application::SCREEN_SIZE_Y / 2;
+	cameraPos_.x = 0;
+	cameraPos_.y = 0;
 	
 }
 void Camera::Update()
@@ -76,19 +76,12 @@ void Camera::Update()
 	if (cameraRightSidePosX - FOCAS_X < playerPos.x)
 	{
 		cameraPos_.x = (playerPos.x - Application::SCREEN_SIZE_X) + FOCAS_X;
-		if (cameraPos_.x + Application::SCREEN_SIZE_X > ((32*2) * 60))
+		if (cameraRightSidePosX > ((32*2) * 70))
 		{
-			cameraPos_.x= ((32 * 2) * 60)-Application::SCREEN_SIZE_X;
+			cameraPos_.x= ((32 * 2) * 50)-Application::SCREEN_SIZE_X;
 		}
 	}
-	if (cameraRightSidePosX - FOCAS_X < playerPos.x)
-	{
-		cameraPos_.x = (playerPos.x - Application::SCREEN_SIZE_X) + FOCAS_X;
-		if (cameraRightSidePosX > ((32 * 2) * 60))
-		{
-			cameraPos_.x = ((32 * 2) * 60) - Application::SCREEN_SIZE_X;
-		}
-	}
+	
 
 	//カメラの上側処理
 	//カメラの上側座標よりプレイヤーが上に行っていたら
