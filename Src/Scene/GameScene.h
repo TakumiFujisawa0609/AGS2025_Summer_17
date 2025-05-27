@@ -8,6 +8,7 @@ class Player;
 class EnemyManager;
 class Stage;
 class Camera;
+class Wall;
 
 class GameScene : public SceneBase
 {
@@ -25,6 +26,8 @@ private:
 	Stage* stage_;
 	// ƒJƒƒ‰
 	Camera* camera_;
+	// •Ç
+	Wall* wall_;
 
 public:
 

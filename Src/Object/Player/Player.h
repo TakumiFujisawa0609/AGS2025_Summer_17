@@ -6,6 +6,7 @@ class Stage;
 class Camera;
 
 
+
 class Player
 {
 public:

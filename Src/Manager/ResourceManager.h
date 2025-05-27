@@ -15,6 +15,10 @@ public:
 		PLAYERS,
 		PLAYERARM,
 		MAPCHIP,
+		PWALL,
+		FWALL,
+		WWALL,
+
 		//‰æ‘œ‚Ì—ñ‹“
 		//BLOCK,
 	};
