@@ -46,7 +46,7 @@ void ResourceManager::Init(void)
 	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "gimick/Fwall.png",3,1,96,96*3);
 	resourcesMap_.emplace(SRC::FWALL, std::move(res));
 
-	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "gimick/Wwall.png", 5, 1, 96, 96 *5);
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "gimick/Wwall.png", 5, 1, 96, 96*3);
 	resourcesMap_.emplace(SRC::WWALL, std::move(res));
 
 	//âÊëúÇÃì«Ç›çûÇ›

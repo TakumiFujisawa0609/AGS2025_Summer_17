@@ -7,6 +7,7 @@ class Player;
 class Enemy;
 class Stage;
 class Camera;
+class Wall;
 
 class GameScene : public SceneBase
 {
@@ -24,6 +25,8 @@ private:
 	Stage* stage_;
 	// カメラ
 	Camera* camera_;
+	// 壁
+	Wall* wall_;
 
 public:
 	// コンストラクタ

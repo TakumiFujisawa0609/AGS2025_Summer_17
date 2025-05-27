@@ -8,6 +8,7 @@
 #include "../Object/Enemy/Enemy.h"
 #include "../Object/Stage/Stage.h"
 #include "../Object/Camera/Camera.h"
+#include "../Object/Wall/Wall.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -32,6 +33,8 @@ void GameScene::Init(void)
 	stage_ = new Stage();
 	// カメラ
 	camera_ = new Camera();
+	// 壁
+	wall_ = new Wall();
 	
 
 
@@ -39,6 +42,7 @@ void GameScene::Init(void)
 	stage_->Init(this, player_,camera_);
 	camera_->Init(player_,this);
 	enemy_->Init();
+	wall_->Init();
 
 }
 
@@ -57,6 +61,9 @@ void GameScene::Update(void)
 
 	// カメラの更新
 	camera_->Update();
+
+	// 壁の更新
+	wall_->Update();
 	
 
 	// シーン遷移
@@ -69,12 +76,17 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {
+	
+	
 	// ステージの描画
 	stage_->Draw();
 	// プレイヤーの描画
 	player_->Draw();
 	// エネミーの描画
 	enemy_->Draw();
+
+	//壁の描画
+	wall_->Draw();
 
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 	
