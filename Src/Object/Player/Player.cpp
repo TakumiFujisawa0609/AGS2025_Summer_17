@@ -710,24 +710,24 @@ void Player::DrawHitCollision(void)
 	//足元の当たり判定の可視化
 	constexpr unsigned int FOOT_HIT_POS_COLOR = 0xff0000;
 	constexpr int CHIRCLE_SIZE = 2;
-	DrawCircle(footPosC_.x+camera_->GetCameraPos().x, footPosC_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
-	DrawCircle(footPosL_.x + camera_->GetCameraPos().x, footPosL_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
-	DrawCircle(footPosR_.x + camera_->GetCameraPos().x, footPosR_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
+	DrawCircle(footPosC_.x-camera_->GetCameraPos().x, footPosC_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
+	DrawCircle(footPosL_.x - camera_->GetCameraPos().x, footPosL_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
+	DrawCircle(footPosR_.x - camera_->GetCameraPos().x, footPosR_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
 	//頭側の当たり判定の可視化
 	constexpr unsigned int HEAD_HIT_POS_COLOR = 0x000000;
-	DrawCircle(headPosC_.x + camera_->GetCameraPos().x, headPosC_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
-	DrawCircle(headPosL_.x + camera_->GetCameraPos().x, headPosL_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
-	DrawCircle(headPosR_.x + camera_->GetCameraPos().x, headPosR_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
+	DrawCircle(headPosC_.x - camera_->GetCameraPos().x, headPosC_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
+	DrawCircle(headPosL_.x - camera_->GetCameraPos().x, headPosL_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
+	DrawCircle(headPosR_.x - camera_->GetCameraPos().x, headPosR_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
 	//右側の当たり判定の可視化
 	constexpr unsigned int RIGHT_HIT_POS_COLOR = 0x0000FF;
-	DrawCircle(rightPosC_.x + camera_->GetCameraPos().x, rightPosC_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
-	DrawCircle(rightPosD_.x + camera_->GetCameraPos().x, rightPosD_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
-	DrawCircle(rightPosU_.x + camera_->GetCameraPos().x, rightPosU_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
+	DrawCircle(rightPosC_.x - camera_->GetCameraPos().x, rightPosC_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
+	DrawCircle(rightPosD_.x - camera_->GetCameraPos().x, rightPosD_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
+	DrawCircle(rightPosU_.x - camera_->GetCameraPos().x, rightPosU_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
 	//左側の当たり判定の可視化
 	constexpr unsigned int LEFT_HIT_POS_COLOR = 0xFF00FF;
-	DrawCircle(leftPosC_.x + camera_->GetCameraPos().x, leftPosC_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
-	DrawCircle(leftPosD_.x + camera_->GetCameraPos().x, leftPosD_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
-	DrawCircle(leftPosU_.x + camera_->GetCameraPos().x, leftPosU_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
+	DrawCircle(leftPosC_.x - camera_->GetCameraPos().x, leftPosC_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
+	DrawCircle(leftPosD_.x - camera_->GetCameraPos().x, leftPosD_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
+	DrawCircle(leftPosU_.x - camera_->GetCameraPos().x, leftPosU_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
 	//当たり判定確認用デバッグ文字
 	constexpr unsigned int STRING_COLOR = 0x000000;
 	if (isHitFoot_) DrawString(45, 0, "下側が当たっている", STRING_COLOR);

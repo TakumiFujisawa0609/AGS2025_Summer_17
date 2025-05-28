@@ -43,7 +43,7 @@ void GameScene::Init(void)
 
 	enemyManager_->Init();
 	//enemy_->Init();
-	wall_->Init();
+	wall_->Init(camera_);
 
 
 }
@@ -78,17 +78,19 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {
-	
-	
-	// ステージの描画
-	stage_->Draw();
 	// プレイヤーの描画
 	player_->Draw();
-	// エネミーの描画
-	enemyManager_->Draw();
 
 	//壁の描画
 	wall_->Draw();
+	
+	// ステージの描画
+	stage_->Draw();
+	
+	// エネミーの描画
+	enemyManager_->Draw();
+
+	
 
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 	

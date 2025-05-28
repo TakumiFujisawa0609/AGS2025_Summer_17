@@ -18,6 +18,8 @@ public:
 		PWALL,
 		FWALL,
 		WWALL,
+		WSPHERE,
+
 
 		//‰æ‘œ‚Ì—ñ‹“
 		//BLOCK,

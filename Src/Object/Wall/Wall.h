@@ -1,4 +1,7 @@
 #pragma once
+
+class Camera;
+
 class Wall
 {
 public:
@@ -31,31 +34,36 @@ private:
 	int plantsImg_;
 	int* flareImg_;
 	int*waterImg_;
+	int* wSphereImg_;
 
 	//画像の数
 	int flareNo_;
 	int waterNo_;
+	int sphereNo_;
 
 	//座標
 	Vector2F plantsPos_;
 	Vector2F flarePos_;
 	Vector2F waterPos_;
+	Vector2F spherePos_;
 
 	//生存フラグ
 	bool isPlantsAlive_;
 	bool isFlareAlive_;
 	bool isWaterAlive_;
+	bool isSphereAlive_;
 
 	//アニメーションカウント
 	int flareAnimCount_;
 	int waterAnimCount_;
 
+	Camera* camera_;
 
 
 public:
 	Wall();
 	~Wall();
-	void Init();
+	void Init(Camera*camera);
 	void Update();
 	void Draw();
 
