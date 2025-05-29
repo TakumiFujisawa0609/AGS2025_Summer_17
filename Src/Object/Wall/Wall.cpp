@@ -3,8 +3,7 @@
 
 #include <DxLib.h>
 #include "../../Application.h"
-#include "../../Common/Vector2.h"
-#include "../../Common/Vector2F.h"
+
 #include "../Camera/Camera.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Manager/ResourceManager.h"
@@ -118,8 +117,7 @@ void Wall::Draw()
 
 		
 	}
-	DrawBox(plantsPos_.x + cameraPos, plantsPos_.y, plantsPos_.x + PLANTS_HALF_SIZE_X + cameraPos, plantsPos_.y + PLANTS_HALF_SIZE_X, 0x000000, true);
-	//ƒtƒŒƒA‚Ì•`‰æ
+	
 	if (isFlareAlive_)
 	{
 		DrawGraph(flarePos_.x+ cameraPos, flarePos_.y, flareImg_[flareNo_], TRUE);
@@ -130,8 +128,9 @@ void Wall::Draw()
 	{
 		DrawGraph(waterPos_.x+ cameraPos, waterPos_.y, waterImg_[waterNo_], TRUE);
 	}
-	DrawBox(0, 0, waterPos_.x + WATER_HALF_SIZE_X + cameraPos, waterPos_.y + WATER_HALF_SIZE_X, 0x000000, true);
-	if (isSphereAlive_)
+	//DrawBox(waterPos_.x + cameraPos, waterPos_.y, waterPos_.x + WATER_SIZE_X + cameraPos, waterPos_.y + WATER_SIZE_Y,0x000000,true);
+	//…»
+	if (isSphereAlive_) 
 	{
 		DrawGraph(spherePos_.x + cameraPos, spherePos_.y, wSphereImg_[0], TRUE);
 	}
@@ -143,43 +142,76 @@ void Wall::Draw()
 }
 
 //Get,Set
-Vector2F Wall::GetPlantsPos() const
+Vector2F Wall::GetPlantsPos() 
 {
 	return plantsPos_;
 }
-Vector2F Wall::GetFlarePos() const
+Vector2F Wall::GetFlarePos() 
 {
 	return flarePos_;
 }
-Vector2F Wall::GetWaterPos() const
+Vector2F Wall::GetWaterPos() 
 {
 	return waterPos_;
 }
-bool Wall::IsPlantsAlive() const
+bool Wall::IsPlantsAlive() 
 {
 	return isPlantsAlive_;
 }
-bool Wall::IsFlareAlive() const
+bool Wall::IsFlareAlive() 
 {
 	return isFlareAlive_;
 }
-bool Wall::IsWaterAlive() const
+bool Wall::IsWaterAlive() 
 {
 	return isWaterAlive_;
 }
-void Wall::SetPlantsPos(const Vector2F& pos)
+void Wall::SetPlantsPos( Vector2F pos)
 {
 	plantsPos_ = pos;
 }
-void Wall::SetFlarePos(const Vector2F& pos)
+void Wall::SetFlarePos( Vector2F pos)
 {
 	flarePos_ = pos;
 }
-void Wall::SetWaterPos(const Vector2F& pos)
+void Wall::SetWaterPos( Vector2F pos)
 {
 	waterPos_ = pos;
 }
-bool IsCollision(Vector2 pos)
+bool Wall::IsWaterCollision(Vector2 pos)
 {
-	return true;
+	Vector2 pPos = pos;
+
+	if (pPos.x>waterPos_.x&&pPos.y>waterPos_.y+ WATER_SIZE_X &&pPos.x<waterPos_.x + WATER_SIZE_X&&pPos.y<waterPos_.y + WATER_SIZE_Y+ WATER_SIZE_X)
+	{
+		return true;
+	}
+
+	return false;
+}
+bool Wall::IsFlaereCollision(Vector2 pos)
+{
+	Vector2 pPos = pos;
+
+	if (pPos.x > flarePos_.x && pPos.y > flarePos_.y + FLARE_SIZE_X && pPos.x < flarePos_.x + FLARE_SIZE_X && pPos.y < flarePos_.y + FLARE_SIZE_Y + FLARE_SIZE_X)
+	{
+		return true;
+	}
+
+
+
+	return false;
+}
+bool Wall::IsPlantsCollision(Vector2 pos)
+{
+	Vector2 pPos = pos;
+
+	if (pPos.x > plantsPos_.x && pPos.y > plantsPos_.y + PLANTS_SIZE_X && pPos.x < plantsPos_.x + PLANTS_SIZE_X && pPos.y < plantsPos_.y + PLANTS_SIZE_Y + PLANTS_SIZE_X)
+	{
+		return true;
+	}
+
+
+
+	return false;
 }

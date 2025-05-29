@@ -37,7 +37,7 @@ void GameScene::Init(void)
 	
 
 
-	player_->Init(camera_, stage_);
+	player_->Init(camera_, stage_,wall_);
 	stage_->Init(this, player_,camera_);
 	camera_->Init(player_,this);
 

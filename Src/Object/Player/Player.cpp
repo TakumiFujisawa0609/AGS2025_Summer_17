@@ -5,6 +5,7 @@
 #include "../Camera/Camera.h"
 #include "../../Manager/ResourceManager.h"
 #include "../../Manager/InputManager.h"
+#include "../Wall/Wall.h"
 #include "Player.h"
 
 
@@ -20,7 +21,7 @@ Player::~Player()
 {
 
 }
-void Player::Init(Camera*camera,Stage*stage)
+void Player::Init(Camera*camera,Stage*stage,Wall*wall)
 {
 
 	//カメラの取得
@@ -28,6 +29,10 @@ void Player::Init(Camera*camera,Stage*stage)
 
 	//ステージの取得
 	stage_ = stage;
+
+	//壁の取得
+	wall_ = wall;
+
 
 	// 画像の読み込み
 	ResourceManager& res = ResourceManager::GetInstance();
@@ -272,6 +277,9 @@ void Player::Move()
 	
 	//右に移動していたら右と衝突判定
 	if (prePos.x < pos_.x)CollisionRightSide();
+	if (prePos.x < pos_.x)CollisionWaterRightSide();
+	
+
 	if(!ins.IsNew(KEY_INPUT_D) && !ins.IsNew(KEY_INPUT_A))
 	{
 		moveType_ = MOVE_TYPE::STOP;
@@ -576,6 +584,7 @@ bool Player::IsHitFootPos(void)
 	return stage_->IsCollisionStage(footPosC_)
 		|| stage_->IsCollisionStage(footPosL_)
 		|| stage_->IsCollisionStage(footPosR_);
+		
 }
 bool Player::IsHitHeadPos(void)
 {
@@ -678,7 +687,7 @@ void Player::CollisionRightSide(void)
 		//プレイヤーの右側がマップチップの左側になるように設定する
 		pos_.x = static_cast<float>(mapChipLeftPosX) - HALF_COL_SIZE_X - COL_OFFSET;
 		//右に移動量があるときは移動量をなくす
-		//if (movePosX_ > 0.0f)movePosX_ = 0.0f;
+		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
 	}
 }
 void Player::CollisionLeftSide(void)
@@ -790,4 +799,149 @@ void Player::ElementChange()
 		cr = 0xffffff;
 		break;
 	}
+}
+
+
+bool Player::IsWaterHitFootPos(void)
+{
+	return wall_->IsWaterCollision(footPosC_)
+		|| wall_->IsWaterCollision(footPosL_)
+		|| wall_->IsWaterCollision(footPosR_);
+
+}
+bool Player::IsWaterHitHeadPos(void)
+{
+	return wall_->IsWaterCollision(footPosC_)
+		|| wall_->IsWaterCollision(footPosL_)
+		|| wall_->IsWaterCollision(footPosR_);
+
+}
+bool Player::IsWaterHitRightPos(void)
+{
+	return wall_->IsWaterCollision(footPosC_)
+		|| wall_->IsWaterCollision(footPosL_)
+		|| wall_->IsWaterCollision(footPosR_);
+
+}
+bool Player::IsWaterHitLeftPos(void)
+{
+	return wall_->IsWaterCollision(footPosC_)
+		|| wall_->IsWaterCollision(footPosL_)
+		|| wall_->IsWaterCollision(footPosR_);
+
+}
+
+bool Player::IsFlareHitFootPos(void)
+{
+	return wall_->IsFlaereCollision(footPosC_)
+		|| wall_->IsFlaereCollision(footPosL_)
+		|| wall_->IsFlaereCollision(footPosR_);
+}
+bool Player::IsFlareHitHeadPos(void)
+{
+	return wall_->IsFlaereCollision(footPosC_)
+		|| wall_->IsFlaereCollision(footPosL_)
+		|| wall_->IsFlaereCollision(footPosR_);
+}
+bool Player::IsFlareHitRightPos(void)
+{
+	return wall_->IsFlaereCollision(footPosC_)
+		|| wall_->IsFlaereCollision(footPosL_)
+		|| wall_->IsFlaereCollision(footPosR_);
+
+}
+
+bool Player::IsFlareHitLeftPos(void)
+{
+	return wall_->IsFlaereCollision(footPosC_)
+		|| wall_->IsFlaereCollision(footPosL_)
+		|| wall_->IsFlaereCollision(footPosR_);
+}
+
+bool Player::IsPlantsHitFootPos(void)
+{
+	return wall_->IsPlantsCollision(footPosC_)
+		|| wall_->IsPlantsCollision(footPosL_)
+		|| wall_->IsPlantsCollision(footPosR_);
+}
+bool Player::IsPlantsHitHeadPos(void)
+{
+	return wall_->IsPlantsCollision(footPosC_)
+		|| wall_->IsPlantsCollision(footPosL_)
+		|| wall_->IsPlantsCollision(footPosR_);
+}
+bool Player::IsPlantsHitRightPos(void)
+{
+	return wall_->IsPlantsCollision(footPosC_)
+		|| wall_->IsPlantsCollision(footPosL_)
+		|| wall_->IsPlantsCollision(footPosR_);
+}
+bool Player::IsPlantsHitLeftPos(void)
+{
+	return wall_->IsPlantsCollision(footPosC_)
+		|| wall_->IsPlantsCollision(footPosL_)
+		|| wall_->IsPlantsCollision(footPosR_);
+}
+
+
+void Player::CollisionWaterFoot(void)
+{
+
+}
+void Player::CollisionWaterHead(void)
+{
+
+}
+void Player::CollisionWaterRightSide(void)
+{
+	//右側三点の座標
+	CalcRightSidePos();
+
+	//右側三点との当たり判定
+	isHitRightSide_ = IsWaterHitRightPos();
+
+	//右側三点のどれかが当たっていたら
+	if (isHitRightSide_)
+	{
+		pos_.x = wall_->GetWaterPos().x - wall_->FLARE_HALF_SIZE_X;
+		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
+	}
+}
+void Player::CollisionWaterLeftSide(void)
+{
+
+}
+
+void Player::CollisionPlantFoot(void)
+{
+
+}
+void Player::CollisionPlantHead(void)
+{
+
+}
+void Player::CollisionPlantRightSide(void)
+{
+
+}
+void Player::CollisionPlantLeftSide(void)
+{
+
+}
+
+void Player::CollisionPlantsFoot(void)
+{
+
+}
+void Player::CollisionPlantsHead(void)
+{
+
+}
+void Player::CollisionPlantsRightSide(void)
+{
+
+}
+void Player::CollisionPlantsLeftSide(void)
+{
+
 }

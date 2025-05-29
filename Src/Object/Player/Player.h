@@ -4,6 +4,7 @@
 #include "../../Utility/AsoUtility.h"
 class Stage;
 class Camera;
+class Wall;
 
 
 
@@ -124,6 +125,8 @@ private:
 	Camera* camera_;
 	//ステージ
 	Stage* stage_;
+	//壁
+	Wall* wall_;
 
 	AsoUtility::DIR dir_;
 
@@ -142,7 +145,7 @@ public:
 	//プロトタイプ宣言
 	Player();
 	~Player();
-	void Init(Camera*camera,Stage*stage);
+	void Init(Camera*camera,Stage*stage,Wall*wall);
 	void Update();
 	void Draw();
 
@@ -164,11 +167,41 @@ public:
 	bool IsHitRightPos(void);
 	bool IsHitLeftPos(void);
 
+	bool IsWaterHitFootPos(void);
+	bool IsWaterHitHeadPos(void);
+	bool IsWaterHitRightPos(void);
+	bool IsWaterHitLeftPos(void);
+
+	bool IsFlareHitFootPos(void);
+	bool IsFlareHitHeadPos(void);
+	bool IsFlareHitRightPos(void);
+	bool IsFlareHitLeftPos(void);
+
+	bool IsPlantsHitFootPos(void);
+	bool IsPlantsHitHeadPos(void);
+	bool IsPlantsHitRightPos(void);
+	bool IsPlantsHitLeftPos(void);
+
 	//衝突判定
 	void CollisionFoot(void);
 	void CollisionHead(void);
 	void CollisionRightSide(void);
 	void CollisionLeftSide(void);
+
+	void CollisionWaterFoot(void);
+	void CollisionWaterHead(void);
+	void CollisionWaterRightSide(void);
+	void CollisionWaterLeftSide(void);
+
+	void CollisionPlantFoot(void);
+	void CollisionPlantHead(void);
+	void CollisionPlantRightSide(void);
+	void CollisionPlantLeftSide(void);
+
+	void CollisionPlantsFoot(void);
+	void CollisionPlantsHead(void);
+	void CollisionPlantsRightSide(void);
+	void CollisionPlantsLeftSide(void);
 
 	//衝突判定描画
 	void DrawHitCollision(void);
