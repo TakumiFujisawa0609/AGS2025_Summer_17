@@ -82,5 +82,6 @@ public:
 	void SetFlarePos(const Vector2F& pos);
 	void SetWaterPos(const Vector2F& pos);
 
+	bool IsCollision(Vector2 pos);
 };
 

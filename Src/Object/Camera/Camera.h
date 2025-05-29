@@ -8,7 +8,7 @@ class Camera
 public:
 	//定数
 	//カメラフォーカス
-	static const int FOCAS_X = 300;
+	static const int FOCAS_X = 900;
 	static const int FOCAS_Y = 300;
 
 private:

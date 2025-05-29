@@ -114,8 +114,11 @@ void Wall::Draw()
 	if (isPlantsAlive_)
 	{
 		DrawGraph(plantsPos_.x+ cameraPos, plantsPos_.y, plantsImg_, TRUE);
-	}
 
+
+		
+	}
+	DrawBox(plantsPos_.x + cameraPos, plantsPos_.y, plantsPos_.x + PLANTS_HALF_SIZE_X + cameraPos, plantsPos_.y + PLANTS_HALF_SIZE_X, 0x000000, true);
 	//ƒtƒŒƒA‚Ì•`‰æ
 	if (isFlareAlive_)
 	{
@@ -127,7 +130,7 @@ void Wall::Draw()
 	{
 		DrawGraph(waterPos_.x+ cameraPos, waterPos_.y, waterImg_[waterNo_], TRUE);
 	}
-
+	DrawBox(0, 0, waterPos_.x + WATER_HALF_SIZE_X + cameraPos, waterPos_.y + WATER_HALF_SIZE_X, 0x000000, true);
 	if (isSphereAlive_)
 	{
 		DrawGraph(spherePos_.x + cameraPos, spherePos_.y, wSphereImg_[0], TRUE);
@@ -175,4 +178,8 @@ void Wall::SetFlarePos(const Vector2F& pos)
 void Wall::SetWaterPos(const Vector2F& pos)
 {
 	waterPos_ = pos;
+}
+bool IsCollision(Vector2 pos)
+{
+	return true;
 }
