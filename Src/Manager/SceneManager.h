@@ -9,6 +9,7 @@ class SceneBase;
 class Fader;
 class Camera;
 
+
 class SceneManager
 {
 
@@ -21,6 +22,7 @@ public:
 		
 		TITLE,
 		GAME,
+		CLEAR,
 		
 	};
 	

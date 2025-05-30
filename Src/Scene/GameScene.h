@@ -28,6 +28,9 @@ private:
 	// 壁
 	Wall* wall_;
 
+	//背景
+	int backImg_;
+
 public:
 
 	// コンストラクタ

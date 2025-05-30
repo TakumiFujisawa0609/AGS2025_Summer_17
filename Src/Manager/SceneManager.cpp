@@ -4,6 +4,7 @@
 #include "../Common/Fader.h"
 #include "../Scene/TitleScene.h"
 #include "../Scene/GameScene.h"
+#include "../Scene/ClearScene.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
 
@@ -25,10 +26,9 @@ SceneManager& SceneManager::GetInstance(void)
 
 void SceneManager::Init(void)
 {
-
+	
 	sceneId_ = SCENE_ID::TITLE;
 	waitSceneId_ = SCENE_ID::NONE;
-
 
 	fader_ = std::make_unique<Fader>();
 	fader_->Init();
@@ -129,6 +129,7 @@ void SceneManager::Destroy(void)
 {
 	delete instance_;
 
+
 }
 
 void SceneManager::ChangeScene(SCENE_ID nextId)
@@ -206,6 +207,9 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	case SCENE_ID::GAME:
 		scene_ = std::make_unique<GameScene>();
+		break;
+	case SCENE_ID::CLEAR:
+		scene_ = std::make_unique<ClearScene>();
 		break;
 	}
 

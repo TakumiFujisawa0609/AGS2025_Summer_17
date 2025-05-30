@@ -35,15 +35,21 @@ void GameScene::Init(void)
 	// •Ç
 	wall_ = new Wall();
 	
+	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 
-
-	player_->Init(camera_, stage_);
+	player_->Init(camera_, stage_,wall_);
 	stage_->Init(this, player_,camera_);
 	camera_->Init(player_,this);
 	enemyManager_->Init();
+<<<<<<< HEAD
 	wall_->Init();
 
+=======
+	//enemy_->Init();
+	wall_->Init(camera_);
+>>>>>>> ad8914d840d8d8a7d20c3cda38a705113c4daf16
 
+	
 }
 
 void GameScene::Update(void)
@@ -69,27 +75,37 @@ void GameScene::Update(void)
 	// ƒV[ƒ“‘JˆÚ
 	if (ins.IsTrgDown(KEY_INPUT_R))
 	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
 	}
 
 }
 
 void GameScene::Draw(void)
 {
-	
+
+	//”wŒi‚Ì•`‰æ
+	DrawGraph(0, 0, backImg_, true);
 	
 	// ƒXƒe[ƒW‚Ì•`‰æ
 	stage_->Draw();
+
 	// ƒvƒŒƒCƒ„[‚Ì•`‰æ
 	player_->Draw();
-	// ƒGƒlƒ~[‚Ì•`‰æ
-	enemyManager_->Draw();
 
 	//•Ç‚Ì•`‰æ
 	wall_->Draw();
+	
+	// ƒXƒe[ƒW‚Ì•`‰æ
+	stage_->Draw();
+	
+	// ƒGƒlƒ~[‚Ì•`‰æ
+	enemyManager_->Draw();
+
+	
 
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 	
+
 }
 
 

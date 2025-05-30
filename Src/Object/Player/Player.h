@@ -4,6 +4,7 @@
 #include "../../Utility/AsoUtility.h"
 class Stage;
 class Camera;
+class Wall;
 
 
 
@@ -45,7 +46,7 @@ public:
 	static constexpr float MAX_GRAVITY = 8.5f;
 
 	//ジャンプ力
-	static constexpr float JUMP_POW = -8.5f;
+	static constexpr float JUMP_POW = -20.5f;
 
 	//加速度
 	static constexpr float MOVE_ACC_POW = 0.5f;
@@ -124,6 +125,8 @@ private:
 	Camera* camera_;
 	//ステージ
 	Stage* stage_;
+	//壁
+	Wall* wall_;
 
 	AsoUtility::DIR dir_;
 
@@ -142,7 +145,7 @@ public:
 	//プロトタイプ宣言
 	Player();
 	~Player();
-	void Init(Camera*camera,Stage*stage);
+	void Init(Camera*camera,Stage*stage,Wall*wall);
 	void Update();
 	void Draw();
 
@@ -164,11 +167,35 @@ public:
 	bool IsHitRightPos(void);
 	bool IsHitLeftPos(void);
 
+
+	bool IsWaterHitRightPos(void);
+	bool IsWaterHitLeftPos(void);
+
+	
+	bool IsFlareHitRightPos(void);
+	bool IsFlareHitLeftPos(void);
+
+
+	bool IsPlantsHitRightPos(void);
+	bool IsPlantsHitLeftPos(void);
+
 	//衝突判定
 	void CollisionFoot(void);
 	void CollisionHead(void);
 	void CollisionRightSide(void);
 	void CollisionLeftSide(void);
+
+	
+	void CollisionWaterRightSide(void);
+	void CollisionWaterLeftSide(void);
+
+	
+	void CollisionFlareRightSide(void);
+	void CollisionFlareLeftSide(void);
+
+	
+	void CollisionPlantsRightSide(void);
+	void CollisionPlantsLeftSide(void);
 
 	//衝突判定描画
 	void DrawHitCollision(void);

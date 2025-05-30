@@ -73,8 +73,8 @@ void Stage::Draw()
 
 			//マップチップのスクリーン座標
 			//２Dでは「スクリーン座標＝ワールド座標ーカメラ座標」
-			int mapChipScreenPosX = mapChipWorldPosX -cameraPos.x;
-			int mapChipScreenPosY = mapChipWorldPosY ;
+			int mapChipScreenPosX = mapChipWorldPosX - cameraPos.x;
+			int mapChipScreenPosY = mapChipWorldPosY;
 
 			
 				//DrawRotaGraphF(mapChipScreenPosX, mapChipScreenPosY, 1.0, 0.0, imgHandle, true);

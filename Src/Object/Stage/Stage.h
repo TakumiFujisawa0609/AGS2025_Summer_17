@@ -21,7 +21,7 @@ public:
 
 	// 地上マップのサイズ(縦枚数×横枚数)
 	static constexpr int MAP_GROUND_SIZE_X = 60;
-	static constexpr int MAP_GROUND_SIZE_Y = 10;
+	static constexpr int MAP_GROUND_SIZE_Y = 12;
 
 	Stage();
 	~Stage();

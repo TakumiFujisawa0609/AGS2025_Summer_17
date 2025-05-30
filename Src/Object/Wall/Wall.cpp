@@ -3,8 +3,8 @@
 
 #include <DxLib.h>
 #include "../../Application.h"
-#include "../../Common/Vector2.h"
-#include "../../Common/Vector2F.h"
+
+#include "../Camera/Camera.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Manager/ResourceManager.h"
 #include "../../Scene/GameScene.h"
@@ -19,33 +19,41 @@ Wall::~Wall()
 {
 
 }
-void Wall::Init()
+void Wall::Init(Camera*camera)
 {
+	camera_ = camera;
 	ResourceManager& res = ResourceManager::GetInstance();
 
 	//画像の取得
 	plantsImg_ = res.Load(ResourceManager::SRC::PWALL).handleId_;
 	flareImg_ = res.Load(ResourceManager::SRC::FWALL).handleIds_;
 	waterImg_ = res.Load(ResourceManager::SRC::WWALL).handleIds_;
+	wSphereImg_ = res.Load(ResourceManager::SRC::WSPHERE).handleIds_;
 
 	//座標の初期化
-	plantsPos_.x = 96.0f;
-	plantsPos_.y = 96.0f+48.0f;
-	flarePos_.x = 96.0f*2;
-	flarePos_.y = 96.0f + 48.0f;
-	waterPos_.x = 0.0f;
-	waterPos_.y = 96.0f + 48.0f;
+	plantsPos_.x = 64*34;
+	plantsPos_.y = 64*8;
+	flarePos_.x = 64*45;
+	flarePos_.y = 64*8;
+	waterPos_.x = 64*26;
+	waterPos_.y = 64*8;
+	spherePos_.x = 64 * 26;
+	spherePos_.y = 64 * 7;
+
+
 
 	//生存フラグの初期化
 	isPlantsAlive_ = true;
 	isFlareAlive_ = true;
 	isWaterAlive_ = true;
+	isSphereAlive_ = true;
 
 	//アニメーションカウントの初期化
 	flareAnimCount_ = 0;
 	waterAnimCount_ = 0;
 	flareNo_ = 0;
 	waterNo_ = 0;
+	sphereNo_ = 0;
 	
 	
 	
@@ -100,60 +108,110 @@ void Wall::AnimUpdate()
 
 void Wall::Draw()
 {
+	float cameraPos = -camera_->GetCameraPos().x;
 	//植物の描画
 	if (isPlantsAlive_)
 	{
-		DrawRotaGraphF(plantsPos_.x, plantsPos_.y,  0.75f, 0.0f, plantsImg_, TRUE);
-	}
+		DrawGraph(plantsPos_.x+ cameraPos, plantsPos_.y, plantsImg_, TRUE);
 
-	//フレアの描画
+
+		
+	}
+	
 	if (isFlareAlive_)
 	{
-		DrawRotaGraphF(flarePos_.x, flarePos_.y, 0.75f, 0.0f, flareImg_[flareNo_], TRUE);
+		DrawGraph(flarePos_.x+ cameraPos, flarePos_.y, flareImg_[flareNo_], TRUE);
 	}
 
 	//水の描画
 	if (isWaterAlive_)
 	{
-		DrawRotaGraphF(waterPos_.x, waterPos_.y,0.75f, 0.0f, waterImg_[waterNo_], TRUE);
+		DrawGraph(waterPos_.x+ cameraPos, waterPos_.y, waterImg_[waterNo_], TRUE);
+	}
+	//DrawBox(waterPos_.x + cameraPos, waterPos_.y, waterPos_.x + WATER_SIZE_X + cameraPos, waterPos_.y + WATER_SIZE_Y,0x000000,true);
+	//水晶
+	if (isSphereAlive_) 
+	{
+		DrawGraph(spherePos_.x + cameraPos, spherePos_.y, wSphereImg_[0], TRUE);
+	}
+	else
+	{
+		DrawGraph(spherePos_.x + cameraPos, spherePos_.y, wSphereImg_[1], TRUE);
 	}
 	
 }
 
 //Get,Set
-Vector2F Wall::GetPlantsPos() const
+Vector2F Wall::GetPlantsPos() 
 {
 	return plantsPos_;
 }
-Vector2F Wall::GetFlarePos() const
+Vector2F Wall::GetFlarePos() 
 {
 	return flarePos_;
 }
-Vector2F Wall::GetWaterPos() const
+Vector2F Wall::GetWaterPos() 
 {
 	return waterPos_;
 }
-bool Wall::IsPlantsAlive() const
+bool Wall::IsPlantsAlive() 
 {
 	return isPlantsAlive_;
 }
-bool Wall::IsFlareAlive() const
+bool Wall::IsFlareAlive() 
 {
 	return isFlareAlive_;
 }
-bool Wall::IsWaterAlive() const
+bool Wall::IsWaterAlive() 
 {
 	return isWaterAlive_;
 }
-void Wall::SetPlantsPos(const Vector2F& pos)
+void Wall::SetPlantsPos( Vector2F pos)
 {
 	plantsPos_ = pos;
 }
-void Wall::SetFlarePos(const Vector2F& pos)
+void Wall::SetFlarePos( Vector2F pos)
 {
 	flarePos_ = pos;
 }
-void Wall::SetWaterPos(const Vector2F& pos)
+void Wall::SetWaterPos( Vector2F pos)
 {
 	waterPos_ = pos;
+}
+bool Wall::IsWaterCollision(Vector2 pos)
+{
+	Vector2 pPos = pos;
+
+	if (pPos.x>waterPos_.x&&pPos.y>waterPos_.y+ WATER_SIZE_X &&pPos.x<waterPos_.x + WATER_SIZE_X&&pPos.y<waterPos_.y + WATER_SIZE_Y+ WATER_SIZE_X)
+	{
+		return true;
+	}
+
+	return false;
+}
+bool Wall::IsFlaereCollision(Vector2 pos)
+{
+	Vector2 pPos = pos;
+
+	if (pPos.x > flarePos_.x && pPos.y > flarePos_.y + FLARE_SIZE_X && pPos.x < flarePos_.x + FLARE_SIZE_X && pPos.y < flarePos_.y + FLARE_SIZE_Y + FLARE_SIZE_X)
+	{
+		return true;
+	}
+
+
+
+	return false;
+}
+bool Wall::IsPlantsCollision(Vector2 pos)
+{
+	Vector2 pPos = pos;
+
+	if (pPos.x > plantsPos_.x && pPos.y > plantsPos_.y + PLANTS_SIZE_X && pPos.x < plantsPos_.x + PLANTS_SIZE_X && pPos.y < plantsPos_.y + PLANTS_SIZE_Y + PLANTS_SIZE_X)
+	{
+		return true;
+	}
+
+
+
+	return false;
 }

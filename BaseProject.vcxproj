@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\ClearScene.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyFire.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyBase.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyManager.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Src\Object\Wall\Wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\ClearScene.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyFire.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp" />

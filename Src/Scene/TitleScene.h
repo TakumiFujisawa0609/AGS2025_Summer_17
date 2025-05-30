@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SceneBase.h"
+#include"../Manager/ResourceManager.h"
 
 
 class TitleScene : public SceneBase
@@ -17,9 +18,14 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 	void Draw(void) override;
+	
 
 private:
 
+	int img_;  // ‰æ‘œƒnƒ“ƒhƒ‹
 	
+
+
+
 
 };
