@@ -40,9 +40,7 @@ void GameScene::Init(void)
 	player_->Init(camera_, stage_);
 	stage_->Init(this, player_,camera_);
 	camera_->Init(player_,this);
-
 	enemyManager_->Init();
-	//enemy_->Init();
 	wall_->Init();
 
 

@@ -1,7 +1,6 @@
 //#pragma once
 #include "SceneBase.h"
 #include "../Common/Vector2.h"
-#include "../Object/Enemy/EnemyManager.h"
 #include <vector>
 
 class Player;

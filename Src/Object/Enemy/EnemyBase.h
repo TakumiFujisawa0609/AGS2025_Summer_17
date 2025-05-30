@@ -2,6 +2,7 @@
 #include "../../Common/Vector2.h"
 #include "../../Common/Vector2F.h"
 class Camera;
+class EnemyFire;
 
 class EnemyBase {
 public:
@@ -17,10 +18,15 @@ protected:
     // UŒ‚ˆ—
     void Attack();
 
-    Vector2F pos_;
-    int img_;
-    int attackCnt_;
-    bool isAlive_;
-    bool isAttack_;
+    int imgF_;
+    int imgW_;
+    int imgP_;
+
+    bool isFire_;
+    bool isWater_;
+    bool isPlant_;
+  
+    Camera* camera_;
+    EnemyFire* enemyFire_;
 
 };

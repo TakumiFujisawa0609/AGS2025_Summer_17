@@ -1,15 +1,15 @@
 #include "EnemyBase.h"
+#include "EnemyFire.h"
 #include "../Camera/Camera.h"
 #include "../../Application.h"
+#include "../../Utility/AsoUtility.h"
 #include <DxLib.h>
 
-void EnemyBase::Init() {
-    pos_.x = 100.0f;
-    pos_.y = 100.0f;
-    attackCnt_ = 0;
-    isAlive_ = false;
-    isAttack_ = false;
-    img_ = LoadGraph("Data/Image/Stage/Map1.png"); // ‰æ‘œ‰¼
+void EnemyBase::Init()
+{
+	isFire_ = false;
+	isWater_ = false;
+	isPlant_ = false;
 }
 
 void EnemyBase::Update()
