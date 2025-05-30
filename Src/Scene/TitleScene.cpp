@@ -20,7 +20,7 @@ TitleScene::~TitleScene(void)
 void TitleScene::Init(void)
 {
 	//âÊëúì«Ç›çûÇ›
-	img_ = LoadGraph((Application::PATH_IMAGE + "Title/Title.png").c_str());
+	img_ = LoadGraph((Application::PATH_IMAGE + "Scene/Title.png").c_str());
 	
 
 }

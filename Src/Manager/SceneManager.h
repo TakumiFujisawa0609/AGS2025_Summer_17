@@ -8,7 +8,7 @@
 class SceneBase;
 class Fader;
 class Camera;
-class TitleScene;
+
 
 class SceneManager
 {
@@ -22,6 +22,7 @@ public:
 		
 		TITLE,
 		GAME,
+		CLEAR,
 		
 	};
 	
@@ -66,9 +67,6 @@ private:
 
 	// フェード
 	std::unique_ptr<SceneBase> scene_;
-
-	//タイトルシーン
-	std::unique_ptr<TitleScene> titleScene_;
 
 	// 各種シーン
 	std::unique_ptr<Fader> fader_;
