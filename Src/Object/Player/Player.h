@@ -46,7 +46,7 @@ public:
 	static constexpr float MAX_GRAVITY = 8.5f;
 
 	//ƒWƒƒƒ“ƒv—Í
-	static constexpr float JUMP_POW = -8.5f;
+	static constexpr float JUMP_POW = -20.5f;
 
 	//‰Á‘¬“x
 	static constexpr float MOVE_ACC_POW = 0.5f;
@@ -167,18 +167,15 @@ public:
 	bool IsHitRightPos(void);
 	bool IsHitLeftPos(void);
 
-	bool IsWaterHitFootPos(void);
-	bool IsWaterHitHeadPos(void);
+
 	bool IsWaterHitRightPos(void);
 	bool IsWaterHitLeftPos(void);
 
-	bool IsFlareHitFootPos(void);
-	bool IsFlareHitHeadPos(void);
+	
 	bool IsFlareHitRightPos(void);
 	bool IsFlareHitLeftPos(void);
 
-	bool IsPlantsHitFootPos(void);
-	bool IsPlantsHitHeadPos(void);
+
 	bool IsPlantsHitRightPos(void);
 	bool IsPlantsHitLeftPos(void);
 
@@ -188,18 +185,15 @@ public:
 	void CollisionRightSide(void);
 	void CollisionLeftSide(void);
 
-	void CollisionWaterFoot(void);
-	void CollisionWaterHead(void);
+	
 	void CollisionWaterRightSide(void);
 	void CollisionWaterLeftSide(void);
 
-	void CollisionPlantFoot(void);
-	void CollisionPlantHead(void);
-	void CollisionPlantRightSide(void);
-	void CollisionPlantLeftSide(void);
+	
+	void CollisionFlareRightSide(void);
+	void CollisionFlareLeftSide(void);
 
-	void CollisionPlantsFoot(void);
-	void CollisionPlantsHead(void);
+	
 	void CollisionPlantsRightSide(void);
 	void CollisionPlantsLeftSide(void);
 

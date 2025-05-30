@@ -161,7 +161,6 @@ void Player::Move()
 	if (prePos.y > pos_.y)CollisionHead();
 
 
-
 	//下への移動処理
 	//デバッグ表示用に一回計算する
 	//完成品では消してよし
@@ -170,8 +169,7 @@ void Player::Move()
 
 	//下に移動していたら足元と衝突判定
 	if (prePos.y < pos_.y)CollisionFoot();
-
-
+	
 	//左への移動処理
 	if (ins.IsNew(KEY_INPUT_A))
 	{
@@ -222,8 +220,9 @@ void Player::Move()
 
 	//左に移動していたら左と衝突判定
 	if (prePos.x > pos_.x)CollisionLeftSide();
-
-
+	if (prePos.x > pos_.x)CollisionWaterLeftSide();
+	if (prePos.x > pos_.x)CollisionFlareLeftSide();
+	if (prePos.x > pos_.x)CollisionPlantsLeftSide();
 	//右への移動処理
 	if (ins.IsNew(KEY_INPUT_D))
 	{
@@ -278,7 +277,8 @@ void Player::Move()
 	//右に移動していたら右と衝突判定
 	if (prePos.x < pos_.x)CollisionRightSide();
 	if (prePos.x < pos_.x)CollisionWaterRightSide();
-	
+	if (prePos.x < pos_.x)CollisionFlareRightSide();
+	if (prePos.x < pos_.x)CollisionPlantsRightSide();
 
 	if(!ins.IsNew(KEY_INPUT_D) && !ins.IsNew(KEY_INPUT_A))
 	{
@@ -802,96 +802,53 @@ void Player::ElementChange()
 }
 
 
-bool Player::IsWaterHitFootPos(void)
-{
-	return wall_->IsWaterCollision(footPosC_)
-		|| wall_->IsWaterCollision(footPosL_)
-		|| wall_->IsWaterCollision(footPosR_);
 
-}
-bool Player::IsWaterHitHeadPos(void)
-{
-	return wall_->IsWaterCollision(footPosC_)
-		|| wall_->IsWaterCollision(footPosL_)
-		|| wall_->IsWaterCollision(footPosR_);
-
-}
 bool Player::IsWaterHitRightPos(void)
 {
-	return wall_->IsWaterCollision(footPosC_)
-		|| wall_->IsWaterCollision(footPosL_)
-		|| wall_->IsWaterCollision(footPosR_);
+	return wall_->IsWaterCollision(rightPosC_)
+		|| wall_->IsWaterCollision(rightPosU_)
+		|| wall_->IsWaterCollision(rightPosD_);
 
 }
 bool Player::IsWaterHitLeftPos(void)
 {
-	return wall_->IsWaterCollision(footPosC_)
-		|| wall_->IsWaterCollision(footPosL_)
-		|| wall_->IsWaterCollision(footPosR_);
+	return wall_->IsWaterCollision(leftPosC_)
+		|| wall_->IsWaterCollision(leftPosU_)
+		|| wall_->IsWaterCollision(leftPosD_);
 
 }
 
-bool Player::IsFlareHitFootPos(void)
-{
-	return wall_->IsFlaereCollision(footPosC_)
-		|| wall_->IsFlaereCollision(footPosL_)
-		|| wall_->IsFlaereCollision(footPosR_);
-}
-bool Player::IsFlareHitHeadPos(void)
-{
-	return wall_->IsFlaereCollision(footPosC_)
-		|| wall_->IsFlaereCollision(footPosL_)
-		|| wall_->IsFlaereCollision(footPosR_);
-}
+
 bool Player::IsFlareHitRightPos(void)
 {
-	return wall_->IsFlaereCollision(footPosC_)
-		|| wall_->IsFlaereCollision(footPosL_)
-		|| wall_->IsFlaereCollision(footPosR_);
+	return wall_->IsFlaereCollision(rightPosC_)
+		|| wall_->IsFlaereCollision(rightPosU_)
+		|| wall_->IsFlaereCollision(rightPosD_);
 
 }
-
 bool Player::IsFlareHitLeftPos(void)
 {
-	return wall_->IsFlaereCollision(footPosC_)
-		|| wall_->IsFlaereCollision(footPosL_)
-		|| wall_->IsFlaereCollision(footPosR_);
+	return wall_->IsFlaereCollision(leftPosC_)
+		|| wall_->IsFlaereCollision(leftPosU_)
+		|| wall_->IsFlaereCollision(leftPosD_);
 }
 
-bool Player::IsPlantsHitFootPos(void)
-{
-	return wall_->IsPlantsCollision(footPosC_)
-		|| wall_->IsPlantsCollision(footPosL_)
-		|| wall_->IsPlantsCollision(footPosR_);
-}
-bool Player::IsPlantsHitHeadPos(void)
-{
-	return wall_->IsPlantsCollision(footPosC_)
-		|| wall_->IsPlantsCollision(footPosL_)
-		|| wall_->IsPlantsCollision(footPosR_);
-}
+
 bool Player::IsPlantsHitRightPos(void)
 {
-	return wall_->IsPlantsCollision(footPosC_)
-		|| wall_->IsPlantsCollision(footPosL_)
-		|| wall_->IsPlantsCollision(footPosR_);
+	return wall_->IsPlantsCollision(rightPosC_)
+		|| wall_->IsPlantsCollision(rightPosU_)
+		|| wall_->IsPlantsCollision(rightPosD_);
 }
 bool Player::IsPlantsHitLeftPos(void)
 {
-	return wall_->IsPlantsCollision(footPosC_)
-		|| wall_->IsPlantsCollision(footPosL_)
-		|| wall_->IsPlantsCollision(footPosR_);
+	return wall_->IsPlantsCollision(leftPosC_)
+		|| wall_->IsPlantsCollision(leftPosU_)
+		|| wall_->IsPlantsCollision(leftPosD_);
 }
 
 
-void Player::CollisionWaterFoot(void)
-{
 
-}
-void Player::CollisionWaterHead(void)
-{
-
-}
 void Player::CollisionWaterRightSide(void)
 {
 	//右側三点の座標
@@ -909,39 +866,78 @@ void Player::CollisionWaterRightSide(void)
 }
 void Player::CollisionWaterLeftSide(void)
 {
+	CalcLeftSidePos();
+	//左側三点との当たり判定
+	isHitLeftSide_ = IsWaterHitLeftPos();
 
+	//左側三点のどれかが当たっていたら
+	if (isHitLeftSide_)
+	{
+		
+		pos_.x = wall_->GetWaterPos().x + wall_->FLARE_SIZE_X+wall_->FLARE_HALF_SIZE_X;
+		//左に移動録があるときは移動量をなくす
+		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
+	}
 }
 
-void Player::CollisionPlantFoot(void)
+
+void Player::CollisionFlareRightSide(void)
 {
+	CalcRightSidePos();
 
+	//右側三点との当たり判定
+	isHitRightSide_ = IsFlareHitRightPos();
+
+	//右側三点のどれかが当たっていたら
+	if (isHitRightSide_)
+	{
+		pos_.x = wall_->GetFlarePos().x - wall_->FLARE_HALF_SIZE_X;
+		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
+	}
 }
-void Player::CollisionPlantHead(void)
+void Player::CollisionFlareLeftSide(void)
 {
+	CalcLeftSidePos();
+	//左側三点との当たり判定
+	isHitLeftSide_ = IsFlareHitLeftPos();
 
+	//左側三点のどれかが当たっていたら
+	if (isHitLeftSide_)
+	{
+
+		pos_.x = wall_->GetFlarePos().x + wall_->FLARE_SIZE_X + wall_->FLARE_HALF_SIZE_X;
+		//左に移動録があるときは移動量をなくす
+		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
+	}
 }
-void Player::CollisionPlantRightSide(void)
-{
 
-}
-void Player::CollisionPlantLeftSide(void)
-{
 
-}
-
-void Player::CollisionPlantsFoot(void)
-{
-
-}
-void Player::CollisionPlantsHead(void)
-{
-
-}
 void Player::CollisionPlantsRightSide(void)
 {
+	CalcRightSidePos();
 
+	//右側三点との当たり判定
+	isHitRightSide_ = IsPlantsHitRightPos();
+
+	//右側三点のどれかが当たっていたら
+	if (isHitRightSide_)
+	{
+		pos_.x = wall_->GetPlantsPos().x - wall_->FLARE_HALF_SIZE_X;
+		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
+	}
 }
 void Player::CollisionPlantsLeftSide(void)
 {
+	CalcLeftSidePos();
+	//左側三点との当たり判定
+	isHitLeftSide_ = IsPlantsHitLeftPos();
 
+	//左側三点のどれかが当たっていたら
+	if (isHitLeftSide_)
+	{
+
+		pos_.x = wall_->GetPlantsPos().x + wall_->FLARE_SIZE_X + wall_->FLARE_HALF_SIZE_X;
+		//左に移動録があるときは移動量をなくす
+		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
+	}
 }

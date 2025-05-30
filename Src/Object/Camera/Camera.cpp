@@ -76,9 +76,9 @@ void Camera::Update()
 	if (cameraRightSidePosX - FOCAS_X < playerPos.x)
 	{
 		cameraPos_.x = (playerPos.x - Application::SCREEN_SIZE_X) + FOCAS_X;
-		if (cameraRightSidePosX > ((32*2) * 70))
+		if (cameraPos_.x + Application::SCREEN_SIZE_X > ((32*2) * 70))
 		{
-			cameraPos_.x= ((32 * 2) * 50)-Application::SCREEN_SIZE_X;
+			cameraPos_.x= ((32 * 2) * 50)+Application::SCREEN_SIZE_X;
 		}
 	}
 	
