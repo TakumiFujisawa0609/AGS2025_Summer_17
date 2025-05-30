@@ -35,7 +35,7 @@ void GameScene::Init(void)
 	// •Ç
 	wall_ = new Wall();
 	
-
+	backImg_ = LoadGraph((Application::PATH_IMAGE + "Stage/BackBue.png").c_str());
 
 	player_->Init(camera_, stage_,wall_);
 	stage_->Init(this, player_,camera_);
@@ -45,7 +45,7 @@ void GameScene::Init(void)
 	//enemy_->Init();
 	wall_->Init(camera_);
 
-
+	
 }
 
 void GameScene::Update(void)
@@ -78,6 +78,13 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {
+
+	//”wŒi‚Ì•`‰æ
+	DrawGraph(0, -100, backImg_, true);
+	
+	// ƒXƒe[ƒW‚Ì•`‰æ
+	stage_->Draw();
+
 	// ƒvƒŒƒCƒ„[‚Ì•`‰æ
 	player_->Draw();
 
@@ -94,6 +101,7 @@ void GameScene::Draw(void)
 
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 	
+
 }
 
 

@@ -25,10 +25,9 @@ SceneManager& SceneManager::GetInstance(void)
 
 void SceneManager::Init(void)
 {
-
+	
 	sceneId_ = SCENE_ID::TITLE;
 	waitSceneId_ = SCENE_ID::NONE;
-
 
 	fader_ = std::make_unique<Fader>();
 	fader_->Init();
@@ -128,6 +127,7 @@ void SceneManager::Draw(void)
 void SceneManager::Destroy(void)
 {
 	delete instance_;
+
 
 }
 
