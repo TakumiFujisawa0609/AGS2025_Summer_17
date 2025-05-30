@@ -31,6 +31,8 @@ private:
 	//背景
 	int backImg_;
 
+	
+
 public:
 
 	// コンストラクタ

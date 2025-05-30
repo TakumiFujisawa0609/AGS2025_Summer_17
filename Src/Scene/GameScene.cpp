@@ -41,13 +41,10 @@ void GameScene::Init(void)
 	stage_->Init(this, player_,camera_);
 	camera_->Init(player_,this);
 	enemyManager_->Init();
-<<<<<<< HEAD
-	wall_->Init();
 
-=======
 	//enemy_->Init();
 	wall_->Init(camera_);
->>>>>>> ad8914d840d8d8a7d20c3cda38a705113c4daf16
+
 
 	
 }

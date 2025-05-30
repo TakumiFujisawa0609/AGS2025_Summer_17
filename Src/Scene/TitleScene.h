@@ -19,13 +19,13 @@ public:
 	void Update(void) override;
 	void Draw(void) override;
 	
-
+	
 private:
 
 	int img_;  // ‰æ‘œƒnƒ“ƒhƒ‹
 	
+	int  blinkCycle; // “_–ÅŽüŠú
 
-
-
+	float frameCount;
 
 };

@@ -19,5 +19,7 @@ private:
 
 	int Img_; // ”wŒi‰æ‘œ
 
+	int clearImg_; // ƒNƒŠƒA‰æ‘œ
+
 };
 
