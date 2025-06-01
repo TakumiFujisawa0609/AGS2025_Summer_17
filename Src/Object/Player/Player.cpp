@@ -57,16 +57,22 @@ void Player::Init(Camera*camera,Stage*stage,Wall*wall)
 	//属性タイプ
 	elementType_ = ELEMENT_TYPE::NORMAL;
 	cr = 0xffffff;
+	
+
+
 
 	//攻撃
-	isAttack_ = false;
-
+	isAttack_ = true;
+	isCircle = true;
+	attackPos_.x = 0;
+	attackPos_.y = 0;
+	movePos = 0.0f;
 	//攻撃ポイント(Init)
-	attckAnglePoint_.x = pos_.x + sinf(armAngle_) * 100;
-	attckAnglePoint_.y = pos_.y + sinf(armAngle_) * 100;
+	attckAnglePoint_.x = 0;
+	attckAnglePoint_.y = 0;
 
-	attckPoint_.x = pos_.x + cosf(armAngle_) * 100;
-	attckPoint_.y = pos_.y + cosf(armAngle_) * 100;
+	/*attckPoint_.x = pos_.x + cosf(armAngle_) * 100;
+	attckPoint_.y = pos_.y + cosf(armAngle_) * 100;*/
 
 	
 }
@@ -108,6 +114,7 @@ void Player::Draw()
 
 	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y, 5, 0x0000ff);
 	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y, 5, 0x0000ff);
+	DrawCircle(attackPos_.x - cpos.x, attackPos_.y, 5, 0x0000ff);
 
 #endif // DEBUG
 
@@ -419,8 +426,8 @@ void Player::Attack()
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
 
-				attckPoint_.x = pos_.x - cosf(armAngle_);
-				attckPoint_.y = pos_.y + sinf(armAngle_);
+				/*attckPoint_.x = pos_.x - cosf(armAngle_);
+				attckPoint_.y = pos_.y + sinf(armAngle_);*/
 			}
 			else if(!ins.IsNew(KEY_INPUT_K))
 			{
@@ -446,8 +453,8 @@ void Player::Attack()
 				//
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
-				attckPoint_.x = pos_.x - cosf(armAngle_);
-				attckPoint_.y = pos_.y + sinf(armAngle_);
+				/*attckPoint_.x = pos_.x - cosf(armAngle_);
+				attckPoint_.y = pos_.y + sinf(armAngle_);*/
 			}
 			else if (!ins.IsNew(KEY_INPUT_K))
 			{
@@ -459,39 +466,88 @@ void Player::Attack()
 }
 void Player::AttackChange(void)
 {
+
 	InputManager& ins = InputManager::GetInstance();
-	if (dir_ == AsoUtility::DIR::RIGHT)
+	if (isAttack_)
 	{
-		if (ins.IsNew(KEY_INPUT_K))
-		{
-			armAngle_ -= AsoUtility::Deg2RadF(5.0f);
-			if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
-			{
-				armAngle_ = AsoUtility::Deg2RadF(-120.0f);
-			}
-		}
-		else if (!ins.IsNew(KEY_INPUT_K))
-		{
-			armAngle_ = AsoUtility::Deg2RadF(0.0f);
-		}
 
+		if (ins.IsTrgUp(KEY_INPUT_K))
+		{
+			attackPos_.x = attckAnglePoint_.x;
+			attackPos_.y = attckAnglePoint_.y;
+
+			movePos = upCnt;
+			isAttack_ = false;
+		}
 	}
-	else if (dir_ == AsoUtility::DIR::LEFT)
+	attackPos_.y -= movePos;
+	movePos -= GRAVITY;
+	
+	if (attackPos_.y > (64 * 12))
 	{
-		if (ins.IsNew(KEY_INPUT_K))
-		{
-			armAngle_ += AsoUtility::Deg2RadF(5.0f);
-			if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
-			{
-				armAngle_ = AsoUtility::Deg2RadF(120.0f);
-			}
-		}
-		else if (!ins.IsNew(KEY_INPUT_K))
-		{
-			armAngle_ = AsoUtility::Deg2RadF(0.0f);
-		}
-
+		attackPos_.y = (64 * 12);
+		isAttack_ = true;
 	}
+
+		if (dir_ == AsoUtility::DIR::RIGHT)
+		{
+			attackPos_.x += MOVE_POWER;
+			if (ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
+				for (int i = 1; i <= 11; ++i)
+				{
+					if (armAngle_ <= AsoUtility::Deg2RadF(-10.0f * i))
+					{
+						upCnt = i;
+					}
+				}
+				
+				if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(0.0f);
+					upCnt = 0;
+				}
+			}
+			else if (!ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+			}
+			attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 30;
+			attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 30;
+
+		}
+		else if (dir_ == AsoUtility::DIR::LEFT)
+		{
+			attackPos_.x -= MOVE_POWER;
+			if (ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ += AsoUtility::Deg2RadF(5.0f);
+				for (int i = 1; i <= 11; ++i)
+				{
+					if (armAngle_ >= AsoUtility::Deg2RadF(10.0f * i))
+					{
+						upCnt = i;
+					}
+				}
+				if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(0.0f);
+					upCnt = 12;
+				}
+				
+			}
+			else if (!ins.IsNew(KEY_INPUT_K))
+			{
+
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+
+			}
+			attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 30;
+			attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 30;
+		}
+	
+	
 }
 
 
@@ -940,4 +996,11 @@ void Player::CollisionPlantsLeftSide(void)
 		//左に移動録があるときは移動量をなくす
 		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
 	}
+}
+
+bool Player::IsAttakPos(void)
+{
+	return wall_->IsFlaereCollision(attackPos_)
+		|| wall_->IsPlantsCollision(attackPos_)
+		|| wall_->IsWaterCollision(attackPos_);
 }

@@ -38,6 +38,7 @@ public:
 	static constexpr int COL_OFFSET = 1;						//ï‚ê≥íl
 	// à⁄ìÆë¨ìx
 	static constexpr float MOVE_SPEED = 1.5f;
+	static constexpr float MOVE_POWER = 5.0f;
 
 	//èdóÕ
 	static constexpr float GRAVITY = 0.3f;
@@ -85,8 +86,12 @@ private:
 	//ATTACK//==================================================================================================================
 	//çUåÇíÜÇ©Ç«Ç§Ç©
 	bool isAttack_;//çUåÇíÜÇ©Ç«Ç§Ç©
+	bool isCircle;
+	int upCnt;
+	Vector2 attackPos_;
 
-
+	float armPower;
+	float movePos;
 	
 	//==========================================================================================================================
 
@@ -196,6 +201,8 @@ public:
 	
 	void CollisionPlantsRightSide(void);
 	void CollisionPlantsLeftSide(void);
+
+	bool IsAttakPos(void);
 
 	//è’ìÀîªíËï`âÊ
 	void DrawHitCollision(void);
