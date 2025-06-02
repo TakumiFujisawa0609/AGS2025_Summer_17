@@ -178,6 +178,18 @@ void Wall::SetWaterPos( Vector2F pos)
 {
 	waterPos_ = pos;
 }
+void Wall::SetIsPlants(bool isAlive)
+{
+	isPlantsAlive_ = isAlive;
+}
+void Wall::SetIsFlare(bool isAlive)
+{
+
+}
+void Wall::SetIsWater(bool isAlive)
+{
+
+}
 bool Wall::IsWaterCollision(Vector2 pos)
 {
 	Vector2 pPos = pos;

@@ -9,6 +9,9 @@
 #include "../Object/Stage/Stage.h"
 #include "../Object/Camera/Camera.h"
 #include "../Object/Wall/Wall.h"
+#include "../Object/Attack/Blast.h"
+#include "../Object/Attack/Plants.h"
+#include "../Object/Attack/Water.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -34,17 +37,25 @@ void GameScene::Init(void)
 	camera_ = new Camera();
 	// •Ç
 	wall_ = new Wall();
+	//UŒ‚
+	//”š”­
+	blast_ = new Blast();
+	//A•¨
+	plants_ = new Plants();
+	//…
+	water_ = new Water();
+
 	
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Stage/BackBue.png").c_str());
 
-	player_->Init(camera_, stage_,wall_);
+	player_->Init(camera_, stage_,wall_,blast_);
 	stage_->Init(this, player_,camera_);
 	camera_->Init(player_,this);
 
 	enemyManager_->Init();
 	//enemy_->Init();
 	wall_->Init(camera_);
-
+	blast_->Init();
 	
 }
 
@@ -66,7 +77,7 @@ void GameScene::Update(void)
 
 	// •Ç‚ÌXV
 	wall_->Update();
-	
+	blast_->Update();
 
 	// ƒV[ƒ“‘JˆÚ
 	if (ins.IsTrgDown(KEY_INPUT_R))
@@ -97,6 +108,7 @@ void GameScene::Draw(void)
 	// ƒGƒlƒ~[‚Ì•`‰æ
 	enemyManager_->Draw();
 
+	blast_->Draw();
 	
 
 	DrawFormatString(0, 0, 0x000000, "GameScene");

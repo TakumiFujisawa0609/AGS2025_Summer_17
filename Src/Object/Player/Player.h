@@ -5,6 +5,7 @@
 class Stage;
 class Camera;
 class Wall;
+class Blast;
 
 
 
@@ -86,7 +87,7 @@ private:
 	//ATTACK//==================================================================================================================
 	//攻撃中かどうか
 	bool isAttack_;//攻撃中かどうか
-	bool isCircle;
+	bool isPoint_;
 	int upCnt;
 	Vector2 attackPos_;
 
@@ -133,6 +134,8 @@ private:
 	//壁
 	Wall* wall_;
 
+	Blast* blast_;
+
 	AsoUtility::DIR dir_;
 
 	
@@ -150,7 +153,7 @@ public:
 	//プロトタイプ宣言
 	Player();
 	~Player();
-	void Init(Camera*camera,Stage*stage,Wall*wall);
+	void Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast);
 	void Update();
 	void Draw();
 
@@ -202,7 +205,7 @@ public:
 	void CollisionPlantsRightSide(void);
 	void CollisionPlantsLeftSide(void);
 
-	bool IsAttakPos(void);
+	
 
 	//衝突判定描画
 	void DrawHitCollision(void);

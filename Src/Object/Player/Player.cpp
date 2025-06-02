@@ -6,6 +6,7 @@
 #include "../../Manager/ResourceManager.h"
 #include "../../Manager/InputManager.h"
 #include "../Wall/Wall.h"
+#include "../Attack/Blast.h"
 #include "Player.h"
 
 
@@ -21,7 +22,7 @@ Player::~Player()
 {
 
 }
-void Player::Init(Camera*camera,Stage*stage,Wall*wall)
+void Player::Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast)
 {
 
 	//ƒJƒƒ‰‚ÌŽæ“¾
@@ -33,6 +34,7 @@ void Player::Init(Camera*camera,Stage*stage,Wall*wall)
 	//•Ç‚ÌŽæ“¾
 	wall_ = wall;
 
+	blast_ = blast;
 
 	// ‰æ‘œ‚Ì“Ç‚Ýž‚Ý
 	ResourceManager& res = ResourceManager::GetInstance();
@@ -63,7 +65,7 @@ void Player::Init(Camera*camera,Stage*stage,Wall*wall)
 
 	//UŒ‚
 	isAttack_ = true;
-	isCircle = true;
+	isPoint_ = false;
 	attackPos_.x = 0;
 	attackPos_.y = 0;
 	movePos = 0.0f;
@@ -114,7 +116,10 @@ void Player::Draw()
 
 	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y, 5, 0x0000ff);
 	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y, 5, 0x0000ff);
-	DrawCircle(attackPos_.x - cpos.x, attackPos_.y, 5, 0x0000ff);
+	if (isPoint_)
+	{
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y, 5, 0x0000ff);
+	}
 
 #endif // DEBUG
 
@@ -365,6 +370,16 @@ void Player::Attack()
 	if (elementType_ == ELEMENT_TYPE::FIRE)
 	{
 		AttackChange();
+		if (wall_->IsWaterCollision(attackPos_) == true||wall_->IsFlaereCollision(attackPos_)==true||stage_->IsCollisionStage(attackPos_)==true)
+		{
+			isPoint_ = false;
+			isAttack_ = true;
+		}
+		if (wall_->IsPlantsCollision(attackPos_) == true)
+		{
+			isPoint_ = false;
+			isAttack_ = true;
+		}
 
 		if (dir_ == AsoUtility::DIR::RIGHT)
 		{
@@ -381,6 +396,16 @@ void Player::Attack()
 	if (elementType_ == ELEMENT_TYPE::WATER)
 	{
 		AttackChange();
+		if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+		{
+			isPoint_ = false;
+			isAttack_ = true;
+		}
+		if (wall_->IsFlaereCollision(attackPos_) == true)
+		{
+			isPoint_ = false;
+			isAttack_ = true;
+		}
 		if (dir_ == AsoUtility::DIR::RIGHT)
 		{
 			
@@ -395,6 +420,16 @@ void Player::Attack()
 	if (elementType_ == ELEMENT_TYPE::PLANT)
 	{
 		AttackChange();
+		if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+		{
+			isPoint_ = false;
+			isAttack_ = true;
+		}
+		if (wall_->IsPlantsCollision(attackPos_) == true)
+		{
+			isPoint_ = false;
+			isAttack_ = true;
+		}
 		if (dir_ == AsoUtility::DIR::RIGHT)
 		{
 
@@ -477,6 +512,7 @@ void Player::AttackChange(void)
 			attackPos_.y = attckAnglePoint_.y;
 
 			movePos = upCnt;
+			isPoint_ = true;
 			isAttack_ = false;
 		}
 	}
@@ -486,6 +522,7 @@ void Player::AttackChange(void)
 	if (attackPos_.y > (64 * 12))
 	{
 		attackPos_.y = (64 * 12);
+		isPoint_ = false;
 		isAttack_ = true;
 	}
 
@@ -998,9 +1035,3 @@ void Player::CollisionPlantsLeftSide(void)
 	}
 }
 
-bool Player::IsAttakPos(void)
-{
-	return wall_->IsFlaereCollision(attackPos_)
-		|| wall_->IsPlantsCollision(attackPos_)
-		|| wall_->IsWaterCollision(attackPos_);
-}

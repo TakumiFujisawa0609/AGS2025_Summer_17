@@ -141,6 +141,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Attack\Blast.h" />
+    <ClInclude Include="Src\Object\Attack\Plants.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyFire.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyBase.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyManager.h" />
@@ -162,8 +164,11 @@
     <ClInclude Include="Src\Utility\AsoUtility.h" />
     <ClInclude Include="Src\Common\Vector2F.h" />
     <ClInclude Include="Src\Object\Wall\Wall.h" />
+    <ClInclude Include="Src\Object\Attack\Water.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Attack\Blast.cpp" />
+    <ClCompile Include="Src\Object\Attack\Plants.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyFire.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp" />
@@ -185,6 +190,7 @@
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
     <ClCompile Include="Src\Common\Vector2F.cpp" />
     <ClCompile Include="Src\Object\Wall\Wall.cpp" />
+    <ClCompile Include="Src\Object\Attack\Water.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
