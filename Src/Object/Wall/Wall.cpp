@@ -108,11 +108,11 @@ void Wall::AnimUpdate()
 
 void Wall::Draw()
 {
-	float cameraPos = -camera_->GetCameraPos().x;
+	float cameraPos = camera_->GetCameraPos().x;
 	//A•¨‚Ì•`‰æ
 	if (isPlantsAlive_)
 	{
-		DrawGraph(plantsPos_.x+ cameraPos, plantsPos_.y, plantsImg_, TRUE);
+		DrawGraph(plantsPos_.x- cameraPos, plantsPos_.y, plantsImg_, TRUE);
 
 
 		
@@ -120,23 +120,23 @@ void Wall::Draw()
 	
 	if (isFlareAlive_)
 	{
-		DrawGraph(flarePos_.x+ cameraPos, flarePos_.y, flareImg_[flareNo_], TRUE);
+		DrawGraph(flarePos_.x- cameraPos, flarePos_.y, flareImg_[flareNo_], TRUE);
 	}
 
 	//…‚Ì•`‰æ
 	if (isWaterAlive_)
 	{
-		DrawGraph(waterPos_.x+ cameraPos, waterPos_.y, waterImg_[waterNo_], TRUE);
+		DrawGraph(waterPos_.x- cameraPos, waterPos_.y, waterImg_[waterNo_], TRUE);
 	}
 	//DrawBox(waterPos_.x + cameraPos, waterPos_.y, waterPos_.x + WATER_SIZE_X + cameraPos, waterPos_.y + WATER_SIZE_Y,0x000000,true);
 	//…»
 	if (isSphereAlive_) 
 	{
-		DrawGraph(spherePos_.x + cameraPos, spherePos_.y, wSphereImg_[0], TRUE);
+		DrawGraph(spherePos_.x - cameraPos, spherePos_.y, wSphereImg_[0], TRUE);
 	}
 	else
 	{
-		DrawGraph(spherePos_.x + cameraPos, spherePos_.y, wSphereImg_[1], TRUE);
+		DrawGraph(spherePos_.x - cameraPos, spherePos_.y, wSphereImg_[1], TRUE);
 	}
 	
 }
@@ -184,33 +184,36 @@ void Wall::SetIsPlants(bool isAlive)
 }
 void Wall::SetIsFlare(bool isAlive)
 {
-
+	isFlareAlive_ = isAlive;
 }
 void Wall::SetIsWater(bool isAlive)
 {
-
+	isWaterAlive_ = isAlive;
 }
 bool Wall::IsWaterCollision(Vector2 pos)
 {
 	Vector2 pPos = pos;
-
-	if (pPos.x>waterPos_.x&&pPos.y>waterPos_.y+ WATER_SIZE_X &&pPos.x<waterPos_.x + WATER_SIZE_X&&pPos.y<waterPos_.y + WATER_SIZE_Y+ WATER_SIZE_X)
+	if (isWaterAlive_)
 	{
-		return true;
-	}
 
+		if (pPos.x > waterPos_.x && pPos.y > waterPos_.y + WATER_SIZE_X && pPos.x < waterPos_.x + WATER_SIZE_X && pPos.y < waterPos_.y + WATER_SIZE_Y + WATER_SIZE_X)
+		{
+			return true;
+		}
+	}
 	return false;
 }
 bool Wall::IsFlaereCollision(Vector2 pos)
 {
 	Vector2 pPos = pos;
-
-	if (pPos.x > flarePos_.x && pPos.y > flarePos_.y + FLARE_SIZE_X && pPos.x < flarePos_.x + FLARE_SIZE_X && pPos.y < flarePos_.y + FLARE_SIZE_Y + FLARE_SIZE_X)
+	if (isFlareAlive_)
 	{
-		return true;
+		if (pPos.x > flarePos_.x && pPos.y > flarePos_.y + FLARE_SIZE_X && pPos.x < flarePos_.x + FLARE_SIZE_X && pPos.y < flarePos_.y + FLARE_SIZE_Y + FLARE_SIZE_X)
+		{
+			return true;
+		}
+
 	}
-
-
 
 	return false;
 }
@@ -218,12 +221,14 @@ bool Wall::IsPlantsCollision(Vector2 pos)
 {
 	Vector2 pPos = pos;
 
-	if (pPos.x > plantsPos_.x && pPos.y > plantsPos_.y + PLANTS_SIZE_X && pPos.x < plantsPos_.x + PLANTS_SIZE_X && pPos.y < plantsPos_.y + PLANTS_SIZE_Y + PLANTS_SIZE_X)
+	if(isPlantsAlive_)
 	{
-		return true;
+		if (pPos.x > plantsPos_.x && pPos.y > plantsPos_.y + PLANTS_SIZE_X && pPos.x < plantsPos_.x + PLANTS_SIZE_X && pPos.y < plantsPos_.y + PLANTS_SIZE_Y + PLANTS_SIZE_X)
+		{
+			return true;
+		}
+
 	}
-
-
 
 	return false;
 }

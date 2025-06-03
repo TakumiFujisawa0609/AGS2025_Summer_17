@@ -7,6 +7,7 @@
 #include "../../Manager/InputManager.h"
 #include "../Wall/Wall.h"
 #include "../Attack/Blast.h"
+#include "../Attack/Water.h"
 #include "Player.h"
 
 
@@ -22,7 +23,7 @@ Player::~Player()
 {
 
 }
-void Player::Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast)
+void Player::Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast,Water*water)
 {
 
 	//ƒJƒƒ‰‚ÌŽæ“¾
@@ -35,6 +36,8 @@ void Player::Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast)
 	wall_ = wall;
 
 	blast_ = blast;
+
+	water_ = water;
 
 	// ‰æ‘œ‚Ì“Ç‚Ýž‚Ý
 	ResourceManager& res = ResourceManager::GetInstance();
@@ -375,22 +378,15 @@ void Player::Attack()
 			isPoint_ = false;
 			isAttack_ = true;
 		}
-		if (wall_->IsPlantsCollision(attackPos_) == true)
+		else if (wall_->IsPlantsCollision(attackPos_) == true)
 		{
+			
 			isPoint_ = false;
 			isAttack_ = true;
+			blast_->SetBlastPos(attackPos_);
+			blast_->SetIsBlast(true);
 		}
 
-		if (dir_ == AsoUtility::DIR::RIGHT)
-		{
-			
-
-		}
-		else if (dir_ == AsoUtility::DIR::LEFT)
-		{
-			
-		}
-		
 	}
 
 	if (elementType_ == ELEMENT_TYPE::WATER)
@@ -401,42 +397,27 @@ void Player::Attack()
 			isPoint_ = false;
 			isAttack_ = true;
 		}
-		if (wall_->IsFlaereCollision(attackPos_) == true)
-		{
-			isPoint_ = false;
-			isAttack_ = true;
-		}
-		if (dir_ == AsoUtility::DIR::RIGHT)
+		else if (wall_->IsFlaereCollision(attackPos_) == true)
 		{
 			
+			isPoint_ = false;
+			isAttack_ = true;
+			water_->CreateEffect(attackPos_);
 		}
-		else if (dir_ == AsoUtility::DIR::LEFT)
-		{
-					
-		}
-
-
 	}
 	if (elementType_ == ELEMENT_TYPE::PLANT)
 	{
 		AttackChange();
-		if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+		if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
 		{
 			isPoint_ = false;
 			isAttack_ = true;
 		}
-		if (wall_->IsPlantsCollision(attackPos_) == true)
+		else if (wall_->IsWaterCollision(attackPos_) == true)
 		{
+			
 			isPoint_ = false;
 			isAttack_ = true;
-		}
-		if (dir_ == AsoUtility::DIR::RIGHT)
-		{
-
-		}
-		else if (dir_ == AsoUtility::DIR::LEFT)
-		{
-
 		}
 	}
 	if (elementType_ == ELEMENT_TYPE::NORMAL)
@@ -461,8 +442,6 @@ void Player::Attack()
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
 
-				/*attckPoint_.x = pos_.x - cosf(armAngle_);
-				attckPoint_.y = pos_.y + sinf(armAngle_);*/
 			}
 			else if(!ins.IsNew(KEY_INPUT_K))
 			{
@@ -488,8 +467,7 @@ void Player::Attack()
 				//
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
-				/*attckPoint_.x = pos_.x - cosf(armAngle_);
-				attckPoint_.y = pos_.y + sinf(armAngle_);*/
+				
 			}
 			else if (!ins.IsNew(KEY_INPUT_K))
 			{
@@ -516,9 +494,10 @@ void Player::AttackChange(void)
 			isAttack_ = false;
 		}
 	}
-	attackPos_.y -= movePos;
-	movePos -= GRAVITY;
-	
+	if (isPoint_) {
+		attackPos_.y -= movePos;
+		movePos -= GRAVITY;
+	}
 	if (attackPos_.y > (64 * 12))
 	{
 		attackPos_.y = (64 * 12);

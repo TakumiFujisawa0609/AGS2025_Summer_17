@@ -6,7 +6,7 @@ class Stage;
 class Camera;
 class Wall;
 class Blast;
-
+class Water;
 
 
 class Player
@@ -136,6 +136,10 @@ private:
 
 	Blast* blast_;
 
+	Water* water_;
+
+
+
 	AsoUtility::DIR dir_;
 
 	
@@ -153,7 +157,7 @@ public:
 	//プロトタイプ宣言
 	Player();
 	~Player();
-	void Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast);
+	void Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast,Water* water);
 	void Update();
 	void Draw();
 

@@ -1,5 +1,6 @@
 #include <DxLib.h>
 #include "../Application.h"
+#include "../Common/Vector2.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/ResourceManager.h"
@@ -48,15 +49,16 @@ void GameScene::Init(void)
 	
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Stage/BackBue.png").c_str());
 
-	player_->Init(camera_, stage_,wall_,blast_);
+	player_->Init(camera_, stage_,wall_,blast_,water_);
 	stage_->Init(this, player_,camera_);
 	camera_->Init(player_,this);
 
 	enemyManager_->Init();
 	//enemy_->Init();
 	wall_->Init(camera_);
-	blast_->Init();
-	
+	blast_->Init(camera_);
+	water_->Init(camera_);
+
 }
 
 void GameScene::Update(void)
@@ -78,6 +80,27 @@ void GameScene::Update(void)
 	// 壁の更新
 	wall_->Update();
 	blast_->Update();
+	water_->Update();
+	if (ins.IsTrgDown(KEY_INPUT_N))
+	{
+		Vector2 pos;
+		pos.x = 100;
+		pos.y = 100;
+
+		blast_->SetBlastPos(pos);
+		blast_->SetIsBlast(true);
+
+	}
+	if (ins.IsTrgDown(KEY_INPUT_Z))
+	{
+		Vector2 pos;
+		pos.x = 100;
+		pos.y = 100;
+
+		water_->CreateEffect(pos);
+
+
+	}
 
 	// シーン遷移
 	if (ins.IsTrgDown(KEY_INPUT_R))
@@ -109,11 +132,21 @@ void GameScene::Draw(void)
 	enemyManager_->Draw();
 
 	blast_->Draw();
-	
+	water_->Draw();
 
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 	
 
 }
 
-
+void GameScene::Release()
+{
+	delete plants_;
+	delete stage_;
+	delete wall_;
+	delete camera_;
+	blast_->Release();
+	delete blast_;
+	water_->Release();
+	delete water_;
+}
