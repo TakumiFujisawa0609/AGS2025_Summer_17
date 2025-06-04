@@ -8,6 +8,7 @@
 #include "../Wall/Wall.h"
 #include "../Attack/Blast.h"
 #include "../Attack/Water.h"
+#include "../Attack/Plants.h"
 #include "Player.h"
 
 
@@ -23,7 +24,7 @@ Player::~Player()
 {
 
 }
-void Player::Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast,Water*water)
+void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water* water, Plants* plants)
 {
 
 	//カメラの取得
@@ -38,6 +39,8 @@ void Player::Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast,Water*water)
 	blast_ = blast;
 
 	water_ = water;
+
+	plants_ = plants;
 
 	// 画像の読み込み
 	ResourceManager& res = ResourceManager::GetInstance();
@@ -132,6 +135,17 @@ void Player::Move()
 	//移動処理
 	InputManager& ins = InputManager::GetInstance();
 
+	if (ins.IsNew(KEY_INPUT_LSHIFT))
+	{
+		speed_ = MOVE_ACC_POW * 3;
+		maxSpeed_ = MAX_MOVE_SPEED * 3;
+	}
+	else
+	{
+		speed_ = MOVE_SPEED;
+		maxSpeed_ = MAX_MOVE_SPEED;
+	}
+
 	if (ins.IsTrgDown(KEY_INPUT_D) || ins.IsTrgDown(KEY_INPUT_A))
 	{
 		animationCount_ = 6                                  ;
@@ -194,12 +208,12 @@ void Player::Move()
 		//左を向ける
 		dir_ = AsoUtility::DIR::LEFT;
 		//加速量を加算する
-		movePosX_ -= MOVE_ACC_POW;
+		movePosX_ -= speed_;
 
 		//移動量
-		if (movePosX_ < -MAX_MOVE_SPEED)
+		if (movePosX_ < -maxSpeed_)
 		{
-			movePosX_ = -MAX_MOVE_SPEED;
+			movePosX_ = -maxSpeed_;
 		}
 		pos_.x += movePosX_;
 		//地上にいるときは走るアニメモーション再生
@@ -248,12 +262,12 @@ void Player::Move()
 		dir_ = AsoUtility::DIR::RIGHT;
 
 		//加速量を加算する
-		movePosX_ += MOVE_ACC_POW;
+		movePosX_ += speed_;
 
 		//移動量
-		if (movePosX_ > MAX_MOVE_SPEED)
+		if (movePosX_ > maxSpeed_)
 		{
-			movePosX_ = MAX_MOVE_SPEED;
+			movePosX_ = maxSpeed_;
 		}
 		pos_.x += movePosX_;
 		//地上にいるときは走るアニメモーション再生
@@ -373,51 +387,61 @@ void Player::Attack()
 	if (elementType_ == ELEMENT_TYPE::FIRE)
 	{
 		AttackChange();
-		if (wall_->IsWaterCollision(attackPos_) == true||wall_->IsFlaereCollision(attackPos_)==true||stage_->IsCollisionStage(attackPos_)==true)
+		if (isPoint_)
 		{
-			isPoint_ = false;
-			isAttack_ = true;
+			if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+			{
+				isPoint_ = false;
+				isAttack_ = true;
+			}
+			else if (wall_->IsPlantsCollision(attackPos_) == true)
+			{
+				wall_->SetIsPlants(false);
+				isPoint_ = false;
+				isAttack_ = true;
+				blast_->SetBlastPos(attackPos_);
+				blast_->SetIsBlast(true);
+			}
 		}
-		else if (wall_->IsPlantsCollision(attackPos_) == true)
-		{
-			
-			isPoint_ = false;
-			isAttack_ = true;
-			blast_->SetBlastPos(attackPos_);
-			blast_->SetIsBlast(true);
-		}
-
 	}
 
 	if (elementType_ == ELEMENT_TYPE::WATER)
 	{
 		AttackChange();
-		if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+		if (isPoint_)
 		{
-			isPoint_ = false;
-			isAttack_ = true;
-		}
-		else if (wall_->IsFlaereCollision(attackPos_) == true)
-		{
-			
-			isPoint_ = false;
-			isAttack_ = true;
-			water_->CreateEffect(attackPos_);
+			if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+			{
+				isPoint_ = false;
+				isAttack_ = true;
+			}
+			else if (wall_->IsFlaereCollision(attackPos_) == true)
+			{
+				wall_->SetIsFlare(false);
+				isPoint_ = false;
+				isAttack_ = true;
+				water_->CreateEffect(attackPos_);
+			}
 		}
 	}
 	if (elementType_ == ELEMENT_TYPE::PLANT)
 	{
 		AttackChange();
-		if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+		if (isPoint_)
 		{
-			isPoint_ = false;
-			isAttack_ = true;
-		}
-		else if (wall_->IsWaterCollision(attackPos_) == true)
-		{
-			
-			isPoint_ = false;
-			isAttack_ = true;
+			if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true || wall_->IsWaterCollision(attackPos_) == true)
+			{
+				isPoint_ = false;
+				isAttack_ = true;
+			}
+			else if (wall_->IsSphereCollision(attackPos_) == true)
+			{
+				wall_->SetIsSphere(false);
+				isPoint_ = false;
+				isAttack_ = true;
+				plants_->SetPlantsPos(attackPos_);
+				plants_->SetIsPlants(true);
+			}
 		}
 	}
 	if (elementType_ == ELEMENT_TYPE::NORMAL)

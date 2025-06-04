@@ -31,13 +31,13 @@ void Wall::Init(Camera*camera)
 	wSphereImg_ = res.Load(ResourceManager::SRC::WSPHERE).handleIds_;
 
 	//À•W‚Ì‰Šú‰»
-	plantsPos_.x = 64*34;
+	plantsPos_.x = 64*49;
 	plantsPos_.y = 64*8;
-	flarePos_.x = 64*45;
+	flarePos_.x = 64*61;
 	flarePos_.y = 64*8;
-	waterPos_.x = 64*26;
+	waterPos_.x = 64*37;
 	waterPos_.y = 64*8;
-	spherePos_.x = 64 * 26;
+	spherePos_.x = 64 * 38;
 	spherePos_.y = 64 * 7;
 
 
@@ -104,6 +104,14 @@ void Wall::AnimUpdate()
 		}
 		
 	}
+	if (isSphereAlive_)
+	{
+
+	}
+	else
+	{
+		isWaterAlive_ = false;
+	}
 }
 
 void Wall::Draw()
@@ -136,6 +144,7 @@ void Wall::Draw()
 	}
 	else
 	{
+		
 		DrawGraph(spherePos_.x - cameraPos, spherePos_.y, wSphereImg_[1], TRUE);
 	}
 	
@@ -190,6 +199,12 @@ void Wall::SetIsWater(bool isAlive)
 {
 	isWaterAlive_ = isAlive;
 }
+
+void Wall::SetIsSphere(bool isAlive)
+{
+	isSphereAlive_ = isAlive;
+}
+
 bool Wall::IsWaterCollision(Vector2 pos)
 {
 	Vector2 pPos = pos;
@@ -224,6 +239,21 @@ bool Wall::IsPlantsCollision(Vector2 pos)
 	if(isPlantsAlive_)
 	{
 		if (pPos.x > plantsPos_.x && pPos.y > plantsPos_.y + PLANTS_SIZE_X && pPos.x < plantsPos_.x + PLANTS_SIZE_X && pPos.y < plantsPos_.y + PLANTS_SIZE_Y + PLANTS_SIZE_X)
+		{
+			return true;
+		}
+
+	}
+
+	return false;
+}
+bool Wall::IsSphereCollision(Vector2 pos)
+{
+	Vector2 pPos = pos;
+
+	if (isSphereAlive_)
+	{
+		if (pPos.x > spherePos_.x && pPos.y > spherePos_.y && pPos.x < spherePos_.x + PLANTS_SIZE_X && pPos.y < spherePos_.y+PLANTS_SIZE_X)
 		{
 			return true;
 		}

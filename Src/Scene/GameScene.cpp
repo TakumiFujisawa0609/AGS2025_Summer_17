@@ -49,7 +49,7 @@ void GameScene::Init(void)
 	
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Stage/BackBue.png").c_str());
 
-	player_->Init(camera_, stage_,wall_,blast_,water_);
+	player_->Init(camera_, stage_,wall_,blast_,water_,plants_);
 	stage_->Init(this, player_,camera_);
 	camera_->Init(player_,this);
 
@@ -58,7 +58,7 @@ void GameScene::Init(void)
 	wall_->Init(camera_);
 	blast_->Init(camera_);
 	water_->Init(camera_);
-
+	plants_->Init(camera_);
 }
 
 void GameScene::Update(void)
@@ -81,6 +81,8 @@ void GameScene::Update(void)
 	wall_->Update();
 	blast_->Update();
 	water_->Update();
+	plants_->Update();
+
 	if (ins.IsTrgDown(KEY_INPUT_N))
 	{
 		Vector2 pos;
@@ -101,7 +103,16 @@ void GameScene::Update(void)
 
 
 	}
+	if (ins.IsTrgDown(KEY_INPUT_V))
+	{
+		Vector2 pos;
+		pos.x = 100;
+		pos.y = 100;
 
+		
+		plants_->SetPlantsPos(pos);
+		plants_->SetIsPlants(true);
+	}
 	// ƒV[ƒ“‘JˆÚ
 	if (ins.IsTrgDown(KEY_INPUT_R))
 	{
@@ -133,6 +144,7 @@ void GameScene::Draw(void)
 
 	blast_->Draw();
 	water_->Draw();
+	plants_->Draw();
 
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 	
@@ -149,4 +161,6 @@ void GameScene::Release()
 	delete blast_;
 	water_->Release();
 	delete water_;
+	plants_->Release();
+	delete plants_;
 }

@@ -20,7 +20,7 @@ public:
 	static constexpr int CHIP_HALF_SIZE_Y = CHIP_SIZE_Y / 2;	// 縦半分
 
 	// 地上マップのサイズ(縦枚数×横枚数)
-	static constexpr int MAP_GROUND_SIZE_X = 60;
+	static constexpr int MAP_GROUND_SIZE_X = 100;
 	static constexpr int MAP_GROUND_SIZE_Y = 12;
 
 	Stage();

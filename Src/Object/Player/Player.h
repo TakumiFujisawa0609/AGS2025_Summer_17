@@ -7,7 +7,7 @@ class Camera;
 class Wall;
 class Blast;
 class Water;
-
+class Plants;
 
 class Player
 {
@@ -81,7 +81,8 @@ private:
 	//移動量
 	float movePosX_;
 	float movePosY_;
-
+	float speed_;
+	float maxSpeed_;
 	bool isJump_;//ジャンプ中かどうか
 
 	//ATTACK//==================================================================================================================
@@ -138,8 +139,7 @@ private:
 
 	Water* water_;
 
-
-
+	Plants* plants_;
 	AsoUtility::DIR dir_;
 
 	
@@ -157,7 +157,7 @@ public:
 	//プロトタイプ宣言
 	Player();
 	~Player();
-	void Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast,Water* water);
+	void Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast,Water* water,Plants*plants);
 	void Update();
 	void Draw();
 
@@ -190,6 +190,8 @@ public:
 
 	bool IsPlantsHitRightPos(void);
 	bool IsPlantsHitLeftPos(void);
+
+	
 
 	//衝突判定
 	void CollisionFoot(void);
