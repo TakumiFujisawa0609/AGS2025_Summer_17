@@ -6,7 +6,7 @@ void ClearScene::Init(void)
 {
 	Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/castle.jpg").c_str());
 
-	clearImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/GameClear.jpg").c_str());
+	clearImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/Clear.png").c_str());
 }
 
 void ClearScene::Update(void)
@@ -19,5 +19,6 @@ void ClearScene::Draw(void)
 	// ‰æ‘œ•`‰æ
 	DrawGraph(0, 0, Img_, TRUE);
 
-	DrawGraph(570, 200, clearImg_, TRUE);
+	DrawGraph(100, 0
+		, clearImg_, TRUE);
 }
