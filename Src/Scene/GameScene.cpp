@@ -119,7 +119,7 @@ void GameScene::Update(void)
 		plants_->SetIsPlants(true);
 	}
 	// ƒV[ƒ“‘JˆÚ
-	if (ins.IsTrgDown(KEY_INPUT_R))
+	if (ins.IsTrgDown(KEY_INPUT_R)||player_->GetPlayerPos().x>64 * 78)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
 	}
