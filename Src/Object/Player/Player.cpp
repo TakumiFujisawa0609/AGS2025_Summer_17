@@ -6,6 +6,9 @@
 #include "../../Manager/ResourceManager.h"
 #include "../../Manager/InputManager.h"
 #include "../Wall/Wall.h"
+#include "../Attack/Blast.h"
+#include "../Attack/Water.h"
+#include "../Attack/Plants.h"
 #include "Player.h"
 
 
@@ -21,7 +24,7 @@ Player::~Player()
 {
 
 }
-void Player::Init(Camera*camera,Stage*stage,Wall*wall)
+void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water* water, Plants* plants)
 {
 
 	//カメラの取得
@@ -33,6 +36,11 @@ void Player::Init(Camera*camera,Stage*stage,Wall*wall)
 	//壁の取得
 	wall_ = wall;
 
+	blast_ = blast;
+
+	water_ = water;
+
+	plants_ = plants;
 
 	// 画像の読み込み
 	ResourceManager& res = ResourceManager::GetInstance();
@@ -57,16 +65,22 @@ void Player::Init(Camera*camera,Stage*stage,Wall*wall)
 	//属性タイプ
 	elementType_ = ELEMENT_TYPE::NORMAL;
 	cr = 0xffffff;
+	
+
+
 
 	//攻撃
-	isAttack_ = false;
-
+	isAttack_ = true;
+	isPoint_ = false;
+	attackPos_.x = 0;
+	attackPos_.y = 0;
+	movePos = 0.0f;
 	//攻撃ポイント(Init)
-	attckAnglePoint_.x = pos_.x + sinf(armAngle_) * 100;
-	attckAnglePoint_.y = pos_.y + sinf(armAngle_) * 100;
+	attckAnglePoint_.x = 0;
+	attckAnglePoint_.y = 0;
 
-	attckPoint_.x = pos_.x + cosf(armAngle_) * 100;
-	attckPoint_.y = pos_.y + cosf(armAngle_) * 100;
+	/*attckPoint_.x = pos_.x + cosf(armAngle_) * 100;
+	attckPoint_.y = pos_.y + cosf(armAngle_) * 100;*/
 
 	
 }
@@ -108,6 +122,10 @@ void Player::Draw()
 
 	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y, 5, 0x0000ff);
 	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y, 5, 0x0000ff);
+	if (isPoint_)
+	{
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y, 5, 0x0000ff);
+	}
 
 #endif // DEBUG
 
@@ -116,6 +134,17 @@ void Player::Move()
 {
 	//移動処理
 	InputManager& ins = InputManager::GetInstance();
+
+	if (ins.IsNew(KEY_INPUT_LSHIFT))
+	{
+		speed_ = MOVE_ACC_POW * 3;
+		maxSpeed_ = MAX_MOVE_SPEED * 3;
+	}
+	else
+	{
+		speed_ = MOVE_SPEED;
+		maxSpeed_ = MAX_MOVE_SPEED;
+	}
 
 	if (ins.IsTrgDown(KEY_INPUT_D) || ins.IsTrgDown(KEY_INPUT_A))
 	{
@@ -179,12 +208,12 @@ void Player::Move()
 		//左を向ける
 		dir_ = AsoUtility::DIR::LEFT;
 		//加速量を加算する
-		movePosX_ -= MOVE_ACC_POW;
+		movePosX_ -= speed_;
 
 		//移動量
-		if (movePosX_ < -MAX_MOVE_SPEED)
+		if (movePosX_ < -maxSpeed_)
 		{
-			movePosX_ = -MAX_MOVE_SPEED;
+			movePosX_ = -maxSpeed_;
 		}
 		pos_.x += movePosX_;
 		//地上にいるときは走るアニメモーション再生
@@ -233,12 +262,12 @@ void Player::Move()
 		dir_ = AsoUtility::DIR::RIGHT;
 
 		//加速量を加算する
-		movePosX_ += MOVE_ACC_POW;
+		movePosX_ += speed_;
 
 		//移動量
-		if (movePosX_ > MAX_MOVE_SPEED)
+		if (movePosX_ > maxSpeed_)
 		{
-			movePosX_ = MAX_MOVE_SPEED;
+			movePosX_ = maxSpeed_;
 		}
 		pos_.x += movePosX_;
 		//地上にいるときは走るアニメモーション再生
@@ -358,43 +387,61 @@ void Player::Attack()
 	if (elementType_ == ELEMENT_TYPE::FIRE)
 	{
 		AttackChange();
-
-		if (dir_ == AsoUtility::DIR::RIGHT)
+		if (isPoint_)
 		{
-			
-
+			if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+			{
+				isPoint_ = false;
+				isAttack_ = true;
+			}
+			else if (wall_->IsPlantsCollision(attackPos_) == true)
+			{
+				wall_->SetIsPlants(false);
+				isPoint_ = false;
+				isAttack_ = true;
+				blast_->SetBlastPos(attackPos_);
+				blast_->SetIsBlast(true);
+			}
 		}
-		else if (dir_ == AsoUtility::DIR::LEFT)
-		{
-			
-		}
-		
 	}
 
 	if (elementType_ == ELEMENT_TYPE::WATER)
 	{
 		AttackChange();
-		if (dir_ == AsoUtility::DIR::RIGHT)
+		if (isPoint_)
 		{
-			
+			if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+			{
+				isPoint_ = false;
+				isAttack_ = true;
+			}
+			else if (wall_->IsFlaereCollision(attackPos_) == true)
+			{
+				wall_->SetIsFlare(false);
+				isPoint_ = false;
+				isAttack_ = true;
+				water_->CreateEffect(attackPos_);
+			}
 		}
-		else if (dir_ == AsoUtility::DIR::LEFT)
-		{
-					
-		}
-
-
 	}
 	if (elementType_ == ELEMENT_TYPE::PLANT)
 	{
 		AttackChange();
-		if (dir_ == AsoUtility::DIR::RIGHT)
+		if (isPoint_)
 		{
-
-		}
-		else if (dir_ == AsoUtility::DIR::LEFT)
-		{
-
+			if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true || wall_->IsWaterCollision(attackPos_) == true)
+			{
+				isPoint_ = false;
+				isAttack_ = true;
+			}
+			else if (wall_->IsSphereCollision(attackPos_) == true)
+			{
+				wall_->SetIsSphere(false);
+				isPoint_ = false;
+				isAttack_ = true;
+				plants_->SetPlantsPos(attackPos_);
+				plants_->SetIsPlants(true);
+			}
 		}
 	}
 	if (elementType_ == ELEMENT_TYPE::NORMAL)
@@ -419,8 +466,6 @@ void Player::Attack()
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
 
-				attckPoint_.x = pos_.x - cosf(armAngle_);
-				attckPoint_.y = pos_.y + sinf(armAngle_);
 			}
 			else if(!ins.IsNew(KEY_INPUT_K))
 			{
@@ -446,8 +491,7 @@ void Player::Attack()
 				//
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
-				attckPoint_.x = pos_.x - cosf(armAngle_);
-				attckPoint_.y = pos_.y + sinf(armAngle_);
+				
 			}
 			else if (!ins.IsNew(KEY_INPUT_K))
 			{
@@ -459,39 +503,91 @@ void Player::Attack()
 }
 void Player::AttackChange(void)
 {
+
 	InputManager& ins = InputManager::GetInstance();
-	if (dir_ == AsoUtility::DIR::RIGHT)
+	if (isAttack_)
 	{
-		if (ins.IsNew(KEY_INPUT_K))
-		{
-			armAngle_ -= AsoUtility::Deg2RadF(5.0f);
-			if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
-			{
-				armAngle_ = AsoUtility::Deg2RadF(-120.0f);
-			}
-		}
-		else if (!ins.IsNew(KEY_INPUT_K))
-		{
-			armAngle_ = AsoUtility::Deg2RadF(0.0f);
-		}
 
+		if (ins.IsTrgUp(KEY_INPUT_K))
+		{
+			attackPos_.x = attckAnglePoint_.x;
+			attackPos_.y = attckAnglePoint_.y;
+
+			movePos = upCnt;
+			isPoint_ = true;
+			isAttack_ = false;
+		}
 	}
-	else if (dir_ == AsoUtility::DIR::LEFT)
+	if (isPoint_) {
+		attackPos_.y -= movePos;
+		movePos -= GRAVITY;
+	}
+	if (attackPos_.y > (64 * 12))
 	{
-		if (ins.IsNew(KEY_INPUT_K))
-		{
-			armAngle_ += AsoUtility::Deg2RadF(5.0f);
-			if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
-			{
-				armAngle_ = AsoUtility::Deg2RadF(120.0f);
-			}
-		}
-		else if (!ins.IsNew(KEY_INPUT_K))
-		{
-			armAngle_ = AsoUtility::Deg2RadF(0.0f);
-		}
-
+		attackPos_.y = (64 * 12);
+		isPoint_ = false;
+		isAttack_ = true;
 	}
+
+		if (dir_ == AsoUtility::DIR::RIGHT)
+		{
+			attackPos_.x += MOVE_POWER;
+			if (ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
+				for (int i = 1; i <= 11; ++i)
+				{
+					if (armAngle_ <= AsoUtility::Deg2RadF(-10.0f * i))
+					{
+						upCnt = i;
+					}
+				}
+				
+				if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(0.0f);
+					upCnt = 0;
+				}
+			}
+			else if (!ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+			}
+			attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 30;
+			attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 30;
+
+		}
+		else if (dir_ == AsoUtility::DIR::LEFT)
+		{
+			attackPos_.x -= MOVE_POWER;
+			if (ins.IsNew(KEY_INPUT_K))
+			{
+				armAngle_ += AsoUtility::Deg2RadF(5.0f);
+				for (int i = 1; i <= 11; ++i)
+				{
+					if (armAngle_ >= AsoUtility::Deg2RadF(10.0f * i))
+					{
+						upCnt = i;
+					}
+				}
+				if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
+				{
+					armAngle_ = AsoUtility::Deg2RadF(0.0f);
+					upCnt = 12;
+				}
+				
+			}
+			else if (!ins.IsNew(KEY_INPUT_K))
+			{
+
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+
+			}
+			attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 30;
+			attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 30;
+		}
+	
+	
 }
 
 
@@ -941,3 +1037,4 @@ void Player::CollisionPlantsLeftSide(void)
 		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
 	}
 }
+
