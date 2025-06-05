@@ -8,6 +8,9 @@ class EnemyManager;
 class Stage;
 class Camera;
 class Wall;
+class Blast;
+class Plants;
+class Water;
 
 class GameScene : public SceneBase
 {
@@ -27,6 +30,15 @@ private:
 	Camera* camera_;
 	// •Ç
 	Wall* wall_;
+	//UŒ‚
+	//”š”­
+	Blast* blast_;
+	//A•¨
+	Plants* plants_;
+	//…
+	Water* water_;
+
+
 
 	//”wŒi
 	int backImg_;
@@ -44,5 +56,5 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-
+	void Release(void);
 };

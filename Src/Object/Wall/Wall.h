@@ -82,9 +82,14 @@ public:
 	void SetPlantsPos(Vector2F pos);
 	void SetFlarePos(Vector2F pos);
 	void SetWaterPos(Vector2F pos);
+	void SetIsPlants(bool isAlive);
+	void SetIsFlare(bool isAlive);
+	void SetIsWater(bool isAlive);
+	void SetIsSphere(bool isAlive);
 
 	bool IsWaterCollision(Vector2 pos);
 	bool IsFlaereCollision(Vector2 pos);
 	bool IsPlantsCollision(Vector2 pos);
+	bool IsSphereCollision(Vector2 pos);
 };
 

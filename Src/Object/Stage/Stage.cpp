@@ -109,7 +109,7 @@ void Stage::LoadGroundCsvData(void)
 	}
 
 	// ファイルの読み込み
-	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage2.csv");
+	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage3.csv");
 	if (!ifs)
 	{
 		// エラーが発生
@@ -164,7 +164,7 @@ bool Stage::IsCollisionStage(Vector2 worldPos)
 	int chipNo = GetChipNo(mapPos);
 
 	// 障害物のチップ番号と当たっていたら真を返す
-	if (chipNo==0|| chipNo == 1|| chipNo == 2)
+	if (chipNo==0|| chipNo == 1|| chipNo == 2||chipNo==3)
 	{
 		return true;
 	}

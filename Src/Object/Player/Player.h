@@ -5,8 +5,9 @@
 class Stage;
 class Camera;
 class Wall;
-
-
+class Blast;
+class Water;
+class Plants;
 
 class Player
 {
@@ -38,6 +39,7 @@ public:
 	static constexpr int COL_OFFSET = 1;						//補正値
 	// 移動速度
 	static constexpr float MOVE_SPEED = 1.5f;
+	static constexpr float MOVE_POWER = 5.0f;
 
 	//重力
 	static constexpr float GRAVITY = 0.3f;
@@ -46,7 +48,7 @@ public:
 	static constexpr float MAX_GRAVITY = 8.5f;
 
 	//ジャンプ力
-	static constexpr float JUMP_POW = -20.5f;
+	static constexpr float JUMP_POW = -9.5f;
 
 	//加速度
 	static constexpr float MOVE_ACC_POW = 0.5f;
@@ -79,14 +81,19 @@ private:
 	//移動量
 	float movePosX_;
 	float movePosY_;
-
+	float speed_;
+	float maxSpeed_;
 	bool isJump_;//ジャンプ中かどうか
 
 	//ATTACK//==================================================================================================================
 	//攻撃中かどうか
 	bool isAttack_;//攻撃中かどうか
+	bool isPoint_;
+	int upCnt;
+	Vector2 attackPos_;
 
-
+	float armPower;
+	float movePos;
 	
 	//==========================================================================================================================
 
@@ -128,6 +135,11 @@ private:
 	//壁
 	Wall* wall_;
 
+	Blast* blast_;
+
+	Water* water_;
+
+	Plants* plants_;
 	AsoUtility::DIR dir_;
 
 	
@@ -145,7 +157,7 @@ public:
 	//プロトタイプ宣言
 	Player();
 	~Player();
-	void Init(Camera*camera,Stage*stage,Wall*wall);
+	void Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast,Water* water,Plants*plants);
 	void Update();
 	void Draw();
 
@@ -179,6 +191,8 @@ public:
 	bool IsPlantsHitRightPos(void);
 	bool IsPlantsHitLeftPos(void);
 
+	
+
 	//衝突判定
 	void CollisionFoot(void);
 	void CollisionHead(void);
@@ -196,6 +210,8 @@ public:
 	
 	void CollisionPlantsRightSide(void);
 	void CollisionPlantsLeftSide(void);
+
+	
 
 	//衝突判定描画
 	void DrawHitCollision(void);

@@ -1,5 +1,6 @@
 #include <DxLib.h>
 #include "../Application.h"
+#include "../Common/Vector2.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/ResourceManager.h"
@@ -9,6 +10,9 @@
 #include "../Object/Stage/Stage.h"
 #include "../Object/Camera/Camera.h"
 #include "../Object/Wall/Wall.h"
+#include "../Object/Attack/Blast.h"
+#include "../Object/Attack/Plants.h"
+#include "../Object/Attack/Water.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -34,19 +38,32 @@ void GameScene::Init(void)
 	camera_ = new Camera();
 	// •Ç
 	wall_ = new Wall();
-	
+	//UŒ‚
+	//”š”­
+	blast_ = new Blast();
+	//A•¨
+	plants_ = new Plants();
+	//…
+	water_ = new Water();
+
+
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 
-	player_->Init(camera_, stage_,wall_);
-	stage_->Init(this, player_,camera_);
-	camera_->Init(player_,this);
+	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
+	stage_->Init(this, player_, camera_);
+	camera_->Init(player_, this);
 	enemyManager_->Init();
 
 	//enemy_->Init();
 	wall_->Init(camera_);
 
 
-	
+
+
+
+	blast_->Init(camera_);
+	water_->Init(camera_);
+	plants_->Init(camera_);
 }
 
 void GameScene::Update(void)
@@ -67,8 +84,40 @@ void GameScene::Update(void)
 
 	// •Ç‚ÌXV
 	wall_->Update();
-	
+	blast_->Update();
+	water_->Update();
+	plants_->Update();
 
+	if (ins.IsTrgDown(KEY_INPUT_N))
+	{
+		Vector2 pos;
+		pos.x = 100;
+		pos.y = 100;
+
+		blast_->SetBlastPos(pos);
+		blast_->SetIsBlast(true);
+
+	}
+	if (ins.IsTrgDown(KEY_INPUT_Z))
+	{
+		Vector2 pos;
+		pos.x = 100;
+		pos.y = 100;
+
+		water_->CreateEffect(pos);
+
+
+	}
+	if (ins.IsTrgDown(KEY_INPUT_V))
+	{
+		Vector2 pos;
+		pos.x = 100;
+		pos.y = 100;
+
+		
+		plants_->SetPlantsPos(pos);
+		plants_->SetIsPlants(true);
+	}
 	// ƒV[ƒ“‘JˆÚ
 	if (ins.IsTrgDown(KEY_INPUT_R))
 	{
@@ -98,11 +147,25 @@ void GameScene::Draw(void)
 	// ƒGƒlƒ~[‚Ì•`‰æ
 	enemyManager_->Draw();
 
-	
+	blast_->Draw();
+	water_->Draw();
+	plants_->Draw();
 
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 	
 
 }
 
-
+void GameScene::Release()
+{
+	delete plants_;
+	delete stage_;
+	delete wall_;
+	delete camera_;
+	blast_->Release();
+	delete blast_;
+	water_->Release();
+	delete water_;
+	plants_->Release();
+	delete plants_;
+}
