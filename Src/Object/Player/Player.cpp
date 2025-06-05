@@ -51,8 +51,8 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 
 	
 	// 初期位置設定
-	pos_.x = 100.0f;
-	pos_.y = 100.0f;
+	pos_.x = 64*2;
+	pos_.y = 64*8;
 	
 	//アニメーション初期化
 	armAngle_= AsoUtility::Deg2RadF(0.0f);
@@ -115,17 +115,17 @@ void Player::Draw()
 	
 
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
-	
+	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y, 5, cr);
+	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y, 5, cr);
+	if (isPoint_)
+	{
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y, 5, cr);
+	}
 #ifdef _DEBUG
 	//当たり判定の可視化
 	DrawHitCollision();
 
-	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y, 5, 0x0000ff);
-	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y, 5, 0x0000ff);
-	if (isPoint_)
-	{
-		DrawCircle(attackPos_.x - cpos.x, attackPos_.y, 5, 0x0000ff);
-	}
+	
 
 #endif // DEBUG
 

@@ -27,26 +27,26 @@ void Camera::Update()
 	//移動スピード
 	constexpr int SPEED_CAMERA = 8;
 
-	//カメラ座標を移動させる
-	if (CheckHitKey(KEY_INPUT_I))
-	{
-		cameraPos_.y -= SPEED_CAMERA;
-	}
-	
-	if (CheckHitKey(KEY_INPUT_K))
-	{
-		cameraPos_.y += SPEED_CAMERA;
-	}
-	
-	if (CheckHitKey(KEY_INPUT_J))
-	{
-		cameraPos_.x -= SPEED_CAMERA;
-	}
-	
-	if (CheckHitKey(KEY_INPUT_L))
-	{
-		cameraPos_.x += SPEED_CAMERA;
-	}
+	////カメラ座標を移動させる
+	//if (CheckHitKey(KEY_INPUT_I))
+	//{
+	//	cameraPos_.y -= SPEED_CAMERA;
+	//}
+	//
+	//if (CheckHitKey(KEY_INPUT_K))
+	//{
+	//	cameraPos_.y += SPEED_CAMERA;
+	//}
+	//
+	//if (CheckHitKey(KEY_INPUT_J))
+	//{
+	//	cameraPos_.x -= SPEED_CAMERA;
+	//}
+	//
+	//if (CheckHitKey(KEY_INPUT_L))
+	//{
+	//	cameraPos_.x += SPEED_CAMERA;
+	//}
 	
 
 

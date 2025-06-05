@@ -21,5 +21,9 @@ private:
 
 	int clearImg_; // ƒNƒŠƒA‰æ‘œ
 
+	int  blinkCycle; // “_–ÅüŠú
+
+	float frameCount;
+
 };
 

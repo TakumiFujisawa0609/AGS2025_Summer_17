@@ -88,7 +88,7 @@ void GameScene::Update(void)
 	water_->Update();
 	plants_->Update();
 
-	if (ins.IsTrgDown(KEY_INPUT_N))
+	/*if (ins.IsTrgDown(KEY_INPUT_N))
 	{
 		Vector2 pos;
 		pos.x = 100;
@@ -117,9 +117,9 @@ void GameScene::Update(void)
 		
 		plants_->SetPlantsPos(pos);
 		plants_->SetIsPlants(true);
-	}
+	}*/
 	// ƒV[ƒ“‘JˆÚ
-	if (ins.IsTrgDown(KEY_INPUT_R)||player_->GetPlayerPos().x>64 * 78)
+	if (player_->GetPlayerPos().x>64 * 78)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
 	}
@@ -151,8 +151,13 @@ void GameScene::Draw(void)
 	water_->Draw();
 	plants_->Draw();
 
-	DrawFormatString(0, 0, 0x000000, "GameScene");
 	
+#ifdef _DEBUG
+	DrawFormatString(0, 0, 0x000000, "GameScene");
+
+
+
+#endif // DEBUG
 
 }
 

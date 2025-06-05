@@ -43,7 +43,7 @@ if (ins.IsTrgDown(KEY_INPUT_SPACE))
 void TitleScene::Draw(void)  
 {  
   frameCount++;  
-  DrawFormatString(0, 0, 0x000000, "TitleScene");  
+ 
 
   // ‰æ‘œ•`‰æ  
   DrawGraph(0, 0, img_, TRUE);  
@@ -53,4 +53,12 @@ void TitleScene::Draw(void)
       DrawFormatString(725, 700, 0x000000, "PREASE_HIT_SPACE_KEY");
   }  
   SetFontSize(16);
+
+#ifdef _DEBUG
+  //“–‚½‚è”»’è‚Ì‰ÂŽ‹‰»
+  DrawFormatString(0, 0, 0x000000, "TitleScene");
+
+
+
+#endif // DEBUG
 }

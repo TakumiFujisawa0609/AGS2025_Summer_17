@@ -36,7 +36,14 @@ void Stage::Init(GameScene* scene,Player*player,Camera*camera)
 	ResourceManager& res = ResourceManager::GetInstance();
 	mapChip_ = res.Load(ResourceManager::SRC::MAPCHIP).handleIds_;
 
-	
+	b_ = LoadGraph("Data/Image/Stage/B.png");
+	g_ = LoadGraph("Data/Image/Stage/G.png");
+	j_ = LoadGraph("Data/Image/Stage/Janp.png");
+	r_ = LoadGraph("Data/Image/Stage/R.png");
+	rgb_ = LoadGraph("Data/Image/Stage/RGB.png");
+	m_ = LoadGraph("Data/Image/Stage/Move.png");
+	d_ = LoadGraph("Data/Image/Stage/Move+.png");
+	k_ = LoadGraph("Data/Image/Stage/k.png");
 
 	// 外部ファイルからマップデータを読み込む
 	LoadGroundCsvData();
@@ -82,10 +89,17 @@ void Stage::Draw()
 				
 				
 				DrawGraph(mapChipScreenPosX, mapChipScreenPosY,imgHandle, true);
-			
+				
 		}
 	}
-
+	DrawGraph(64 - cameraPos.x, 64*2, m_, true);
+	DrawGraph(64 * 12 - cameraPos.x, 64*2, j_, true);
+	DrawGraph(64 * 22 - cameraPos.x, 64*2, d_, true);
+	DrawGraph(64 * 27 - cameraPos.x, 64*2, rgb_, true);
+	DrawGraph(64 * 32 - cameraPos.x, 64*2, g_, true);
+	DrawGraph(64 * 45 - cameraPos.x, 64*2, r_, true);
+	DrawGraph(64 * 59 - cameraPos.x, 64*2, b_, true);
+	DrawGraph(64 * 37 - cameraPos.x, 64 * 2, k_, true);
 }
 
 void Stage::Release()
@@ -95,6 +109,14 @@ void Stage::Release()
 	{
 		DeleteGraph(mapChip_[i]);
 	}
+	DeleteGraph(m_);
+	DeleteGraph(j_);
+	DeleteGraph(d_);
+	DeleteGraph(rgb_);
+	DeleteGraph(g_);
+	DeleteGraph(r_);
+	DeleteGraph(b_);
+	DeleteGraph(k_);
 }
 
 void Stage::LoadGroundCsvData(void)

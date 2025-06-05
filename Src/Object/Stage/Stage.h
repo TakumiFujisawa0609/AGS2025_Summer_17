@@ -52,6 +52,16 @@ public:
 private:
 	
 
+	int r_;
+	int g_;
+	int b_;
+	int rgb_;
+	int j_;
+	int m_;
+	int d_;
+	int k_;
+
+
 
 	// ƒ}ƒbƒv‰æ‘œ
 	int* mapChip_;
