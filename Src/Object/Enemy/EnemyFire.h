@@ -24,6 +24,7 @@ public:
     void Draw();
 
 private:
+    Camera* camera_;
 
     Vector2F pos_;
 
