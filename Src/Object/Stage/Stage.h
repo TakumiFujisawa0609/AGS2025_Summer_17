@@ -1,7 +1,6 @@
 #pragma once
 #include "../../Common/Vector2.h"
 class Player;
-class GameScene;
 class Camera;
 
 class Stage
@@ -27,15 +26,9 @@ public:
 	static constexpr int MAP_GROUND_SIZE_X = 100;
 	static constexpr int MAP_GROUND_SIZE_Y = 12;
 
-	
-
-	
-
-	
-
-
-
-
+	// 地上マップのサイズ(縦枚数×横枚数)
+	static constexpr int MAP3_GROUND_SIZE_X = 100;
+	static constexpr int MAP3_GROUND_SIZE_Y = 24;
 private:
 	
 
@@ -56,8 +49,6 @@ private:
 	// 地上マップ
 	int groundMap_[MAP_GROUND_SIZE_Y][MAP_GROUND_SIZE_X];
 
-	// ゲームシーンのポインタ変数
-	GameScene* gameScene_;
 
 	// プレイヤーのポインタ変数
 	Player* player_;
@@ -70,27 +61,25 @@ public:
 	Stage();
 	~Stage();
 
-	void Init(GameScene* scene, Player* player, Camera* camera);
+	void Init(Player* player, Camera* camera);
 	void Update();
 	void Draw();
 	void Release();
 
-
-	/*void UpdateStage1();
+	void InitStage1();
+	void UpdateStage1();
 	void DrawStage1();
-	void ReleaseStage1();
 	void LoadGroundCsvDataStage1(void);
 
-
+	void InitStage2();
 	void UpdateStage2();
 	void DrawStage2();
-	void ReleaseStage2();
 	void LoadGroundCsvDataStage2(void);
 
-	void UpdateStage2();
-	void DrawStage2();
-	void ReleaseStage2();
-	void LoadGroundCsvDataStage(void);*/
+	void InitStage3();
+	void UpdateStage3();
+	void DrawStage3();
+	void LoadGroundCsvDataStage3(void);
 
 
 

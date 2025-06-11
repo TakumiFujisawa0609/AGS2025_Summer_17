@@ -50,8 +50,8 @@ void GameScene::Init(void)
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 
 	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
-	stage_->Init(this, player_, camera_);
-	camera_->Init(player_, this);
+	stage_->Init(player_, camera_);
+	camera_->Init(player_);
 	enemyManager_->Init();
 
 	//enemy_->Init();

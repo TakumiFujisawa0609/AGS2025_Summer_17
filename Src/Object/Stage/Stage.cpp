@@ -10,7 +10,6 @@
 #include "../../Application.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Manager/ResourceManager.h"
-#include "../../Scene/GameScene.h"
 #include "../Player/Player.h"
 #include "../Camera/Camera.h"
 #include "Stage.h"
@@ -23,7 +22,7 @@ Stage::~Stage(void)
 {
 }
 
-void Stage::Init(GameScene* scene,Player*player,Camera*camera)
+void Stage::Init(Player*player,Camera*camera)
 {
 	// ゲームシーンの機能を使えるようにする
 	gameScene_ = scene;
@@ -36,22 +35,13 @@ void Stage::Init(GameScene* scene,Player*player,Camera*camera)
 	ResourceManager& res = ResourceManager::GetInstance();
 	mapChip_ = res.Load(ResourceManager::SRC::MAPCHIP).handleIds_;
 
-	b_ = LoadGraph("Data/Image/Stage/B.png");
-	g_ = LoadGraph("Data/Image/Stage/G.png");
-	j_ = LoadGraph("Data/Image/Stage/Janp.png");
-	r_ = LoadGraph("Data/Image/Stage/R.png");
-	rgb_ = LoadGraph("Data/Image/Stage/RGB.png");
-	m_ = LoadGraph("Data/Image/Stage/Move.png");
-	d_ = LoadGraph("Data/Image/Stage/Move+.png");
-	k_ = LoadGraph("Data/Image/Stage/k.png");
+	
 
-	// 外部ファイルからマップデータを読み込む
-	LoadGroundCsvData();
 }
 
 void Stage::Update()
 {
-	//
+	
 }
 
 void Stage::Draw()
@@ -194,95 +184,304 @@ bool Stage::IsCollisionStage(Vector2 worldPos)
 	return false;
 }
 
-//void Stage::UpdateStage1()
-//{
-//
-//}
-//void Stage::DrawStage1()
-//{
-//
-//}
-//void Stage::ReleaseStage1()
-//{
-//
-//}
-//void Stage::LoadGroundCsvDataStage1(void)
-//{
-//	// 地上データの初期化
-//	for (int y = 0; y < MAP_GROUND_SIZE_Y; y++)
-//	{
-//		for (int x = 0; x < MAP_GROUND_SIZE_X; x++)
-//		{
-//			groundMap_[y][x] = -1;
-//		}
-//	}
-//
-//	// ファイルの読み込み
-//	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage3.csv");
-//	if (!ifs)
-//	{
-//		// エラーが発生
-//		return;
-//	}
-//
-//	// ファイルを１行ずつ読み込む
-//	std::string line;
-//	std::string c;
-//	int chipNo = 0;
-//	int x = 0;
-//	int y = 0;
-//	while (getline(ifs, line))
-//	{
-//		// 1行情報 string を ifstream の仲間に変換
-//		std::istringstream stream(line);
-//
-//		// 1文字ずつ読み込み(カンマ区切り)
-//		x = 0;
-//		while (getline(stream, c, ','))
-//		{
-//			// stringからintに変換
-//			chipNo = stoi(c);
-//
-//			// 2次元配列にマップチップ番号を格納
-//			groundMap_[y][x] = chipNo;
-//
-//			++x;
-//		}
-//		++y;
-//	}
-//}
-//
-//
-//void Stage::UpdateStage2()
-//{
-//
-//}
-//void Stage::DrawStage2()
-//{
-//
-//}
-//void Stage::ReleaseStage2()
-//{
-//
-//}
-//void Stage::LoadGroundCsvDataStage2(void)
-//{
-//
-//}
-//
-//void Stage::UpdateStage2()
-//{
-//
-//}
-//void Stage::DrawStage2()
-//{
-//
-//}
-//void ReleaseStage2()
-//{
-//
-//}
-//void LoadGroundCsvDataStage(void)
-//{
-//
-//}
+void Stage::InitStage1()
+{
+	b_ = LoadGraph("Data/Image/Stage/B.png");
+	g_ = LoadGraph("Data/Image/Stage/G.png");
+	j_ = LoadGraph("Data/Image/Stage/Janp.png");
+	r_ = LoadGraph("Data/Image/Stage/R.png");
+	rgb_ = LoadGraph("Data/Image/Stage/RGB.png");
+	m_ = LoadGraph("Data/Image/Stage/Move.png");
+	d_ = LoadGraph("Data/Image/Stage/Move+.png");
+	k_ = LoadGraph("Data/Image/Stage/k.png");
+	// 外部ファイルからマップデータを読み込む
+	LoadGroundCsvDataStage1();
+
+}
+
+void Stage::UpdateStage1()
+{
+
+}
+void Stage::DrawStage1()
+{
+	//カメラ座標の取得
+	Vector2 cameraPos = camera_->GetCameraPos();
+
+	// マップチップの描画
+	for (int y = 0; y < MAP_GROUND_SIZE_Y; y++)
+	{
+		for (int x = 0; x < MAP_GROUND_SIZE_X; x++)
+		{
+			// マップチップ番号を取得
+			int chipNo = groundMap_[y][x];
+
+			//マップチップ番号から画像のハンドルIDを取得
+			int imgHandle = mapChip_[chipNo];
+
+
+			//マップチップのワールド座標
+			int mapChipWorldPosX = x * CHIP_SIZE_X;
+			int mapChipWorldPosY = y * CHIP_SIZE_Y;
+
+
+
+			//マップチップのスクリーン座標
+			//２Dでは「スクリーン座標＝ワールド座標ーカメラ座標」
+			int mapChipScreenPosX = mapChipWorldPosX - cameraPos.x;
+			int mapChipScreenPosY = mapChipWorldPosY - cameraPos.y;
+
+
+			//DrawRotaGraphF(mapChipScreenPosX, mapChipScreenPosY, 1.0, 0.0, imgHandle, true);
+
+
+
+			DrawGraph(mapChipScreenPosX, mapChipScreenPosY, imgHandle, true);
+
+		}
+	}
+	DrawGraph(64 - cameraPos.x, 64 * 2, m_, true);
+	DrawGraph(64 * 12 - cameraPos.x, 64 * 2, j_, true);
+	DrawGraph(64 * 22 - cameraPos.x, 64 * 2, d_, true);
+	DrawGraph(64 * 27 - cameraPos.x, 64 * 2, rgb_, true);
+	DrawGraph(64 * 32 - cameraPos.x, 64 * 2, g_, true);
+	DrawGraph(64 * 45 - cameraPos.x, 64 * 2, r_, true);
+	DrawGraph(64 * 59 - cameraPos.x, 64 * 2, b_, true);
+	DrawGraph(64 * 37 - cameraPos.x, 64 * 2, k_, true);
+}
+
+void Stage::LoadGroundCsvDataStage1(void)
+{
+	// 地上データの初期化
+	for (int y = 0; y < MAP_GROUND_SIZE_Y; y++)
+	{
+		for (int x = 0; x < MAP_GROUND_SIZE_X; x++)
+		{
+			groundMap_[y][x] = -1;
+		}
+	}
+
+	// ファイルの読み込み
+	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage3.csv");
+	if (!ifs)
+	{
+		// エラーが発生
+		return;
+	}
+
+	// ファイルを１行ずつ読み込む
+	std::string line;
+	std::string c;
+	int chipNo = 0;
+	int x = 0;
+	int y = 0;
+	while (getline(ifs, line))
+	{
+		// 1行情報 string を ifstream の仲間に変換
+		std::istringstream stream(line);
+
+		// 1文字ずつ読み込み(カンマ区切り)
+		x = 0;
+		while (getline(stream, c, ','))
+		{
+			// stringからintに変換
+			chipNo = stoi(c);
+
+			// 2次元配列にマップチップ番号を格納
+			groundMap_[y][x] = chipNo;
+
+			++x;
+		}
+		++y;
+	}
+}
+
+void Stage::InitStage2()
+{
+	// 外部ファイルからマップデータを読み込む
+	LoadGroundCsvDataStage2();
+}
+
+void Stage::UpdateStage2()
+{
+
+}
+void Stage::DrawStage2()
+{
+	//カメラ座標の取得
+	Vector2 cameraPos = camera_->GetCameraPos();
+
+	// マップチップの描画
+	for (int y = 0; y < MAP_GROUND_SIZE_Y; y++)
+	{
+		for (int x = 0; x < MAP_GROUND_SIZE_X; x++)
+		{
+			// マップチップ番号を取得
+			int chipNo = groundMap_[y][x];
+
+			//マップチップ番号から画像のハンドルIDを取得
+			int imgHandle = mapChip_[chipNo];
+
+
+			//マップチップのワールド座標
+			int mapChipWorldPosX = x * CHIP_SIZE_X;
+			int mapChipWorldPosY = y * CHIP_SIZE_Y;
+
+
+
+			//マップチップのスクリーン座標
+			//２Dでは「スクリーン座標＝ワールド座標ーカメラ座標」
+			int mapChipScreenPosX = mapChipWorldPosX - cameraPos.x;
+			int mapChipScreenPosY = mapChipWorldPosY - cameraPos.y;
+
+
+			//DrawRotaGraphF(mapChipScreenPosX, mapChipScreenPosY, 1.0, 0.0, imgHandle, true);
+
+
+
+			DrawGraph(mapChipScreenPosX, mapChipScreenPosY, imgHandle, true);
+
+		}
+	}
+}
+
+void Stage::LoadGroundCsvDataStage2(void)
+{
+	// 地上データの初期化
+	for (int y = 0; y < MAP_GROUND_SIZE_Y; y++)
+	{
+		for (int x = 0; x < MAP_GROUND_SIZE_X; x++)
+		{
+			groundMap_[y][x] = -1;
+		}
+	}
+
+	// ファイルの読み込み
+	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage4.csv");
+	if (!ifs)
+	{
+		// エラーが発生
+		return;
+	}
+
+	// ファイルを１行ずつ読み込む
+	std::string line;
+	std::string c;
+	int chipNo = 0;
+	int x = 0;
+	int y = 0;
+	while (getline(ifs, line))
+	{
+		// 1行情報 string を ifstream の仲間に変換
+		std::istringstream stream(line);
+
+		// 1文字ずつ読み込み(カンマ区切り)
+		x = 0;
+		while (getline(stream, c, ','))
+		{
+			// stringからintに変換
+			chipNo = stoi(c);
+
+			// 2次元配列にマップチップ番号を格納
+			groundMap_[y][x] = chipNo;
+
+			++x;
+		}
+		++y;
+	}
+}
+
+void Stage::InitStage3()
+{
+	// 外部ファイルからマップデータを読み込む
+	LoadGroundCsvDataStage3();
+}
+
+void Stage::UpdateStage3()
+{
+
+}
+void Stage::DrawStage3()
+{
+	//カメラ座標の取得
+	Vector2 cameraPos = camera_->GetCameraPos();
+
+	// マップチップの描画
+	for (int y = 0; y < MAP3_GROUND_SIZE_Y; y++)
+	{
+		for (int x = 0; x < MAP3_GROUND_SIZE_X; x++)
+		{
+			// マップチップ番号を取得
+			int chipNo = groundMap_[y][x];
+
+			//マップチップ番号から画像のハンドルIDを取得
+			int imgHandle = mapChip_[chipNo];
+
+
+			//マップチップのワールド座標
+			int mapChipWorldPosX = x * CHIP_SIZE_X;
+			int mapChipWorldPosY = y * CHIP_SIZE_Y;
+
+
+
+			//マップチップのスクリーン座標
+			//２Dでは「スクリーン座標＝ワールド座標ーカメラ座標」
+			int mapChipScreenPosX = mapChipWorldPosX - cameraPos.x;
+			int mapChipScreenPosY = mapChipWorldPosY - cameraPos.y;
+
+
+			//DrawRotaGraphF(mapChipScreenPosX, mapChipScreenPosY, 1.0, 0.0, imgHandle, true);
+
+
+
+			DrawGraph(mapChipScreenPosX, mapChipScreenPosY, imgHandle, true);
+
+		}
+	}
+}
+
+void Stage::LoadGroundCsvDataStage3(void)
+{
+	// 地上データの初期化
+	for (int y = 0; y < MAP3_GROUND_SIZE_Y; y++)
+	{
+		for (int x = 0; x < MAP3_GROUND_SIZE_X; x++)
+		{
+			groundMap_[y][x] = -1;
+		}
+	}
+
+	// ファイルの読み込み
+	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage3.csv");
+	if (!ifs)
+	{
+		// エラーが発生
+		return;
+	}
+
+	// ファイルを１行ずつ読み込む
+	std::string line;
+	std::string c;
+	int chipNo = 0;
+	int x = 0;
+	int y = 0;
+	while (getline(ifs, line))
+	{
+		// 1行情報 string を ifstream の仲間に変換
+		std::istringstream stream(line);
+
+		// 1文字ずつ読み込み(カンマ区切り)
+		x = 0;
+		while (getline(stream, c, ','))
+		{
+			// stringからintに変換
+			chipNo = stoi(c);
+
+			// 2次元配列にマップチップ番号を格納
+			groundMap_[y][x] = chipNo;
+
+			++x;
+		}
+		++y;
+	}
+}

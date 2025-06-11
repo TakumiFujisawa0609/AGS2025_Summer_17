@@ -1,7 +1,6 @@
 #include <DxLib.h>
 #include "../../Application.h"
 #include "../../Utility/AsoUtility.h"
-#include "../../Scene/GameScene.h"
 #include "../Player/Player.h"
 #include "Camera.h"
 
@@ -13,10 +12,10 @@ Camera::~Camera()
 {
 
 }
-void Camera::Init(Player*player,GameScene*gameScene)
+void Camera::Init(Player*player)
 {
 	
-	gameScene_ = gameScene;
+	
 	player_ = player;
 	cameraPos_.x = 0;
 	cameraPos_.y = 0;
