@@ -54,7 +54,7 @@ void Blast::Draw(void)
 			/*DrawBillboard3D(
 				blastPos, BLAST_SIZE_X, BLAST_SIZE_Y, BLAST_Z, 0.0f,
 				blastImgs[blastImgAnimCount], true);*/
-			DrawRotaGraphF(blastPos.x-camera_->GetCameraPos().x, blastPos.y, 1.0f, 0.0f, blastImgs[blastImgAnimCount], TRUE);
+			DrawRotaGraphF(blastPos.x-camera_->GetCameraPos().x, blastPos.y - camera_->GetCameraPos().y, 1.0f, 0.0f, blastImgs[blastImgAnimCount], TRUE);
 		}
 		else
 		{

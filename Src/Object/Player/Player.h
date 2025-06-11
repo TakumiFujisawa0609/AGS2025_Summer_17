@@ -38,7 +38,7 @@ public:
 	static constexpr int HALF_COL_SIZE_Y = COL_SIZE_Y / 2;	//縦半分
 	static constexpr int COL_OFFSET = 1;						//補正値
 	// 移動速度
-	static constexpr float MOVE_SPEED = 1.5f;
+	static constexpr float MOVE_SPEED = 2.0f;
 	static constexpr float MOVE_POWER = 5.0f;
 
 	//重力
@@ -57,7 +57,7 @@ public:
 	static constexpr float MOVE_DEC_POW = 0.05f;
 
 	//移動速度最大値
-	static constexpr float MAX_MOVE_SPEED = 1.5f;
+	static constexpr float MAX_MOVE_SPEED = 2.0f;
 
 private:
 	//変数
@@ -89,6 +89,8 @@ private:
 	//攻撃中かどうか
 	bool isAttack_;//攻撃中かどうか
 	bool isPoint_;
+	bool dirChange_;
+
 	int upCnt;
 	Vector2 attackPos_;
 

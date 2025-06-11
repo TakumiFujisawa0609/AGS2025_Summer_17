@@ -81,7 +81,7 @@ void Stage::Draw()
 			//マップチップのスクリーン座標
 			//２Dでは「スクリーン座標＝ワールド座標ーカメラ座標」
 			int mapChipScreenPosX = mapChipWorldPosX - cameraPos.x;
-			int mapChipScreenPosY = mapChipWorldPosY;
+			int mapChipScreenPosY = mapChipWorldPosY - cameraPos.y;
 
 			
 				//DrawRotaGraphF(mapChipScreenPosX, mapChipScreenPosY, 1.0, 0.0, imgHandle, true);
@@ -194,3 +194,95 @@ bool Stage::IsCollisionStage(Vector2 worldPos)
 	return false;
 }
 
+//void Stage::UpdateStage1()
+//{
+//
+//}
+//void Stage::DrawStage1()
+//{
+//
+//}
+//void Stage::ReleaseStage1()
+//{
+//
+//}
+//void Stage::LoadGroundCsvDataStage1(void)
+//{
+//	// 地上データの初期化
+//	for (int y = 0; y < MAP_GROUND_SIZE_Y; y++)
+//	{
+//		for (int x = 0; x < MAP_GROUND_SIZE_X; x++)
+//		{
+//			groundMap_[y][x] = -1;
+//		}
+//	}
+//
+//	// ファイルの読み込み
+//	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage3.csv");
+//	if (!ifs)
+//	{
+//		// エラーが発生
+//		return;
+//	}
+//
+//	// ファイルを１行ずつ読み込む
+//	std::string line;
+//	std::string c;
+//	int chipNo = 0;
+//	int x = 0;
+//	int y = 0;
+//	while (getline(ifs, line))
+//	{
+//		// 1行情報 string を ifstream の仲間に変換
+//		std::istringstream stream(line);
+//
+//		// 1文字ずつ読み込み(カンマ区切り)
+//		x = 0;
+//		while (getline(stream, c, ','))
+//		{
+//			// stringからintに変換
+//			chipNo = stoi(c);
+//
+//			// 2次元配列にマップチップ番号を格納
+//			groundMap_[y][x] = chipNo;
+//
+//			++x;
+//		}
+//		++y;
+//	}
+//}
+//
+//
+//void Stage::UpdateStage2()
+//{
+//
+//}
+//void Stage::DrawStage2()
+//{
+//
+//}
+//void Stage::ReleaseStage2()
+//{
+//
+//}
+//void Stage::LoadGroundCsvDataStage2(void)
+//{
+//
+//}
+//
+//void Stage::UpdateStage2()
+//{
+//
+//}
+//void Stage::DrawStage2()
+//{
+//
+//}
+//void ReleaseStage2()
+//{
+//
+//}
+//void LoadGroundCsvDataStage(void)
+//{
+//
+//}

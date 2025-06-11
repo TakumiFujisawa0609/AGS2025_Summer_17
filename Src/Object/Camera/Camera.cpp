@@ -85,28 +85,28 @@ void Camera::Update()
 
 	//カメラの上側処理
 	//カメラの上側座標よりプレイヤーが上に行っていたら
-	//if (playerPos.y < cameraPos_.y + FOCAS_Y)
-	//{
-	//	//カメラ座標をプレイヤーの座標にする
-	//	cameraPos_.y = playerPos.y - FOCAS_Y;
-	//	if (cameraPos_.y < 0)
-	//	{
-	//		cameraPos_.y = 0;
-	//	}
-	//}
-	////カメラに移る範囲の右枠X座標
-	//int cameraDownSidePosY = cameraPos_.y + Application::SCREEN_SIZE_Y;
+	if (playerPos.y < cameraPos_.y + FOCAS_Y)
+	{
+		//カメラ座標をプレイヤーの座標にする
+		cameraPos_.y = playerPos.y - FOCAS_Y;
+		if (cameraPos_.y < 0)
+		{
+			cameraPos_.y = 0;
+		}
+	}
+	//カメラに移る範囲の右枠X座標
+	int cameraDownSidePosY = cameraPos_.y + Application::SCREEN_SIZE_Y;
 
-	////カメラの下枠処理
-	//
-	//if (cameraPos_.y + Application::SCREEN_SIZE_Y - FOCAS_Y < playerPos.y)
-	//{
-	//	cameraPos_.y = (playerPos.y - Application::SCREEN_SIZE_Y) + FOCAS_Y;
-	//	if (cameraPos_.y + Application::SCREEN_SIZE_Y > (32 * 30))
-	//	{
-	//		cameraPos_.y = (32 * 30)- Application::SCREEN_SIZE_Y;
-	//	}
-	//}
+	//カメラの下枠処理
+	
+	if (cameraPos_.y + Application::SCREEN_SIZE_Y - FOCAS_Y < playerPos.y)
+	{
+		cameraPos_.y = (playerPos.y - Application::SCREEN_SIZE_Y) + FOCAS_Y;
+		if (cameraPos_.y + Application::SCREEN_SIZE_Y > (32 * 30))
+		{
+			cameraPos_.y = (32 * 30)- Application::SCREEN_SIZE_Y;
+		}
+	}
 
 	//if (cameraDownSidePosY - FOCAS_Y < playerPos.y)
 	//{

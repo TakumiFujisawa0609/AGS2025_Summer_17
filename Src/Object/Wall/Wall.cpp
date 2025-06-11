@@ -116,11 +116,11 @@ void Wall::AnimUpdate()
 
 void Wall::Draw()
 {
-	float cameraPos = camera_->GetCameraPos().x;
+	Vector2 cameraPos = camera_->GetCameraPos();
 	//êAï®ÇÃï`âÊ
 	if (isPlantsAlive_)
 	{
-		DrawGraph(plantsPos_.x- cameraPos, plantsPos_.y, plantsImg_, TRUE);
+		DrawGraph(plantsPos_.x- cameraPos.x, plantsPos_.y - cameraPos.y, plantsImg_, TRUE);
 
 
 		
@@ -128,24 +128,24 @@ void Wall::Draw()
 	
 	if (isFlareAlive_)
 	{
-		DrawGraph(flarePos_.x- cameraPos, flarePos_.y, flareImg_[flareNo_], TRUE);
+		DrawGraph(flarePos_.x- cameraPos.x, flarePos_.y - cameraPos.y, flareImg_[flareNo_], TRUE);
 	}
 
 	//êÖÇÃï`âÊ
 	if (isWaterAlive_)
 	{
-		DrawGraph(waterPos_.x- cameraPos, waterPos_.y, waterImg_[waterNo_], TRUE);
+		DrawGraph(waterPos_.x- cameraPos.x, waterPos_.y - cameraPos.y, waterImg_[waterNo_], TRUE);
 	}
 	//DrawBox(waterPos_.x + cameraPos, waterPos_.y, waterPos_.x + WATER_SIZE_X + cameraPos, waterPos_.y + WATER_SIZE_Y,0x000000,true);
 	//êÖèª
 	if (isSphereAlive_) 
 	{
-		DrawGraph(spherePos_.x - cameraPos, spherePos_.y, wSphereImg_[0], TRUE);
+		DrawGraph(spherePos_.x - cameraPos.x, spherePos_.y - cameraPos.y, wSphereImg_[0], TRUE);
 	}
 	else
 	{
 		
-		DrawGraph(spherePos_.x - cameraPos, spherePos_.y, wSphereImg_[1], TRUE);
+		DrawGraph(spherePos_.x - cameraPos.x, spherePos_.y - cameraPos.y, wSphereImg_[1], TRUE);
 	}
 	
 }

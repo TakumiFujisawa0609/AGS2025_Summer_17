@@ -72,6 +72,7 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 	//攻撃
 	isAttack_ = true;
 	isPoint_ = false;
+	dirChange_ = true;
 	attackPos_.x = 0;
 	attackPos_.y = 0;
 	movePos = 0.0f;
@@ -105,21 +106,21 @@ void Player::Draw()
 {
 	// 画像の描画
 	Vector2 cpos= camera_->GetCameraPos();
-	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
+	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y) - cpos.y, 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
 
 	//腕の描画
 	//色変更
 	//GraphFilter(armImg_, DX_GRAPH_FILTER_HSB, cr, cr,cr,cr);
 	
- 	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y), 1.0f, armAngle_, armImg_[animaAem_], TRUE);
+ 	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y) - cpos.y, 1.0f, armAngle_, armImg_[animaAem_], TRUE);
 	
 
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
-	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y, 5, cr);
-	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y, 5, cr);
+	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 5, cr);
+	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y - cpos.y, 5, cr);
 	if (isPoint_)
 	{
-		DrawCircle(attackPos_.x - cpos.x, attackPos_.y, 5, cr);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 5, cr);
 	}
 #ifdef _DEBUG
 	//当たり判定の可視化
@@ -355,32 +356,34 @@ void Player::Attack()
 {
 	//攻撃処理
 	InputManager& ins = InputManager::GetInstance();
-	if (ins.IsTrgDown(KEY_INPUT_1))
+	if (isAttack_)
 	{
-		animaAem_ = 3;
-		elementType_ = ELEMENT_TYPE::FIRE;
-		
-	}
-	if (ins.IsTrgDown(KEY_INPUT_2))
-	{
-		animaAem_ = 1;
-		elementType_ = ELEMENT_TYPE::WATER;
-		
-	}
-	if (ins.IsTrgDown(KEY_INPUT_3))
-	{
-		animaAem_ = 2;
-		elementType_ = ELEMENT_TYPE::PLANT;
-		
-	}
-	if (ins.IsTrgDown(KEY_INPUT_4))
-	{
-		animaAem_ = 0;
-		elementType_ = ELEMENT_TYPE::NORMAL;
-		
-	}
+		if (ins.IsTrgDown(KEY_INPUT_1))
+		{
+			animaAem_ = 3;
+			elementType_ = ELEMENT_TYPE::FIRE;
 
-	
+		}
+		if (ins.IsTrgDown(KEY_INPUT_2))
+		{
+			animaAem_ = 1;
+			elementType_ = ELEMENT_TYPE::WATER;
+
+		}
+		if (ins.IsTrgDown(KEY_INPUT_3))
+		{
+			animaAem_ = 2;
+			elementType_ = ELEMENT_TYPE::PLANT;
+
+		}
+		if (ins.IsTrgDown(KEY_INPUT_4))
+		{
+			animaAem_ = 0;
+			elementType_ = ELEMENT_TYPE::NORMAL;
+
+		}
+
+	}
 
 
 
@@ -529,65 +532,79 @@ void Player::AttackChange(void)
 		isAttack_ = true;
 	}
 
-		if (dir_ == AsoUtility::DIR::RIGHT)
+	if (dir_ == AsoUtility::DIR::RIGHT)
+	{
+
+		if (ins.IsNew(KEY_INPUT_K))
 		{
-			attackPos_.x += MOVE_POWER;
-			if (ins.IsNew(KEY_INPUT_K))
+			if (isAttack_)
 			{
-				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
-				for (int i = 1; i <= 11; ++i)
+				dirChange_ = true;
+			}
+			armAngle_ -= AsoUtility::Deg2RadF(5.0f);
+			for (int i = 1; i <= 11; ++i)
+			{
+				if (armAngle_ <= AsoUtility::Deg2RadF(-10.0f * i))
 				{
-					if (armAngle_ <= AsoUtility::Deg2RadF(-10.0f * i))
-					{
-						upCnt = i;
-					}
-				}
-				
-				if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
-				{
-					armAngle_ = AsoUtility::Deg2RadF(0.0f);
-					upCnt = 0;
+					upCnt = i;
 				}
 			}
-			else if (!ins.IsNew(KEY_INPUT_K))
+
+			if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
 			{
 				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+				upCnt = 0;
 			}
-			attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 30;
-			attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 30;
-
 		}
-		else if (dir_ == AsoUtility::DIR::LEFT)
+		else if (!ins.IsNew(KEY_INPUT_K))
 		{
-			attackPos_.x -= MOVE_POWER;
-			if (ins.IsNew(KEY_INPUT_K))
-			{
-				armAngle_ += AsoUtility::Deg2RadF(5.0f);
-				for (int i = 1; i <= 11; ++i)
-				{
-					if (armAngle_ >= AsoUtility::Deg2RadF(10.0f * i))
-					{
-						upCnt = i;
-					}
-				}
-				if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
-				{
-					armAngle_ = AsoUtility::Deg2RadF(0.0f);
-					upCnt = 12;
-				}
-				
-			}
-			else if (!ins.IsNew(KEY_INPUT_K))
-			{
-
-				armAngle_ = AsoUtility::Deg2RadF(0.0f);
-
-			}
-			attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 30;
-			attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 30;
+			armAngle_ = AsoUtility::Deg2RadF(0.0f);
 		}
-	
-	
+		attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 30;
+		attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 30;
+
+	}
+	else if (dir_ == AsoUtility::DIR::LEFT)
+	{
+		if (isAttack_)
+		{
+			dirChange_ = false;
+		}
+		if (ins.IsNew(KEY_INPUT_K))
+		{
+			armAngle_ += AsoUtility::Deg2RadF(5.0f);
+			for (int i = 1; i <= 11; ++i)
+			{
+				if (armAngle_ >= AsoUtility::Deg2RadF(10.0f * i))
+				{
+					upCnt = i;
+				}
+			}
+			if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
+			{
+				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+				upCnt = 12;
+			}
+
+		}
+		else if (!ins.IsNew(KEY_INPUT_K))
+		{
+
+			armAngle_ = AsoUtility::Deg2RadF(0.0f);
+
+		}
+		attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 30;
+		attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 30;
+	}
+
+	if (dirChange_)
+	{
+		attackPos_.x += MOVE_POWER;
+	}
+	else if (!dirChange_)
+	{
+		attackPos_.x -= MOVE_POWER;
+	}
 }
 
 
@@ -815,24 +832,24 @@ void Player::DrawHitCollision(void)
 	//足元の当たり判定の可視化
 	constexpr unsigned int FOOT_HIT_POS_COLOR = 0xff0000;
 	constexpr int CHIRCLE_SIZE = 2;
-	DrawCircle(footPosC_.x-camera_->GetCameraPos().x, footPosC_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
-	DrawCircle(footPosL_.x - camera_->GetCameraPos().x, footPosL_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
-	DrawCircle(footPosR_.x - camera_->GetCameraPos().x, footPosR_.y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
+	DrawCircle(footPosC_.x-camera_->GetCameraPos().x, footPosC_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
+	DrawCircle(footPosL_.x - camera_->GetCameraPos().x, footPosL_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
+	DrawCircle(footPosR_.x - camera_->GetCameraPos().x, footPosR_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
 	//頭側の当たり判定の可視化
 	constexpr unsigned int HEAD_HIT_POS_COLOR = 0x000000;
-	DrawCircle(headPosC_.x - camera_->GetCameraPos().x, headPosC_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
-	DrawCircle(headPosL_.x - camera_->GetCameraPos().x, headPosL_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
-	DrawCircle(headPosR_.x - camera_->GetCameraPos().x, headPosR_.y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
+	DrawCircle(headPosC_.x - camera_->GetCameraPos().x, headPosC_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
+	DrawCircle(headPosL_.x - camera_->GetCameraPos().x, headPosL_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
+	DrawCircle(headPosR_.x - camera_->GetCameraPos().x, headPosR_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, HEAD_HIT_POS_COLOR);
 	//右側の当たり判定の可視化
 	constexpr unsigned int RIGHT_HIT_POS_COLOR = 0x0000FF;
-	DrawCircle(rightPosC_.x - camera_->GetCameraPos().x, rightPosC_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
-	DrawCircle(rightPosD_.x - camera_->GetCameraPos().x, rightPosD_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
-	DrawCircle(rightPosU_.x - camera_->GetCameraPos().x, rightPosU_.y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
+	DrawCircle(rightPosC_.x - camera_->GetCameraPos().x, rightPosC_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
+	DrawCircle(rightPosD_.x - camera_->GetCameraPos().x, rightPosD_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
+	DrawCircle(rightPosU_.x - camera_->GetCameraPos().x, rightPosU_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, RIGHT_HIT_POS_COLOR);
 	//左側の当たり判定の可視化
 	constexpr unsigned int LEFT_HIT_POS_COLOR = 0xFF00FF;
-	DrawCircle(leftPosC_.x - camera_->GetCameraPos().x, leftPosC_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
-	DrawCircle(leftPosD_.x - camera_->GetCameraPos().x, leftPosD_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
-	DrawCircle(leftPosU_.x - camera_->GetCameraPos().x, leftPosU_.y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
+	DrawCircle(leftPosC_.x - camera_->GetCameraPos().x, leftPosC_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
+	DrawCircle(leftPosD_.x - camera_->GetCameraPos().x, leftPosD_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
+	DrawCircle(leftPosU_.x - camera_->GetCameraPos().x, leftPosU_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, LEFT_HIT_POS_COLOR);
 	//当たり判定確認用デバッグ文字
 	constexpr unsigned int STRING_COLOR = 0x000000;
 	if (isHitFoot_) DrawString(45, 0, "下側が当たっている", STRING_COLOR);

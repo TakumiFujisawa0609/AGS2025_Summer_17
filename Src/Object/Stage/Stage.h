@@ -8,6 +8,10 @@ class Stage
 {
 public:
 
+
+
+
+
 	// ステージの分割画像
 	static constexpr int NUM_MAP_CHIPS_X = 13;	// マップチップ横画像
 	static constexpr int NUM_MAP_CHIPS_Y = 1;	// マップチップ縦枚数
@@ -23,23 +27,6 @@ public:
 	static constexpr int MAP_GROUND_SIZE_X = 100;
 	static constexpr int MAP_GROUND_SIZE_Y = 12;
 
-	Stage();
-	~Stage();
-
-	void Init(GameScene* scene,Player*player,Camera*camera);
-	void Update();
-	void Draw();
-	void Release();
-
-
-
-	// 外部ファイルから地上のステージデータを読み込む
-	void LoadGroundCsvData(void);
-
-	// マップチップ番号を取得する
-	int GetChipNo(Vector2 mapPos);
-
-	bool IsCollisionStage(Vector2 worldPos);
 	
 
 	
@@ -77,5 +64,43 @@ private:
 
 	// カメラのポインタ変数
 	Camera* camera_;
+
+public:
+
+	Stage();
+	~Stage();
+
+	void Init(GameScene* scene, Player* player, Camera* camera);
+	void Update();
+	void Draw();
+	void Release();
+
+
+	/*void UpdateStage1();
+	void DrawStage1();
+	void ReleaseStage1();
+	void LoadGroundCsvDataStage1(void);
+
+
+	void UpdateStage2();
+	void DrawStage2();
+	void ReleaseStage2();
+	void LoadGroundCsvDataStage2(void);
+
+	void UpdateStage2();
+	void DrawStage2();
+	void ReleaseStage2();
+	void LoadGroundCsvDataStage(void);*/
+
+
+
+	// 外部ファイルから地上のステージデータを読み込む
+	void LoadGroundCsvData(void);
+
+	// マップチップ番号を取得する
+	int GetChipNo(Vector2 mapPos);
+
+	bool IsCollisionStage(Vector2 worldPos);
+
 };
 
