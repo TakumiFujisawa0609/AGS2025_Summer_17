@@ -25,17 +25,17 @@ Stage::~Stage(void)
 void Stage::Init(Player*player,Camera*camera)
 {
 	// ゲームシーンの機能を使えるようにする
-	gameScene_ = scene;
+	
 	// プレイヤーの機能を使えるようにする
 	player_ = player;
 	// カメラの機能を使えるようにする
 	camera_ = camera;
 
-	// 分割された画像を読み込み
-	ResourceManager& res = ResourceManager::GetInstance();
-	mapChip_ = res.Load(ResourceManager::SRC::MAPCHIP).handleIds_;
-
 	
+	// 分割された画像を読み込み
+	
+	InitStage1();
+	id_ = 1;
 
 }
 
@@ -153,6 +153,8 @@ void Stage::LoadGroundCsvData(void)
 		}
 		++y;
 	}
+
+	stageId_ = STAGE_ID::STAGE1;
 }
 
 int Stage::GetChipNo(Vector2 mapPos)
@@ -163,8 +165,19 @@ int Stage::GetChipNo(Vector2 mapPos)
 	{
 		return -1;
 	}
-
+	
 	return groundMap_[mapPos.y][mapPos.x];
+}
+int Stage::GetChipNo3(Vector2 mapPos)
+{
+	// マップ範囲外であれば判定しない
+	if (mapPos.x < 0 || MAP3_GROUND_SIZE_X <= mapPos.x
+		|| mapPos.y < 0 || MAP3_GROUND_SIZE_Y <= mapPos.y)
+	{
+		return -1;
+	}
+
+	return groundMap3_[mapPos.y][mapPos.x];
 }
 
 bool Stage::IsCollisionStage(Vector2 worldPos)
@@ -183,9 +196,28 @@ bool Stage::IsCollisionStage(Vector2 worldPos)
 
 	return false;
 }
+bool Stage::IsCollisionStage3(Vector2 worldPos)
+{
+	// ワールド座標からマップ座標へ変換する
+	Vector2 mapPos = player_->World2MapPos(worldPos);
+
+	// プレイヤーがいる位置のマップチップ番号を取得する
+	int chipNo = GetChipNo3(mapPos);
+
+	// 障害物のチップ番号と当たっていたら真を返す
+	if (chipNo == 0 || chipNo == 1 || chipNo == 2 || chipNo == 3)
+	{
+		return true;
+	}
+
+	return false;
+}
 
 void Stage::InitStage1()
 {
+	ResourceManager& res = ResourceManager::GetInstance();
+	mapChip_ = res.Load(ResourceManager::SRC::MAPCHIP).handleIds_;
+
 	b_ = LoadGraph("Data/Image/Stage/B.png");
 	g_ = LoadGraph("Data/Image/Stage/G.png");
 	j_ = LoadGraph("Data/Image/Stage/Janp.png");
@@ -298,8 +330,12 @@ void Stage::LoadGroundCsvDataStage1(void)
 
 void Stage::InitStage2()
 {
+	// 分割された画像を読み込み
+	ResourceManager& res = ResourceManager::GetInstance();
+	mapChip_ = res.Load(ResourceManager::SRC::MAPCHIP).handleIds_;
 	// 外部ファイルからマップデータを読み込む
 	LoadGroundCsvDataStage2();
+	id_ = 2;
 }
 
 void Stage::UpdateStage2()
@@ -393,8 +429,13 @@ void Stage::LoadGroundCsvDataStage2(void)
 
 void Stage::InitStage3()
 {
+	stageId_ = STAGE_ID::STAGE3;
+	// 分割された画像を読み込み
+	ResourceManager& res = ResourceManager::GetInstance();
+	mapChip_ = res.Load(ResourceManager::SRC::MAPCHIP).handleIds_;
 	// 外部ファイルからマップデータを読み込む
 	LoadGroundCsvDataStage3();
+	id_ = 3;
 }
 
 void Stage::UpdateStage3()
@@ -412,7 +453,7 @@ void Stage::DrawStage3()
 		for (int x = 0; x < MAP3_GROUND_SIZE_X; x++)
 		{
 			// マップチップ番号を取得
-			int chipNo = groundMap_[y][x];
+			int chipNo = groundMap3_[y][x];
 
 			//マップチップ番号から画像のハンドルIDを取得
 			int imgHandle = mapChip_[chipNo];
@@ -447,12 +488,12 @@ void Stage::LoadGroundCsvDataStage3(void)
 	{
 		for (int x = 0; x < MAP3_GROUND_SIZE_X; x++)
 		{
-			groundMap_[y][x] = -1;
+			groundMap3_[y][x] = -1;
 		}
 	}
 
 	// ファイルの読み込み
-	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage3.csv");
+	std::ifstream ifs = std::ifstream("Data/Image/Stage/Stage5.csv");
 	if (!ifs)
 	{
 		// エラーが発生
@@ -478,10 +519,16 @@ void Stage::LoadGroundCsvDataStage3(void)
 			chipNo = stoi(c);
 
 			// 2次元配列にマップチップ番号を格納
-			groundMap_[y][x] = chipNo;
+			groundMap3_[y][x] = chipNo;
 
 			++x;
 		}
 		++y;
 	}
+}
+int Stage::GetStageId(void)
+{
+	
+
+	return id_;
 }

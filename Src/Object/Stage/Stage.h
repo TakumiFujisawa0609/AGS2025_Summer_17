@@ -7,7 +7,14 @@ class Stage
 {
 public:
 
+	enum class STAGE_ID
+	{
+		NONE,
+		STAGE1,
+		STAGE2,
+		STAGE3,
 
+	};
 
 
 
@@ -48,13 +55,16 @@ private:
 
 	// 地上マップ
 	int groundMap_[MAP_GROUND_SIZE_Y][MAP_GROUND_SIZE_X];
-
+	int groundMap3_[MAP3_GROUND_SIZE_Y][MAP3_GROUND_SIZE_X];
 
 	// プレイヤーのポインタ変数
 	Player* player_;
 
 	// カメラのポインタ変数
 	Camera* camera_;
+	STAGE_ID stageId_;
+
+	int id_;
 
 public:
 
@@ -88,8 +98,11 @@ public:
 
 	// マップチップ番号を取得する
 	int GetChipNo(Vector2 mapPos);
-
+	int GetChipNo3(Vector2 mapPos);
 	bool IsCollisionStage(Vector2 worldPos);
+	bool IsCollisionStage3(Vector2 worldPos);
+
+	int  GetStageId(void);
 
 };
 

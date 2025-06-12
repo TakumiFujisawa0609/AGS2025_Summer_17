@@ -4,6 +4,7 @@
 #include <vector>
 
 class Player;
+class StageManager;
 class EnemyManager;
 class Stage;
 class Camera;
@@ -38,7 +39,7 @@ private:
 	//…
 	Water* water_;
 
-
+	StageManager* stageManager_;
 
 	//”wŒi
 	int backImg_;

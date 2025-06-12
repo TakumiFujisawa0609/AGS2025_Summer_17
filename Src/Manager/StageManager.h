@@ -51,7 +51,12 @@ public:
 	void Init(Player* player_,	EnemyManager* enemyManager_,Stage* stage_,Camera* camera_,Wall* wall_,Blast* blast_,	Plants* plants_,Water* water_);
 	void Update();
 	void Draw();
-
+	void Update1();
+	void Draw1();
+	void Update2();
+	void Draw2();
+	void Update3();
+	void Draw3();
 	void ChangeStage(STAGE_TYPE id);
 
 

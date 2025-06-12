@@ -3,6 +3,7 @@
 #include "../Common/Vector2.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/SceneManager.h"
+#include "../Manager/StageManager.h"
 #include "../Manager/ResourceManager.h"
 #include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
@@ -46,6 +47,7 @@ void GameScene::Init(void)
 	//水
 	water_ = new Water();
 
+	stageManager_ = new StageManager();
 
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 
@@ -57,7 +59,7 @@ void GameScene::Init(void)
 	//enemy_->Init();
 	wall_->Init(camera_);
 
-
+	stageManager_->Init(player_, enemyManager_, stage_, camera_, wall_, blast_, plants_, water_);
 
 
 
@@ -70,23 +72,25 @@ void GameScene::Update(void)
 {
 	// 入力の更新
 	InputManager& ins = InputManager::GetInstance();
-	// ステージの更新
-	stage_->Update();
 
-	// プレイヤーの更新
-	player_->Update();
+	stageManager_->Update();
+	//// ステージの更新
+	//stage_->Update();
 
-	// エネミーの更新
-	enemyManager_->Update();
+	//// プレイヤーの更新
+	//player_->Update();
 
-	// カメラの更新
-	camera_->Update();
+	//// エネミーの更新
+	//enemyManager_->Update();
 
-	// 壁の更新
-	wall_->Update();
-	blast_->Update();
-	water_->Update();
-	plants_->Update();
+	//// カメラの更新
+	//camera_->Update();
+
+	//// 壁の更新
+	//wall_->Update();
+	//blast_->Update();
+	//water_->Update();
+	//plants_->Update();
 
 	/*if (ins.IsTrgDown(KEY_INPUT_N))
 	{
@@ -119,10 +123,10 @@ void GameScene::Update(void)
 		plants_->SetIsPlants(true);
 	}*/
 	// シーン遷移
-	if (player_->GetPlayerPos().x>64 * 78)
+	/*if (player_->GetPlayerPos().x>64 * 78)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
-	}
+	}*/
 
 }
 
@@ -132,24 +136,26 @@ void GameScene::Draw(void)
 	//背景の描画
 	DrawGraph(0, 0, backImg_, true);
 	
-	// ステージの描画
-	stage_->Draw();
+	stageManager_->Draw();
 
-	// プレイヤーの描画
-	player_->Draw();
+	//// ステージの描画
+	//stage_->Draw();
 
-	//壁の描画
-	wall_->Draw();
-	
-	// ステージの描画
-	stage_->Draw();
-	
-	// エネミーの描画
-	enemyManager_->Draw();
+	//// プレイヤーの描画
+	//player_->Draw();
 
-	blast_->Draw();
-	water_->Draw();
-	plants_->Draw();
+	////壁の描画
+	//wall_->Draw();
+	//
+	//// ステージの描画
+	//stage_->Draw();
+	//
+	//// エネミーの描画
+	//enemyManager_->Draw();
+
+	//blast_->Draw();
+	//water_->Draw();
+	//plants_->Draw();
 
 	
 #ifdef _DEBUG
@@ -173,4 +179,5 @@ void GameScene::Release()
 	delete water_;
 	plants_->Release();
 	delete plants_;
+	delete enemyManager_;
 }

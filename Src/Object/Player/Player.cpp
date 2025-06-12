@@ -694,28 +694,66 @@ void Player::CalcLeftSidePos(void)
 
 bool Player::IsHitFootPos(void)
 {
-	return stage_->IsCollisionStage(footPosC_)
-		|| stage_->IsCollisionStage(footPosL_)
-		|| stage_->IsCollisionStage(footPosR_);
-		
+	if (stage_->GetStageId() == 4)
+	{
+		return stage_->IsCollisionStage3(footPosC_)
+			|| stage_->IsCollisionStage3(footPosL_)
+			|| stage_->IsCollisionStage3(footPosR_);
+	}
+	else
+	{
+		return stage_->IsCollisionStage(footPosC_)
+			|| stage_->IsCollisionStage(footPosL_)
+			|| stage_->IsCollisionStage(footPosR_);
+	}
+
+
 }
 bool Player::IsHitHeadPos(void)
 {
-	return stage_->IsCollisionStage(headPosC_)
-		|| stage_->IsCollisionStage(headPosL_)
-		|| stage_->IsCollisionStage(headPosR_);
+	if (stage_->GetStageId() == 3)
+	{
+		return stage_->IsCollisionStage3(headPosC_)
+			|| stage_->IsCollisionStage3(headPosL_)
+			|| stage_->IsCollisionStage3(headPosR_);
+	}
+	else
+	{
+
+		return stage_->IsCollisionStage(headPosC_)
+			|| stage_->IsCollisionStage(headPosL_)
+			|| stage_->IsCollisionStage(headPosR_);
+	}
 }
 bool Player::IsHitRightPos(void)
 {
-	return stage_->IsCollisionStage(rightPosC_)
-		|| stage_->IsCollisionStage(rightPosU_)
-		|| stage_->IsCollisionStage(rightPosD_);
+	if (stage_->GetStageId() == 3)
+	{
+		return stage_->IsCollisionStage3(rightPosC_)
+			|| stage_->IsCollisionStage3(rightPosU_)
+			|| stage_->IsCollisionStage3(rightPosD_);
+	}
+	else
+	{
+		return stage_->IsCollisionStage(rightPosC_)
+			|| stage_->IsCollisionStage(rightPosU_)
+			|| stage_->IsCollisionStage(rightPosD_);
+	}
 }
 bool Player::IsHitLeftPos(void)
 {
-	return stage_->IsCollisionStage(leftPosC_)
-		|| stage_->IsCollisionStage(leftPosU_)
-		|| stage_->IsCollisionStage(leftPosD_);
+	if (stage_->GetStageId() == 3)
+	{
+		return stage_->IsCollisionStage3(leftPosC_)
+			|| stage_->IsCollisionStage3(leftPosU_)
+			|| stage_->IsCollisionStage3(leftPosD_);
+	}
+	else
+	{
+		return stage_->IsCollisionStage(leftPosC_)
+			|| stage_->IsCollisionStage(leftPosU_)
+			|| stage_->IsCollisionStage(leftPosD_);
+	}
 }
 
 void Player::CollisionFoot(void)
@@ -1055,3 +1093,7 @@ void Player::CollisionPlantsLeftSide(void)
 	}
 }
 
+void Player::SetPlayerPos(Vector2F pos)
+{
+	pos_ = pos;
+}

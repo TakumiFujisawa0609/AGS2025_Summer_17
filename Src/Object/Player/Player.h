@@ -223,6 +223,7 @@ public:
 
 	//プレイヤーの位置を取得
 	Vector2F GetPlayerPos(void);
+	void SetPlayerPos(Vector2F pos);
 
 	//移動状態管理
 	void MoveChange(void);
