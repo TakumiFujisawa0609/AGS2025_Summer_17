@@ -91,9 +91,9 @@ void StageManager::Update2()
 	// エネミーの更新
 	enemyManager_->Update();
 
-	if (player_->GetPlayerPos().x > 64 * 84)
+	if (player_->GetPlayerPos().x > 64 * 86)
 	{
-		ChangeStage(STAGE_TYPE::STAGE3);
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
 	}
 	
 }
