@@ -59,6 +59,10 @@ public:
 	//移動速度最大値
 	static constexpr float MAX_MOVE_SPEED = 2.0f;
 
+	//MAX HP
+	static constexpr int MAX_HP = 100;
+	//MAX MP
+	static constexpr int MAX_MP = 100;
 private:
 	//変数
 	int* img_;
@@ -98,6 +102,14 @@ private:
 	float movePos;
 	
 	//==========================================================================================================================
+
+	//ヒットポイント・マジックポイント
+	int hp_;
+	int mp_;
+
+
+
+
 
 	//足元
 	//（デバッグ表示のためメンバー変数化）
@@ -232,5 +244,12 @@ public:
 	void ElementChange(void);
 
 	void AttackChange(void);
+
+	int GetHp(void);
+	void SetHp(int hp);
+
+	int GetMp(void);
+	void SetMp(int mp);
+
 };
 

@@ -19,6 +19,7 @@ public:
 		FWALL,
 		WWALL,
 		WSPHERE,
+		HPUI,
 
 
 		//‰æ‘œ‚Ì—ñ‹“

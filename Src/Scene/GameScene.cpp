@@ -13,6 +13,7 @@
 #include "../Object/Wall/Wall.h"
 #include "../Object/Attack/Blast.h"
 #include "../Object/Attack/Plants.h"
+#include "../Object/Ui/PlayerUi.h"
 #include "../Object/Attack/Water.h"
 #include "GameScene.h"
 
@@ -49,6 +50,8 @@ void GameScene::Init(void)
 
 	stageManager_ = new StageManager();
 
+	playerUi_ = new PlayerUi();
+
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 
 	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
@@ -58,6 +61,8 @@ void GameScene::Init(void)
 
 	//enemy_->Init();
 	wall_->Init(camera_);
+
+	playerUi_->Init(player_);
 
 	stageManager_->Init(player_, enemyManager_, stage_, camera_, wall_, blast_, plants_, water_);
 
@@ -74,6 +79,9 @@ void GameScene::Update(void)
 	InputManager& ins = InputManager::GetInstance();
 
 	stageManager_->Update();
+
+	playerUi_->Update();
+
 	//// ステージの更新
 	//stage_->Update();
 
@@ -137,7 +145,7 @@ void GameScene::Draw(void)
 	DrawGraph(0, 0, backImg_, true);
 	
 	stageManager_->Draw();
-
+	playerUi_->Draw();
 	//// ステージの描画
 	//stage_->Draw();
 

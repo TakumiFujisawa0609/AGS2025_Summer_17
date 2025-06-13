@@ -84,6 +84,10 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 	attckPoint_.y = pos_.y + cosf(armAngle_) * 100;*/
 
 	id_ = 0;
+
+	hp_ = MAX_HP;
+	mp_ = MAX_MP;
+
 }
 void Player::Update()
 {
@@ -539,12 +543,14 @@ void Player::Attack()
 void Player::AttackChange(void)
 {
 
+
 	InputManager& ins = InputManager::GetInstance();
 	if (isAttack_)
 	{
 
 		if (ins.IsTrgUp(KEY_INPUT_K))
 		{
+			mp_ -= 10;
 			attackPos_.x = attckAnglePoint_.x;
 			attackPos_.y = attckAnglePoint_.y;
 
@@ -1043,6 +1049,7 @@ void Player::CollisionWaterRightSide(void)
 	//右側三点のどれかが当たっていたら
 	if (isHitRightSide_)
 	{
+
 		pos_.x = wall_->GetWaterPos().x - wall_->FLARE_HALF_SIZE_X;
 		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
 	}
@@ -1056,7 +1063,7 @@ void Player::CollisionWaterLeftSide(void)
 	//左側三点のどれかが当たっていたら
 	if (isHitLeftSide_)
 	{
-		
+		hp_ -= 50;
 		pos_.x = wall_->GetWaterPos().x + wall_->FLARE_SIZE_X+wall_->FLARE_HALF_SIZE_X;
 		//左に移動録があるときは移動量をなくす
 		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
@@ -1074,6 +1081,7 @@ void Player::CollisionFlareRightSide(void)
 	//右側三点のどれかが当たっていたら
 	if (isHitRightSide_)
 	{
+		hp_ -= 50;
 		pos_.x = wall_->GetFlarePos().x - wall_->FLARE_HALF_SIZE_X;
 		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
 	}
@@ -1087,7 +1095,7 @@ void Player::CollisionFlareLeftSide(void)
 	//左側三点のどれかが当たっていたら
 	if (isHitLeftSide_)
 	{
-
+		hp_ -= 50;
 		pos_.x = wall_->GetFlarePos().x + wall_->FLARE_SIZE_X + wall_->FLARE_HALF_SIZE_X;
 		//左に移動録があるときは移動量をなくす
 		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
@@ -1105,6 +1113,7 @@ void Player::CollisionPlantsRightSide(void)
 	//右側三点のどれかが当たっていたら
 	if (isHitRightSide_)
 	{
+		hp_ -= 50;
 		pos_.x = wall_->GetPlantsPos().x - wall_->FLARE_HALF_SIZE_X;
 		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
 	}
@@ -1118,7 +1127,7 @@ void Player::CollisionPlantsLeftSide(void)
 	//左側三点のどれかが当たっていたら
 	if (isHitLeftSide_)
 	{
-
+		hp_ -= 50;
 		pos_.x = wall_->GetPlantsPos().x + wall_->FLARE_SIZE_X + wall_->FLARE_HALF_SIZE_X;
 		//左に移動録があるときは移動量をなくす
 		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
@@ -1128,4 +1137,22 @@ void Player::CollisionPlantsLeftSide(void)
 void Player::SetPlayerPos(Vector2F pos)
 {
 	pos_ = pos;
+}
+
+int Player::GetHp(void)
+{
+	return hp_;
+}
+void Player::SetHp(int hp)
+{
+	hp_ = hp;
+}
+
+int Player::GetMp(void)
+{
+	return mp_;
+}
+void Player::SetMp(int mp)
+{
+	mp_ = mp;
 }

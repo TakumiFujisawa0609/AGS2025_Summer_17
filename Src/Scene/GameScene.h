@@ -11,6 +11,7 @@ class Camera;
 class Wall;
 class Blast;
 class Plants;
+class PlayerUi;
 class Water;
 
 class GameScene : public SceneBase
@@ -40,6 +41,8 @@ private:
 	Water* water_;
 
 	StageManager* stageManager_;
+
+	PlayerUi* playerUi_;
 
 	//îwåi
 	int backImg_;
