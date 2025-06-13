@@ -35,7 +35,7 @@ void Stage::Init(Player*player,Camera*camera)
 	// 分割された画像を読み込み
 	
 	InitStage1();
-	id_ = 1;
+	
 
 }
 
@@ -228,7 +228,7 @@ void Stage::InitStage1()
 	k_ = LoadGraph("Data/Image/Stage/k.png");
 	// 外部ファイルからマップデータを読み込む
 	LoadGroundCsvDataStage1();
-
+	id_ = 1;
 }
 
 void Stage::UpdateStage1()
