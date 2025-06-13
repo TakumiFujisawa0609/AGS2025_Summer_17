@@ -151,7 +151,7 @@ private:
 	Vector2F attckPoint_;
 	Vector2F attckAnglePoint_;
 
-
+	int id_;
 
 
 public:

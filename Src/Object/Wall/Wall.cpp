@@ -211,7 +211,7 @@ bool Wall::IsWaterCollision(Vector2 pos)
 	if (isWaterAlive_)
 	{
 
-		if (pPos.x > waterPos_.x && pPos.y > waterPos_.y + WATER_SIZE_X && pPos.x < waterPos_.x + WATER_SIZE_X && pPos.y < waterPos_.y + WATER_SIZE_Y + WATER_SIZE_X)
+		if (pPos.x > waterPos_.x && pPos.y > waterPos_.y && pPos.x < waterPos_.x + WATER_SIZE_X && pPos.y < waterPos_.y + WATER_SIZE_Y + WATER_SIZE_X)
 		{
 			return true;
 		}
@@ -223,7 +223,7 @@ bool Wall::IsFlaereCollision(Vector2 pos)
 	Vector2 pPos = pos;
 	if (isFlareAlive_)
 	{
-		if (pPos.x > flarePos_.x && pPos.y > flarePos_.y + FLARE_SIZE_X && pPos.x < flarePos_.x + FLARE_SIZE_X && pPos.y < flarePos_.y + FLARE_SIZE_Y + FLARE_SIZE_X)
+		if (pPos.x > flarePos_.x && pPos.y > flarePos_.y && pPos.x < flarePos_.x + FLARE_SIZE_X && pPos.y < flarePos_.y + FLARE_SIZE_Y + FLARE_SIZE_X)
 		{
 			return true;
 		}
@@ -238,7 +238,7 @@ bool Wall::IsPlantsCollision(Vector2 pos)
 
 	if(isPlantsAlive_)
 	{
-		if (pPos.x > plantsPos_.x && pPos.y > plantsPos_.y + PLANTS_SIZE_X && pPos.x < plantsPos_.x + PLANTS_SIZE_X && pPos.y < plantsPos_.y + PLANTS_SIZE_Y + PLANTS_SIZE_X)
+		if (pPos.x > plantsPos_.x && pPos.y > plantsPos_.y && pPos.x < plantsPos_.x + PLANTS_SIZE_X && pPos.y < plantsPos_.y + PLANTS_SIZE_Y + PLANTS_SIZE_X)
 		{
 			return true;
 		}

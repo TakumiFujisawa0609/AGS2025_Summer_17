@@ -83,12 +83,12 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 	/*attckPoint_.x = pos_.x + cosf(armAngle_) * 100;
 	attckPoint_.y = pos_.y + cosf(armAngle_) * 100;*/
 
-	
+	id_ = 0;
 }
 void Player::Update()
 {
 	
-
+	id_=stage_->GetStageId();
 
 
 	MoveChange();
@@ -392,10 +392,8 @@ void Player::Attack()
 		AttackChange();
 		if (isPoint_)
 		{
-			if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+			if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true)
 			{
-				isPoint_ = false;
-				isAttack_ = true;
 			}
 			else if (wall_->IsPlantsCollision(attackPos_) == true)
 			{
@@ -413,10 +411,27 @@ void Player::Attack()
 		AttackChange();
 		if (isPoint_)
 		{
-			if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+			if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true )
 			{
-				isPoint_ = false;
-				isAttack_ = true;
+
+				if (id_ == 3)
+				{
+					if (stage_->IsCollisionStage3(attackPos_) == true)
+					{
+						isPoint_ = false;
+						isAttack_ = true;
+					}
+
+				}
+				else
+				{
+					if (stage_->IsCollisionStage(attackPos_) == true)
+					{
+						isPoint_ = false;
+						isAttack_ = true;
+					}
+				}
+
 			}
 			else if (wall_->IsFlaereCollision(attackPos_) == true)
 			{
@@ -432,10 +447,27 @@ void Player::Attack()
 		AttackChange();
 		if (isPoint_)
 		{
-			if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true || wall_->IsWaterCollision(attackPos_) == true)
+			if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || wall_->IsWaterCollision(attackPos_) == true)
 			{
-				isPoint_ = false;
-				isAttack_ = true;
+
+				if (id_ == 3)
+				{
+					if (stage_->IsCollisionStage3(attackPos_) == true)
+					{
+						isPoint_ = false;
+						isAttack_ = true;
+					}
+
+				}
+				else
+				{
+					if (stage_->IsCollisionStage(attackPos_) == true)
+					{
+						isPoint_ = false;
+						isAttack_ = true;
+					}
+				}
+
 			}
 			else if (wall_->IsSphereCollision(attackPos_) == true)
 			{
@@ -694,7 +726,7 @@ void Player::CalcLeftSidePos(void)
 
 bool Player::IsHitFootPos(void)
 {
-	if (stage_->GetStageId() == 4)
+	if (id_ == 3)
 	{
 		return stage_->IsCollisionStage3(footPosC_)
 			|| stage_->IsCollisionStage3(footPosL_)
@@ -711,7 +743,7 @@ bool Player::IsHitFootPos(void)
 }
 bool Player::IsHitHeadPos(void)
 {
-	if (stage_->GetStageId() == 3)
+	if (id_ == 3)
 	{
 		return stage_->IsCollisionStage3(headPosC_)
 			|| stage_->IsCollisionStage3(headPosL_)
@@ -727,7 +759,7 @@ bool Player::IsHitHeadPos(void)
 }
 bool Player::IsHitRightPos(void)
 {
-	if (stage_->GetStageId() == 3)
+	if (id_ == 3)
 	{
 		return stage_->IsCollisionStage3(rightPosC_)
 			|| stage_->IsCollisionStage3(rightPosU_)
@@ -742,7 +774,7 @@ bool Player::IsHitRightPos(void)
 }
 bool Player::IsHitLeftPos(void)
 {
-	if (stage_->GetStageId() == 3)
+	if (id_ == 3)
 	{
 		return stage_->IsCollisionStage3(leftPosC_)
 			|| stage_->IsCollisionStage3(leftPosU_)
