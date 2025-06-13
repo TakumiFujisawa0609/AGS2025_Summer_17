@@ -41,8 +41,7 @@ private:
 
 	StageManager* stageManager_;
 
-	//”wŒi
-	int backImg_;
+	
 
 	
 

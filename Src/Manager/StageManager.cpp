@@ -36,7 +36,8 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, Stage* stage
 
 	stageType = STAGE_TYPE::STAGE1;
 
-	stage3img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.png").c_str());
+	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
+	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.jpg").c_str());
 }
 void StageManager::Update()
 {
@@ -136,6 +137,7 @@ void StageManager::Draw()
 void StageManager::Draw1()
 {
 
+	DrawGraph(0, 0, backImg_, true);
 	//•Ç‚Ì•`‰æ
 	wall_->Draw();
 	
@@ -146,7 +148,7 @@ void StageManager::Draw1()
 	// ƒXƒe[ƒW‚Ì•`‰æ
 	stage_->DrawStage1();
 
-
+	
 
 	blast_->Draw();
 	water_->Draw();
@@ -154,15 +156,17 @@ void StageManager::Draw1()
 }
 void StageManager::Draw2()
 {
+	DrawGraph(0, 0, backImg_, true);
+
 	////•Ç‚Ì•`‰æ
 	//wall_->Draw();
 	
 	// ƒvƒŒƒCƒ„[‚Ì•`‰æ
 	player_->Draw();
 
-	
 	// ƒXƒe[ƒW‚Ì•`‰æ
 	stage_->DrawStage2();
+	
 
 	
 
@@ -175,6 +179,7 @@ void StageManager::Draw2()
 }
 void StageManager::Draw3()
 {
+	DrawGraph( 0, 0,back3Img_, true);
 	//•Ç‚Ì•`‰æ
 	wall_->Draw();
 	

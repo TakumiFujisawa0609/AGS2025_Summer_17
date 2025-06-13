@@ -44,7 +44,9 @@ private:
 
 	STAGE_TYPE stageType;
 
-	int stage3img_;
+	int back3Img_;
+	//îwåi
+	int backImg_;
 
 public:
 
