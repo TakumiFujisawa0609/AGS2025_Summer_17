@@ -1,6 +1,5 @@
 #include "EnemyBase.h"
 #include "EnemyFire.h"
-#include "../Camera/Camera.h"
 #include "../../Application.h"
 #include "../../Utility/AsoUtility.h"
 #include <DxLib.h>

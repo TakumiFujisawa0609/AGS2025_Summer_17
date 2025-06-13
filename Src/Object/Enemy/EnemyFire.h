@@ -1,6 +1,8 @@
 #pragma once
 #include "EnemyBase.h"
 #include <DxLib.h>
+class EnemyManager;
+class Camera;
 
 class EnemyFire
 {
@@ -19,11 +21,13 @@ public:
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
     static constexpr int ANIM_INTERVAL = 13;
 
-    void Init();
+    void Init(Camera*camera);
     void Update();
     void Draw();
 
 private:
+    
+    EnemyManager* enemyManager_;
     Camera* camera_;
 
     Vector2F pos_;

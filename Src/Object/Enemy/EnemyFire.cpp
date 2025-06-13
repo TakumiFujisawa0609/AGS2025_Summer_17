@@ -1,7 +1,12 @@
 #include "EnemyFire.h"
+#include "EnemyManager.h"
+#include "../Camera/Camera.h"
+#include <DxLib.h>
 
-void EnemyFire::Init()
+void EnemyFire::Init(Camera*camera)
 {
+    //6Vector2 cameraPos = camera_->GetCameraPos();
+
     pos_.x = 1500.0f;
     pos_.y = 544.0f;
 
@@ -21,6 +26,7 @@ void EnemyFire::Init()
 
 void EnemyFire::Update()
 {
+
     if (isAlive_)
     {
         animCounter_++;

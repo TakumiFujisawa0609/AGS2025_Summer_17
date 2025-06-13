@@ -52,7 +52,7 @@ void GameScene::Init(void)
 	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
 	stage_->Init(this, player_, camera_);
 	camera_->Init(player_, this);
-	enemyManager_->Init();
+	enemyManager_->Init(camera_);
 
 	//enemy_->Init();
 	wall_->Init(camera_);
@@ -76,11 +76,11 @@ void GameScene::Update(void)
 	// プレイヤーの更新
 	player_->Update();
 
-	// エネミーの更新
-	enemyManager_->Update();
-
 	// カメラの更新
 	camera_->Update();
+
+	// エネミーの更新
+	enemyManager_->Update();
 
 	// 壁の更新
 	wall_->Update();

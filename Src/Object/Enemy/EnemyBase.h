@@ -1,7 +1,6 @@
 #pragma once
 #include "../../Common/Vector2.h"
 #include "../../Common/Vector2F.h"
-class Camera;
 class EnemyFire;
 
 class EnemyBase {
@@ -26,7 +25,6 @@ protected:
     bool isWater_;
     bool isPlant_;
   
-    Camera* camera_;
     EnemyFire* enemyFire_;
 
 };
