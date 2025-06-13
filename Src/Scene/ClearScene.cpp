@@ -26,6 +26,8 @@ void ClearScene::Update(void)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
+
+	
 }
 
 void ClearScene::Draw(void)
@@ -38,7 +40,7 @@ void ClearScene::Draw(void)
 		, clearImg_, TRUE);
 	SetFontSize(50);
 	if ((static_cast<int>(frameCount) % static_cast<int>(blinkCycle)) < static_cast<int>(blinkCycle) / 2) {
-		DrawFormatString(725, 700, 0xFFFFFF, "PREASE_HIT_SPACE_KEY");
+		DrawFormatString(725, 700, 0xFFFFFF, "SPACEキーでタイトルに戻る\nENTERキーで終了");
 
 	}
 	SetFontSize(16);

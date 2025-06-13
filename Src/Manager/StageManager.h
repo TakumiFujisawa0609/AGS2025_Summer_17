@@ -44,6 +44,8 @@ private:
 
 	STAGE_TYPE stageType;
 
+	int stage3img_;
+
 public:
 
 	StageManager();

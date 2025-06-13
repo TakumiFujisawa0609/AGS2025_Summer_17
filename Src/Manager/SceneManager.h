@@ -21,6 +21,7 @@ public:
 		NONE,
 		
 		TITLE,
+		MENU,
 		GAME,
 		CLEAR,
 		
@@ -58,6 +59,8 @@ public:
 private:
 
 	int clearTime_;
+
+	
 
 	// 静的インスタンス
 	static SceneManager* instance_;

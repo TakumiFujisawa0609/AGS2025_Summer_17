@@ -50,7 +50,7 @@ void TitleScene::Draw(void)
 
   SetFontSize(50);
   if ((static_cast<int>(frameCount) % static_cast<int>(blinkCycle)) < static_cast<int>(blinkCycle) / 2) {  
-      DrawFormatString(725, 700, 0x000000, "PREASE_HIT_SPACE_KEY");
+      DrawFormatString(725, 700, 0x000000, "START PUSH SPACE KEY");
   }  
   SetFontSize(16);
 

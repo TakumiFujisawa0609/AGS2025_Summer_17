@@ -49,6 +49,8 @@ private:
 	// 解放失敗
 	bool isReleaseFail_;
 
+	bool exitFlag_;
+
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
 	Application(void);
@@ -57,5 +59,9 @@ private:
 
 	// Effekseerの初期化
 	void InitEffekseer(void);
+
+	bool GetExit(void) const;
+
+	void SetExit(bool exit);
 
 };

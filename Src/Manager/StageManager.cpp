@@ -36,7 +36,7 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, Stage* stage
 
 	stageType = STAGE_TYPE::STAGE1;
 
-	
+	stage3img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.png").c_str());
 }
 void StageManager::Update()
 {

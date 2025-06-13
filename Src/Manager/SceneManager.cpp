@@ -5,8 +5,10 @@
 #include "../Scene/TitleScene.h"
 #include "../Scene/GameScene.h"
 #include "../Scene/ClearScene.h"
+#include "../Manager/InputManager.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
+#include "../Application.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
 
@@ -34,6 +36,8 @@ void SceneManager::Init(void)
 	fader_->Init();
 
 	isSceneChanging_ = false;
+
+	
 
 	// デルタタイム
 	preTime_ = std::chrono::system_clock::now();
@@ -97,6 +101,12 @@ void SceneManager::Update(void)
 	else
 	{
 		scene_->Update();
+	}
+
+	InputManager& ins = InputManager::GetInstance();
+	if (ins.IsTrgDown(KEY_INPUT_ESCAPE))
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::MENU);
 	}
 
 }

@@ -45,6 +45,8 @@ void Application::Init(void)
 		return;
 	}
 
+	exitFlag_ = false;
+
 	// EffekseerÇÃèâä˙âª
 	InitEffekseer();
 
@@ -65,11 +67,16 @@ void Application::Run(void)
 	auto& sceneManager = SceneManager::GetInstance();
 
 	// ÉQÅ[ÉÄÉãÅ[Év
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+	while (ProcessMessage() == 0 && (exitFlag_ == false))
 	{
 		FpsControll_Update();
 		inputManager.Update();
 		sceneManager.Update();
+
+		if (inputManager.IsTrgDown(KEY_INPUT_RETURN))
+		{
+			SetExit(true);
+		}
 
 		sceneManager.Draw();
 
@@ -126,4 +133,16 @@ void Application::InitEffekseer(void)
 	SetChangeScreenModeGraphicsSystemResetFlag(FALSE);
 
 	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
+}
+
+bool Application::GetExit(void) const
+{
+	return exitFlag_;
+}
+
+void Application::SetExit(bool exit)
+{
+	
+	exitFlag_ = exit;
+	
 }

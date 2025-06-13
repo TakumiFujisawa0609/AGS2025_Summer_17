@@ -49,7 +49,7 @@ void GameScene::Init(void)
 
 	stageManager_ = new StageManager();
 
-	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
+	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.jpg").c_str());
 
 	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
 	stage_->Init(player_, camera_);
