@@ -68,7 +68,7 @@ private:
 	int* img_;
 	int* armImg_;
 
-	int cr;
+	unsigned int cr_;
 
 	//‘®«
 	ELEMENT_TYPE elementType_;//‘®«ƒ^ƒCƒv
@@ -250,6 +250,9 @@ public:
 
 	int GetMp(void);
 	void SetMp(int mp);
+
+	unsigned int GetCr(void);
+	void SetCr(int cr);
 
 };
 
