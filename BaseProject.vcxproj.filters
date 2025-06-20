@@ -93,6 +93,10 @@
     <ClInclude Include="Src\Manager\StageManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+	  
+	  
+	  
+	  
     <ClInclude Include="Src\Object\Ui\PlayerUi.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -176,6 +180,10 @@
     <ClCompile Include="Src\Manager\StageManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+	  
+	  
+	  
+	  
     <ClCompile Include="Src\Object\Ui\PlayerUi.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
