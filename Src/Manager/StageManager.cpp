@@ -91,7 +91,9 @@ void StageManager::Update2()
 
 	// エネミーの更新
 	enemyManager_->Update();
-
+	blast_->Update();
+	water_->Update();
+	plants_->Update();
 	if (player_->GetPlayerPos().x > 64 * 86)
 	{
 		ChangeStage(STAGE_TYPE::STAGE3);
@@ -110,6 +112,9 @@ void StageManager::Update3()
 
 	// エネミーの更新
 	enemyManager_->Update();
+	blast_->Update();
+	water_->Update();
+	plants_->Update();
 	if (player_->GetPlayerPos().x > 64 * 97&& player_->GetPlayerPos().y<64*12)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);

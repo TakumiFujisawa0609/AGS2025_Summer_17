@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Src\Scene\GameOverScene.h" />
+    <ClInclude Include="Src\Object\Ui\PlayerUi.h" />
     <ClInclude Include="Src\Object\Attack\Blast.h" />
     <ClInclude Include="Src\Object\Attack\Plants.h" />
     <ClInclude Include="Src\Object\Attack\Water.h" />
@@ -171,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Scene\GameOverScene.cpp" />
+    <ClCompile Include="Src\Object\Ui\PlayerUi.cpp" />
     <ClCompile Include="Src\Object\Attack\Blast.cpp" />
     <ClCompile Include="Src\Object\Attack\Plants.cpp" />
     <ClCompile Include="Src\Object\Attack\Water.cpp" />

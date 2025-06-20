@@ -42,17 +42,22 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 
 	plants_ = plants;
 
+	
+
 	// 画像の読み込み
 	ResourceManager& res = ResourceManager::GetInstance();
 	img_ = res.Load(ResourceManager::SRC::PLAYERS).handleIds_;
 
 	armImg_ = res.Load(ResourceManager::SRC::PLAYERARM).handleIds_;
 
-
+	sordImg_ = LoadGraph("Data/Image/Player/Sord.png");
+	stageSize_=stage_->CHIP_SIZE_X;
 	
 	// 初期位置設定
-	pos_.x = 64*2;
-	pos_.y = 64*8;
+	pos_.x = stageSize_*2;
+	pos_.y = stageSize_*8;
+	invCnt_ = 0;
+	isAlive_ = true;
 	
 	//アニメーション初期化
 	armAngle_= AsoUtility::Deg2RadF(0.0f);
@@ -64,7 +69,7 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 	
 	//属性タイプ
 	elementType_ = ELEMENT_TYPE::NORMAL;
-	cr = 0xffffff;
+	cr_ = 0xffffff;
 	
 
 
@@ -73,6 +78,7 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 	isAttack_ = true;
 	isPoint_ = false;
 	dirChange_ = true;
+	isSotd_ = false;
 	attackPos_.x = 0;
 	attackPos_.y = 0;
 	movePos = 0.0f;
@@ -84,10 +90,28 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 	attckPoint_.y = pos_.y + cosf(armAngle_) * 100;*/
 
 	id_ = 0;
+
+	hp_ = MAX_HP;
+	mp_ = MAX_MP;
+
+	regeneCnt_ = 30;
+	mpRegene_ = 1;
+
 }
 void Player::Update()
 {
-	
+	// プレイヤーの再出現処理
+	if (isAlive_ == false)
+	{
+		isAlive_ = true;
+		// 無敵時間
+		invCnt_ = 60;
+	}
+	//無敵時間処理
+	if (invCnt_ > 0)
+	{
+		invCnt_--;
+	}
 	id_=stage_->GetStageId();
 
 
@@ -101,26 +125,63 @@ void Player::Update()
 
 	ElementChange();
 
+	ReSpawn();
+
+	Hp();
+
+	Mp();
+
+
 }
 void Player::Draw()
 {
 	// 画像の描画
 	Vector2 cpos= camera_->GetCameraPos();
-	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y) - cpos.y, 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
+	if (isAlive_)
+	{
+		// 半透明フラグ
+		bool isTrans = false;
+		if (invCnt_ > 0)
+		{
+			if (invCnt_% 2 == 0)
+			{
+				isTrans = true;
+			}
+		}
 
+		if (isTrans)
+		{
+			// 被ダメ時の自機の描画
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 2);
+			DrawRotaGraphF((pos_.x) - cpos.x, (pos_.y) - cpos.y, 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
+			DrawRotaGraphF((pos_.x) - cpos.x, (pos_.y) - cpos.y, 1.0f, armAngle_, armImg_[animaAem_], TRUE);
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		}
+		else
+		{
+			// 自機の描画
+			DrawRotaGraphF((pos_.x) - cpos.x, (pos_.y) - cpos.y, 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
+			DrawRotaGraphF((pos_.x) - cpos.x, (pos_.y) - cpos.y, 1.0f, armAngle_, armImg_[animaAem_], TRUE);
+		}
+
+	}
+	if (isSotd_ == true)
+	{
+		DrawRotaGraphF(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y - cpos.y, 1.0f, armAngle_ + AsoUtility::Deg2RadF(130.0f), sordImg_, true);
+	}
 	//腕の描画
 	//色変更
 	//GraphFilter(armImg_, DX_GRAPH_FILTER_HSB, cr, cr,cr,cr);
 	
- 	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y) - cpos.y, 1.0f, armAngle_, armImg_[animaAem_], TRUE);
+ 	
 	
 
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
-	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 5, cr);
-	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y - cpos.y, 5, cr);
+	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 5, cr_);
+	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y - cpos.y, 32, cr_,false);
 	if (isPoint_)
 	{
-		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 5, cr);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 5, cr_);
 	}
 #ifdef _DEBUG
 	//当たり判定の可視化
@@ -131,6 +192,12 @@ void Player::Draw()
 #endif // DEBUG
 
 }
+
+
+
+//プレイヤーの機能処理==========================================================================================================================================================================
+
+//移動処理
 void Player::Move()
 {
 	//移動処理
@@ -149,7 +216,7 @@ void Player::Move()
 
 	if (ins.IsTrgDown(KEY_INPUT_D) || ins.IsTrgDown(KEY_INPUT_A))
 	{
-		animationCount_ = 6                                  ;
+		animationCount_ = 6;
 		moveType_ = MOVE_TYPE::MOVE;
 
 	}
@@ -316,6 +383,7 @@ void Player::Move()
 	}
 }
 
+//アニメーション処理
 void Player::Anime()
 {
 	if (moveType_ == MOVE_TYPE::MOVE)
@@ -336,6 +404,16 @@ void Player::Anime()
 	}
 	if (moveType_ == MOVE_TYPE::STOP)
 	{
+		regeneCnt_--;
+		if (regeneCnt_ < 0)
+		{
+			regeneCnt_ = 30;
+			SetMp(GetMp() + 2);
+			if (GetMp() >= 100)
+			{
+				SetMp(MAX_MP);
+			}
+		}
 		animationTime_ += 0.05f;
 		if (animationTime_ >= 1.0f)
 		{
@@ -352,8 +430,11 @@ void Player::Anime()
 	}
 
 }
+
+//攻撃タイプ別処理
 void Player::Attack()
 {
+	isSotd_ = false;
 	//攻撃処理
 	InputManager& ins = InputManager::GetInstance();
 	if (isAttack_)
@@ -382,6 +463,19 @@ void Player::Attack()
 			elementType_ = ELEMENT_TYPE::NORMAL;
 
 		}
+		if (ins.IsTrgDown(KEY_INPUT_T))
+		{
+			if (elementType_ == ELEMENT_TYPE::FIRE)
+			{
+				elementType_ = ELEMENT_TYPE::NORMAL;
+				animaAem_ = 0;
+			}
+			else
+			{
+				animaAem_ += 1;
+				elementType_ = static_cast<ELEMENT_TYPE>(static_cast<int>(elementType_) + 1);
+			}
+		}
 
 	}
 
@@ -392,16 +486,40 @@ void Player::Attack()
 		AttackChange();
 		if (isPoint_)
 		{
-			if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true)
+			if (id_ == 3)
 			{
+				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage3(attackPos_) == true)
+				{
+					isPoint_ = false;
+					isAttack_ = true;
+				}
+				else if (wall_->IsPlantsCollision(attackPos_) == true)
+				{
+					wall_->SetIsPlants(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					blast_->SetBlastPos(attackPos_);
+					blast_->SetIsBlast(true);
+				}
 			}
-			else if (wall_->IsPlantsCollision(attackPos_) == true)
+			else if (id_ == 1 || id_ == 2)
 			{
-				wall_->SetIsPlants(false);
-				isPoint_ = false;
-				isAttack_ = true;
-				blast_->SetBlastPos(attackPos_);
-				blast_->SetIsBlast(true);
+				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+				{
+
+					isPoint_ = false;
+					isAttack_ = true;
+
+				}
+				else if (wall_->IsPlantsCollision(attackPos_) == true)
+				{
+					wall_->SetIsPlants(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					blast_->SetBlastPos(attackPos_);
+					blast_->SetIsBlast(true);
+				}
+
 			}
 		}
 	}
@@ -411,71 +529,95 @@ void Player::Attack()
 		AttackChange();
 		if (isPoint_)
 		{
-			if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true )
+			if (id_ == 3)
 			{
-
-				if (id_ == 3)
+				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true || stage_->IsCollisionStage3(attackPos_) == true)
 				{
-					if (stage_->IsCollisionStage3(attackPos_) == true)
-					{
-						isPoint_ = false;
-						isAttack_ = true;
-					}
+
+
+
+					isPoint_ = false;
+					isAttack_ = true;
+
 
 				}
-				else
+				else if (wall_->IsFlaereCollision(attackPos_) == true)
 				{
-					if (stage_->IsCollisionStage(attackPos_) == true)
-					{
-						isPoint_ = false;
-						isAttack_ = true;
-					}
+					wall_->SetIsFlare(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					water_->CreateEffect(attackPos_);
 				}
-
 			}
-			else if (wall_->IsFlaereCollision(attackPos_) == true)
+			else if(id_ == 1 || id_ == 2)
 			{
-				wall_->SetIsFlare(false);
-				isPoint_ = false;
-				isAttack_ = true;
-				water_->CreateEffect(attackPos_);
+				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+				{
+
+					isPoint_ = false;
+					isAttack_ = true;
+
+				}
+				else if (wall_->IsFlaereCollision(attackPos_) == true)
+				{
+					wall_->SetIsFlare(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					water_->CreateEffect(attackPos_);
+				}
 			}
+
 		}
+
 	}
 	if (elementType_ == ELEMENT_TYPE::PLANT)
 	{
 		AttackChange();
 		if (isPoint_)
 		{
-			if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || wall_->IsWaterCollision(attackPos_) == true)
+			if (id_ == 3)
 			{
-
-				if (id_ == 3)
+				if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || wall_->IsWaterCollision(attackPos_) == true ||stage_->IsCollisionStage3(attackPos_) == true)
 				{
-					if (stage_->IsCollisionStage3(attackPos_) == true)
-					{
-						isPoint_ = false;
-						isAttack_ = true;
-					}
+
+
+
+					isPoint_ = false;
+					isAttack_ = true;
 
 				}
-				else
+				else if (wall_->IsSphereCollision(attackPos_) == true)
 				{
-					if (stage_->IsCollisionStage(attackPos_) == true)
-					{
-						isPoint_ = false;
-						isAttack_ = true;
-					}
+					wall_->SetIsSphere(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					plants_->SetPlantsPos(attackPos_);
+					plants_->SetIsPlants(true);
+
 				}
 
+				
 			}
-			else if (wall_->IsSphereCollision(attackPos_) == true)
+			else if (id_ == 1 || id_ == 2)
 			{
-				wall_->SetIsSphere(false);
-				isPoint_ = false;
-				isAttack_ = true;
-				plants_->SetPlantsPos(attackPos_);
-				plants_->SetIsPlants(true);
+				if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || wall_->IsWaterCollision(attackPos_) == true ||stage_->IsCollisionStage(attackPos_) == true)
+				{
+
+					isPoint_ = false;
+					isAttack_ = true;
+
+				}
+				else if (wall_->IsSphereCollision(attackPos_) == true)
+				{
+					wall_->SetIsSphere(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					plants_->SetPlantsPos(attackPos_);
+					plants_->SetIsPlants(true);
+
+
+
+				}
 			}
 		}
 	}
@@ -485,24 +627,25 @@ void Player::Attack()
 		{
 			if (ins.IsNew(KEY_INPUT_K))
 			{
-				
+				isSotd_ = true;
 				if (armAngle_ <= AsoUtility::Deg2RadF(0.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(180.0f);
 				}
 
-				armAngle_ += AsoUtility::Deg2RadF(5.0f);
+				armAngle_ += AsoUtility::Deg2RadF(7.0f);
 
-				if (armAngle_ >= AsoUtility::Deg2RadF(360.0f))
+				if (armAngle_ >= AsoUtility::Deg2RadF(315.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(180.0f);
 				}
 				//
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
+				
 
 			}
-			else if(!ins.IsNew(KEY_INPUT_K))
+			else if (!ins.IsNew(KEY_INPUT_K))
 			{
 				armAngle_ = AsoUtility::Deg2RadF(0.0f);
 			}
@@ -511,15 +654,15 @@ void Player::Attack()
 		{
 			if (ins.IsNew(KEY_INPUT_K))
 			{
-
+				isSotd_ = true;
 				if (armAngle_ >= AsoUtility::Deg2RadF(0.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
 				}
 
-				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
+				armAngle_ -= AsoUtility::Deg2RadF(7.0f);
 
-				if (armAngle_ <= AsoUtility::Deg2RadF(-360.0f))
+				if (armAngle_ <= AsoUtility::Deg2RadF(-315.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
 				}
@@ -527,6 +670,7 @@ void Player::Attack()
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
 				
+
 			}
 			else if (!ins.IsNew(KEY_INPUT_K))
 			{
@@ -536,30 +680,89 @@ void Player::Attack()
 	}
 
 }
+
+void Player::Hp()
+{
+	if (GetHp() < 0)
+	{
+		SetHp(0);
+	}
+}
+
+void Player::DownHp(int Down)
+{
+	if (invCnt_ <= 0)
+	{
+		SetHp(GetHp() - Down);
+		SetIsAlive(false);
+	}
+}
+
+void Player::Mp()
+{
+	if (GetMp() <= 0)
+	{
+		SetMp(0);
+	}
+}
+void Player::DownMp(int Down)
+{
+	SetMp(GetMp() - Down);
+}
+void Player::ReSpawn()
+{
+	if (id_ != 3)
+	{
+		if (pos_.y >= stageSize_ * 13)
+		{
+			pos_.x = stageSize_ * 2;
+			pos_.y = stageSize_ * 8;
+			SetHp(GetHp() - 10);
+		}
+	}
+	else
+	{
+
+		if (pos_.y >= stageSize_ * 25)
+		{
+			pos_.x = stageSize_ * 2;
+			pos_.y = stageSize_ * 8;
+			SetHp(GetHp() - 10);
+		}
+
+	}
+}
+
+//属性攻撃処理
 void Player::AttackChange(void)
 {
+
 
 	InputManager& ins = InputManager::GetInstance();
 	if (isAttack_)
 	{
-
-		if (ins.IsTrgUp(KEY_INPUT_K))
+		if (GetMp() >= 10)
 		{
-			attackPos_.x = attckAnglePoint_.x;
-			attackPos_.y = attckAnglePoint_.y;
 
-			movePos = upCnt;
-			isPoint_ = true;
-			isAttack_ = false;
+			if (ins.IsTrgUp(KEY_INPUT_K))
+			{
+				mp_ -= 10;
+				attackPos_.x = attckAnglePoint_.x;
+				attackPos_.y = attckAnglePoint_.y;
+
+				movePos = upCnt;
+				isPoint_ = true;
+				isAttack_ = false;
+			}
 		}
 	}
 	if (isPoint_) {
 		attackPos_.y -= movePos;
 		movePos -= GRAVITY;
 	}
-	if (attackPos_.y > (64 * 12))
+	if (attackPos_.y > (stageSize_ * 12))
 	{
-		attackPos_.y = (64 * 12);
+		attackPos_.y = (stageSize_ * 12);
 		isPoint_ = false;
 		isAttack_ = true;
 	}
@@ -640,7 +843,7 @@ void Player::AttackChange(void)
 }
 
 
-
+//当たり判定--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void Player::CalcFootPos(void)
 {
@@ -723,7 +926,8 @@ void Player::CalcLeftSidePos(void)
 	leftPosD_.y -= COL_OFFSET;
 }
 
-
+//判定の取得＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+//足元
 bool Player::IsHitFootPos(void)
 {
 	if (id_ == 3)
@@ -741,6 +945,7 @@ bool Player::IsHitFootPos(void)
 
 
 }
+//頭上
 bool Player::IsHitHeadPos(void)
 {
 	if (id_ == 3)
@@ -757,6 +962,7 @@ bool Player::IsHitHeadPos(void)
 			|| stage_->IsCollisionStage(headPosR_);
 	}
 }
+//右側
 bool Player::IsHitRightPos(void)
 {
 	if (id_ == 3)
@@ -772,6 +978,7 @@ bool Player::IsHitRightPos(void)
 			|| stage_->IsCollisionStage(rightPosD_);
 	}
 }
+//左側
 bool Player::IsHitLeftPos(void)
 {
 	if (id_ == 3)
@@ -788,6 +995,58 @@ bool Player::IsHitLeftPos(void)
 	}
 }
 
+//水
+//右側
+bool Player::IsWaterHitRightPos(void)
+{
+	return wall_->IsWaterCollision(rightPosC_)
+		|| wall_->IsWaterCollision(rightPosU_)
+		|| wall_->IsWaterCollision(rightPosD_);
+
+}
+//左側
+bool Player::IsWaterHitLeftPos(void)
+{
+	return wall_->IsWaterCollision(leftPosC_)
+		|| wall_->IsWaterCollision(leftPosU_)
+		|| wall_->IsWaterCollision(leftPosD_);
+
+}
+
+//炎
+//右側
+bool Player::IsFlareHitRightPos(void)
+{
+	return wall_->IsFlaereCollision(rightPosC_)
+		|| wall_->IsFlaereCollision(rightPosU_)
+		|| wall_->IsFlaereCollision(rightPosD_);
+
+}
+//左側
+bool Player::IsFlareHitLeftPos(void)
+{
+	return wall_->IsFlaereCollision(leftPosC_)
+		|| wall_->IsFlaereCollision(leftPosU_)
+		|| wall_->IsFlaereCollision(leftPosD_);
+}
+
+//植物
+//右側
+bool Player::IsPlantsHitRightPos(void)
+{
+	return wall_->IsPlantsCollision(rightPosC_)
+		|| wall_->IsPlantsCollision(rightPosU_)
+		|| wall_->IsPlantsCollision(rightPosD_);
+}
+//左側
+bool Player::IsPlantsHitLeftPos(void)
+{
+	return wall_->IsPlantsCollision(leftPosC_)
+		|| wall_->IsPlantsCollision(leftPosU_)
+		|| wall_->IsPlantsCollision(leftPosD_);
+}
+
+//ブロックとの当たり判定＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 void Player::CollisionFoot(void)
 {
 	//足元三点の座標
@@ -896,13 +1155,119 @@ void Player::CollisionLeftSide(void)
 		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
 	}
 }
+//壁との当たり判定＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+//水との当たり判定
+//右
+void Player::CollisionWaterRightSide(void)
+{
+	//右側三点の座標
+	CalcRightSidePos();
 
+	//右側三点との当たり判定
+	isHitRightSide_ = IsWaterHitRightPos();
+
+	//右側三点のどれかが当たっていたら
+	if (isHitRightSide_)
+	{
+		DownHp(50);
+		pos_.x = wall_->GetWaterPos().x - wall_->FLARE_HALF_SIZE_X;
+		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
+	}
+}
+//左
+void Player::CollisionWaterLeftSide(void)
+{
+	CalcLeftSidePos();
+	//左側三点との当たり判定
+	isHitLeftSide_ = IsWaterHitLeftPos();
+
+	//左側三点のどれかが当たっていたら
+	if (isHitLeftSide_)
+	{
+		DownHp(50);
+		pos_.x = wall_->GetWaterPos().x + wall_->FLARE_SIZE_X+wall_->FLARE_HALF_SIZE_X;
+		//左に移動録があるときは移動量をなくす
+		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
+	}
+}
+
+//炎との当たり判定
+//右
+void Player::CollisionFlareRightSide(void)
+{
+	CalcRightSidePos();
+
+	//右側三点との当たり判定
+	isHitRightSide_ = IsFlareHitRightPos();
+
+	//右側三点のどれかが当たっていたら
+	if (isHitRightSide_)
+	{
+		DownHp(50);
+		pos_.x = wall_->GetFlarePos().x - wall_->FLARE_HALF_SIZE_X;
+		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
+	}
+}
+//左
+void Player::CollisionFlareLeftSide(void)
+{
+	CalcLeftSidePos();
+	//左側三点との当たり判定
+	isHitLeftSide_ = IsFlareHitLeftPos();
+
+	//左側三点のどれかが当たっていたら
+	if (isHitLeftSide_)
+	{
+		DownHp(50);
+		pos_.x = wall_->GetFlarePos().x + wall_->FLARE_SIZE_X + wall_->FLARE_HALF_SIZE_X;
+		//左に移動録があるときは移動量をなくす
+		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
+	}
+}
+
+
+//植物との当たり判定
+//右
+void Player::CollisionPlantsRightSide(void)
+{
+	CalcRightSidePos();
+
+	//右側三点との当たり判定
+	isHitRightSide_ = IsPlantsHitRightPos();
+
+	//右側三点のどれかが当たっていたら
+	if (isHitRightSide_)
+	{
+		DownHp(50);
+		pos_.x = wall_->GetPlantsPos().x - wall_->FLARE_HALF_SIZE_X;
+		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
+	}
+}
+//左
+void Player::CollisionPlantsLeftSide(void)
+{
+	CalcLeftSidePos();
+	//左側三点との当たり判定
+	isHitLeftSide_ = IsPlantsHitLeftPos();
+
+	//左側三点のどれかが当たっていたら
+	if (isHitLeftSide_)
+	{
+		DownHp(50);
+		pos_.x = wall_->GetPlantsPos().x + wall_->FLARE_SIZE_X + wall_->FLARE_HALF_SIZE_X;
+		//左に移動録があるときは移動量をなくす
+		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
+	}
+}
+
+
+//判定の可視化＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝－－－
 void Player::DrawHitCollision(void)
 {
 	//足元の当たり判定の可視化
 	constexpr unsigned int FOOT_HIT_POS_COLOR = 0xff0000;
 	constexpr int CHIRCLE_SIZE = 2;
-	DrawCircle(footPosC_.x-camera_->GetCameraPos().x, footPosC_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
+	DrawCircle(footPosC_.x - camera_->GetCameraPos().x, footPosC_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
 	DrawCircle(footPosL_.x - camera_->GetCameraPos().x, footPosL_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
 	DrawCircle(footPosR_.x - camera_->GetCameraPos().x, footPosR_.y - camera_->GetCameraPos().y, CHIRCLE_SIZE, FOOT_HIT_POS_COLOR);
 	//頭側の当たり判定の可視化
@@ -928,6 +1293,7 @@ void Player::DrawHitCollision(void)
 	if (isHitLeftSide_) DrawString(45, 60, "左側が当たっている", STRING_COLOR);
 }
 
+//ワールド座標からマップ座標への変換
 Vector2 Player::World2MapPos(Vector2 worldPos)
 {
 	Vector2 ret;
@@ -940,11 +1306,68 @@ Vector2 Player::World2MapPos(Vector2 worldPos)
 
 	return ret;
 }
+
+
+//ゲット・セット＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 Vector2F Player::GetPlayerPos()
 {
 	return pos_;
 }
+void Player::SetPlayerPos(Vector2F pos)
+{
+	pos_ = pos;
+}
 
+int Player::GetHp(void)
+{
+	return hp_;
+}
+void Player::SetHp(int hp)
+{
+	hp_ = hp;
+}
+
+int Player::GetMp(void)
+{
+	return mp_;
+}
+void Player::SetMp(int mp)
+{
+	mp_ = mp;
+}
+unsigned int Player::GetCr(void)
+{
+ 	return cr_;
+}
+void Player::SetCr(int cr)
+{
+	cr_ = cr;
+}
+
+bool Player::GetIsAlive()
+{
+	return isAlive_;
+}
+
+void Player::SetIsAlive(bool is)
+{
+	isAlive_ = is;
+}
+
+int Player::GetStageSize()
+{
+	return stageSize_;
+}
+
+void Player::SetStageSize(int size)
+{
+	stageSize_ = size;
+}
+
+
+
+
+//チェンジ関数＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 void Player::MoveChange(void)
 {
 	switch (moveType_)
@@ -952,11 +1375,8 @@ void Player::MoveChange(void)
 	case MOVE_TYPE::STOP:
 		//移動量を０にする
 
-		
-
 		break;
 	case MOVE_TYPE::MOVE:
-		
 
 		break;
 
@@ -970,162 +1390,19 @@ void Player::ElementChange()
 	{
 
 	case ELEMENT_TYPE::FIRE:
-		cr = 0xff0000;
+		cr_ = 0xff0000;
+		
 		break;
 	case ELEMENT_TYPE::WATER:
-		cr = 0x0000ff;
+		cr_ = 0x0000ff;
+		
 		break;
 	case ELEMENT_TYPE::PLANT:
-		cr = 0x00ff00;
+		cr_ = 0x00ff00;
+		
 		break;
 	case ELEMENT_TYPE::NORMAL:
-		cr = 0xffffff;
+		cr_ = 0xffffff;
 		break;
 	}
-}
-
-
-
-bool Player::IsWaterHitRightPos(void)
-{
-	return wall_->IsWaterCollision(rightPosC_)
-		|| wall_->IsWaterCollision(rightPosU_)
-		|| wall_->IsWaterCollision(rightPosD_);
-
-}
-bool Player::IsWaterHitLeftPos(void)
-{
-	return wall_->IsWaterCollision(leftPosC_)
-		|| wall_->IsWaterCollision(leftPosU_)
-		|| wall_->IsWaterCollision(leftPosD_);
-
-}
-
-
-bool Player::IsFlareHitRightPos(void)
-{
-	return wall_->IsFlaereCollision(rightPosC_)
-		|| wall_->IsFlaereCollision(rightPosU_)
-		|| wall_->IsFlaereCollision(rightPosD_);
-
-}
-bool Player::IsFlareHitLeftPos(void)
-{
-	return wall_->IsFlaereCollision(leftPosC_)
-		|| wall_->IsFlaereCollision(leftPosU_)
-		|| wall_->IsFlaereCollision(leftPosD_);
-}
-
-
-bool Player::IsPlantsHitRightPos(void)
-{
-	return wall_->IsPlantsCollision(rightPosC_)
-		|| wall_->IsPlantsCollision(rightPosU_)
-		|| wall_->IsPlantsCollision(rightPosD_);
-}
-bool Player::IsPlantsHitLeftPos(void)
-{
-	return wall_->IsPlantsCollision(leftPosC_)
-		|| wall_->IsPlantsCollision(leftPosU_)
-		|| wall_->IsPlantsCollision(leftPosD_);
-}
-
-
-
-void Player::CollisionWaterRightSide(void)
-{
-	//右側三点の座標
-	CalcRightSidePos();
-
-	//右側三点との当たり判定
-	isHitRightSide_ = IsWaterHitRightPos();
-
-	//右側三点のどれかが当たっていたら
-	if (isHitRightSide_)
-	{
-		pos_.x = wall_->GetWaterPos().x - wall_->FLARE_HALF_SIZE_X;
-		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
-	}
-}
-void Player::CollisionWaterLeftSide(void)
-{
-	CalcLeftSidePos();
-	//左側三点との当たり判定
-	isHitLeftSide_ = IsWaterHitLeftPos();
-
-	//左側三点のどれかが当たっていたら
-	if (isHitLeftSide_)
-	{
-		
-		pos_.x = wall_->GetWaterPos().x + wall_->FLARE_SIZE_X+wall_->FLARE_HALF_SIZE_X;
-		//左に移動録があるときは移動量をなくす
-		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
-	}
-}
-
-
-void Player::CollisionFlareRightSide(void)
-{
-	CalcRightSidePos();
-
-	//右側三点との当たり判定
-	isHitRightSide_ = IsFlareHitRightPos();
-
-	//右側三点のどれかが当たっていたら
-	if (isHitRightSide_)
-	{
-		pos_.x = wall_->GetFlarePos().x - wall_->FLARE_HALF_SIZE_X;
-		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
-	}
-}
-void Player::CollisionFlareLeftSide(void)
-{
-	CalcLeftSidePos();
-	//左側三点との当たり判定
-	isHitLeftSide_ = IsFlareHitLeftPos();
-
-	//左側三点のどれかが当たっていたら
-	if (isHitLeftSide_)
-	{
-
-		pos_.x = wall_->GetFlarePos().x + wall_->FLARE_SIZE_X + wall_->FLARE_HALF_SIZE_X;
-		//左に移動録があるときは移動量をなくす
-		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
-	}
-}
-
-
-void Player::CollisionPlantsRightSide(void)
-{
-	CalcRightSidePos();
-
-	//右側三点との当たり判定
-	isHitRightSide_ = IsPlantsHitRightPos();
-
-	//右側三点のどれかが当たっていたら
-	if (isHitRightSide_)
-	{
-		pos_.x = wall_->GetPlantsPos().x - wall_->FLARE_HALF_SIZE_X;
-		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
-	}
-}
-void Player::CollisionPlantsLeftSide(void)
-{
-	CalcLeftSidePos();
-	//左側三点との当たり判定
-	isHitLeftSide_ = IsPlantsHitLeftPos();
-
-	//左側三点のどれかが当たっていたら
-	if (isHitLeftSide_)
-	{
-
-		pos_.x = wall_->GetPlantsPos().x + wall_->FLARE_SIZE_X + wall_->FLARE_HALF_SIZE_X;
-		//左に移動録があるときは移動量をなくす
-		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
-	}
-}
-
-void Player::SetPlayerPos(Vector2F pos)
-{
-	pos_ = pos;
 }

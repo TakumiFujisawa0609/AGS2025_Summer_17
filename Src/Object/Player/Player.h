@@ -23,10 +23,10 @@ public:
 	enum class ELEMENT_TYPE
 	{
 		NONE,
-		FIRE,
+		NORMAL,
 		WATER,
 		PLANT,
-		NORMAL,
+		FIRE,
 	};
 
 
@@ -59,12 +59,21 @@ public:
 	//移動速度最大値
 	static constexpr float MAX_MOVE_SPEED = 2.0f;
 
+	//MAX HP
+	static constexpr int MAX_HP = 100;
+	//MAX MP
+	static constexpr int MAX_MP = 100;
 private:
 	//変数
 	int* img_;
 	int* armImg_;
+	int sordImg_;
+	int invCnt_;
+	bool isAlive_;
 
-	int cr;
+	int stageSize_;
+
+	unsigned int cr_;
 
 	//属性
 	ELEMENT_TYPE elementType_;//属性タイプ
@@ -90,7 +99,7 @@ private:
 	bool isAttack_;//攻撃中かどうか
 	bool isPoint_;
 	bool dirChange_;
-
+	bool isSotd_;
 	int upCnt;
 	Vector2 attackPos_;
 
@@ -98,6 +107,15 @@ private:
 	float movePos;
 	
 	//==========================================================================================================================
+
+	//ヒットポイント・マジックポイント
+	int hp_;
+	int mp_;
+
+	int regeneCnt_;
+	int mpRegene_;
+
+
 
 	//足元
 	//（デバッグ表示のためメンバー変数化）
@@ -142,6 +160,7 @@ private:
 	Water* water_;
 
 	Plants* plants_;
+
 	AsoUtility::DIR dir_;
 
 	
@@ -167,7 +186,12 @@ public:
 	void Move();
 	void Anime();
 	void Attack();
-	
+	void Hp();
+	void DownHp(int Down);
+	void Mp();
+	void DownMp(int Down);
+	void ReSpawn();
+
 
 	//（デバッグ表紙のために計算処理と衝突判定を別にしておく）
 	void CalcFootPos(void);
@@ -232,5 +256,21 @@ public:
 	void ElementChange(void);
 
 	void AttackChange(void);
+
+	int GetHp(void);
+	void SetHp(int hp);
+
+	int GetMp(void);
+	void SetMp(int mp);
+
+	unsigned int GetCr(void);
+	void SetCr(int cr);
+
+	bool GetIsAlive();
+	void SetIsAlive(bool is);
+
+	int GetStageSize();
+	void SetStageSize(int size);
+
 };
 

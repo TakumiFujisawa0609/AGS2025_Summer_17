@@ -52,6 +52,11 @@ void ResourceManager::Init(void)
 	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "gimick/WSphere.png", 2, 1, 64, 64);
 	resourcesMap_.emplace(SRC::WSPHERE, std::move(res));
 
+	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Player/Ui.png");
+	resourcesMap_.emplace(SRC::HPUI, std::move(res));
+
+	
+	
 
 	//‰æ‘œ‚Ì“Ç‚İ‚İ
 	//ƒuƒƒbƒN	

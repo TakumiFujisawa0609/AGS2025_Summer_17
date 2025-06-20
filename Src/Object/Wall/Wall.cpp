@@ -22,6 +22,9 @@ Wall::~Wall()
 void Wall::Init(Camera*camera)
 {
 	camera_ = camera;
+
+	stageSize_ = Stage::CHIP_SIZE_X;
+
 	ResourceManager& res = ResourceManager::GetInstance();
 
 	//‰æ‘œ‚Ìæ“¾
@@ -31,14 +34,14 @@ void Wall::Init(Camera*camera)
 	wSphereImg_ = res.Load(ResourceManager::SRC::WSPHERE).handleIds_;
 
 	//À•W‚Ì‰Šú‰»
-	plantsPos_.x = 64*49;
-	plantsPos_.y = 64*8;
-	flarePos_.x = 64*61;
-	flarePos_.y = 64*8;
-	waterPos_.x = 64*37;
-	waterPos_.y = 64*8;
-	spherePos_.x = 64 * 38;
-	spherePos_.y = 64 * 7;
+	plantsPos_.x = stageSize_*49;
+	plantsPos_.y = stageSize_*8;
+	flarePos_.x = stageSize_*61;
+	flarePos_.y = stageSize_*8;
+	waterPos_.x = stageSize_*37;
+	waterPos_.y = stageSize_*8;
+	spherePos_.x = stageSize_ * 38;
+	spherePos_.y = stageSize_ * 7;
 
 
 
