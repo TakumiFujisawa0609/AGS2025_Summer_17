@@ -41,7 +41,6 @@ private:
 	Plants* plants_;
 	//…
 	Water* water_;
-
 	STAGE_TYPE stageType;
 
 public:

@@ -67,6 +67,11 @@ private:
 	//変数
 	int* img_;
 	int* armImg_;
+	int sordImg_;
+	int invCnt_;
+	bool isAlive_;
+
+	int stageSize_;
 
 	unsigned int cr_;
 
@@ -94,7 +99,7 @@ private:
 	bool isAttack_;//攻撃中かどうか
 	bool isPoint_;
 	bool dirChange_;
-
+	bool isSotd_;
 	int upCnt;
 	Vector2 attackPos_;
 
@@ -107,7 +112,7 @@ private:
 	int hp_;
 	int mp_;
 
-
+	int 
 
 
 
@@ -154,6 +159,7 @@ private:
 	Water* water_;
 
 	Plants* plants_;
+
 	AsoUtility::DIR dir_;
 
 	
@@ -179,7 +185,12 @@ public:
 	void Move();
 	void Anime();
 	void Attack();
-	
+	void Hp();
+	void DownHp(int Down);
+	void Mp();
+	void DownMp(int Down);
+	void ReSpawn();
+
 
 	//（デバッグ表紙のために計算処理と衝突判定を別にしておく）
 	void CalcFootPos(void);
@@ -253,6 +264,12 @@ public:
 
 	unsigned int GetCr(void);
 	void SetCr(int cr);
+
+	bool GetIsAlive();
+	void SetIsAlive(bool is);
+
+	int GetStageSize();
+	void SetStageSize(int size);
 
 };
 

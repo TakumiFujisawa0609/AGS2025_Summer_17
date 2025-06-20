@@ -82,14 +82,14 @@ void Stage::Draw()
 				
 		}
 	}
-	DrawGraph(64 - cameraPos.x, 64*2, m_, true);
-	DrawGraph(64 * 12 - cameraPos.x, 64*2, j_, true);
-	DrawGraph(64 * 22 - cameraPos.x, 64*2, d_, true);
-	DrawGraph(64 * 27 - cameraPos.x, 64*2, rgb_, true);
-	DrawGraph(64 * 32 - cameraPos.x, 64*2, g_, true);
-	DrawGraph(64 * 45 - cameraPos.x, 64*2, r_, true);
-	DrawGraph(64 * 59 - cameraPos.x, 64*2, b_, true);
-	DrawGraph(64 * 37 - cameraPos.x, 64 * 2, k_, true);
+	DrawGraph(CHIP_SIZE_X - cameraPos.x, CHIP_SIZE_X*2, m_, true);
+	DrawGraph(CHIP_SIZE_X * 12 - cameraPos.x, CHIP_SIZE_X*2, j_, true);
+	DrawGraph(CHIP_SIZE_X * 22 - cameraPos.x, CHIP_SIZE_X*2, d_, true);
+	DrawGraph(CHIP_SIZE_X * 27 - cameraPos.x, CHIP_SIZE_X*2, rgb_, true);
+	DrawGraph(CHIP_SIZE_X * 32 - cameraPos.x, CHIP_SIZE_X*2, g_, true);
+	DrawGraph(CHIP_SIZE_X * 45 - cameraPos.x, CHIP_SIZE_X*2, r_, true);
+	DrawGraph(CHIP_SIZE_X * 59 - cameraPos.x, CHIP_SIZE_X*2, b_, true);
+	DrawGraph(CHIP_SIZE_X * 37 - cameraPos.x, CHIP_SIZE_X * 2, k_, true);
 }
 
 void Stage::Release()
@@ -272,14 +272,14 @@ void Stage::DrawStage1()
 
 		}
 	}
-	DrawGraph(64 - cameraPos.x, 64 * 2, m_, true);
-	DrawGraph(64 * 12 - cameraPos.x, 64 * 2, j_, true);
-	DrawGraph(64 * 22 - cameraPos.x, 64 * 2, d_, true);
-	DrawGraph(64 * 27 - cameraPos.x, 64 * 2, rgb_, true);
-	DrawGraph(64 * 32 - cameraPos.x, 64 * 2, g_, true);
-	DrawGraph(64 * 45 - cameraPos.x, 64 * 2, r_, true);
-	DrawGraph(64 * 59 - cameraPos.x, 64 * 2, b_, true);
-	DrawGraph(64 * 37 - cameraPos.x, 64 * 2, k_, true);
+	DrawGraph(CHIP_SIZE_X - cameraPos.x, CHIP_SIZE_X * 2, m_, true);
+	DrawGraph(CHIP_SIZE_X * 12 - cameraPos.x, CHIP_SIZE_X * 2, j_, true);
+	DrawGraph(CHIP_SIZE_X * 22 - cameraPos.x, CHIP_SIZE_X * 2, d_, true);
+	DrawGraph(CHIP_SIZE_X * 27 - cameraPos.x, CHIP_SIZE_X * 2, rgb_, true);
+	DrawGraph(CHIP_SIZE_X * 32 - cameraPos.x, CHIP_SIZE_X * 2, g_, true);
+	DrawGraph(CHIP_SIZE_X * 45 - cameraPos.x, CHIP_SIZE_X * 2, r_, true);
+	DrawGraph(CHIP_SIZE_X * 59 - cameraPos.x, CHIP_SIZE_X * 2, b_, true);
+	DrawGraph(CHIP_SIZE_X * 37 - cameraPos.x, CHIP_SIZE_X * 2, k_, true);
 }
 
 void Stage::LoadGroundCsvDataStage1(void)

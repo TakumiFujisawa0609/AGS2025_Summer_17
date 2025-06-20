@@ -44,6 +44,7 @@ private:
 
 	PlayerUi* playerUi_;
 
+
 	//îwåi
 	int backImg_;
 

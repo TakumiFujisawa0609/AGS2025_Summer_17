@@ -55,6 +55,9 @@ void ResourceManager::Init(void)
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Player/Ui.png");
 	resourcesMap_.emplace(SRC::HPUI, std::move(res));
 
+	
+	
+
 	//‰æ‘œ‚Ì“Ç‚İ‚İ
 	//ƒuƒƒbƒN	
 	//res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "LineBlock.png");

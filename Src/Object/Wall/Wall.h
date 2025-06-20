@@ -37,6 +37,8 @@ private:
 	int*waterImg_;
 	int* wSphereImg_;
 
+	int stageSize_;
+
 	//‰æ‘œ‚Ì”
 	int flareNo_;
 	int waterNo_;

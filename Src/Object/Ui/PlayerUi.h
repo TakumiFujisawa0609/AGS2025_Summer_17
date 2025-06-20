@@ -16,6 +16,7 @@ public:
 private:
 
 	int hpUi_;
+	int stageSize_;
 	Vector2 uiPos_;
 	Vector2 crPos_;
 	Vector2 hpPos_;

@@ -42,17 +42,22 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 
 	plants_ = plants;
 
+	
+
 	// 画像の読み込み
 	ResourceManager& res = ResourceManager::GetInstance();
 	img_ = res.Load(ResourceManager::SRC::PLAYERS).handleIds_;
 
 	armImg_ = res.Load(ResourceManager::SRC::PLAYERARM).handleIds_;
 
-
+	sordImg_ = LoadGraph("Data/Image/Player/Sord.png");
+	stageSize_=stage_->CHIP_SIZE_X;
 	
 	// 初期位置設定
-	pos_.x = 64*2;
-	pos_.y = 64*8;
+	pos_.x = stageSize_*2;
+	pos_.y = stageSize_*8;
+	invCnt_ = 0;
+	isAlive_ = true;
 	
 	//アニメーション初期化
 	armAngle_= AsoUtility::Deg2RadF(0.0f);
@@ -73,6 +78,7 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 	isAttack_ = true;
 	isPoint_ = false;
 	dirChange_ = true;
+	isSotd_ = false;
 	attackPos_.x = 0;
 	attackPos_.y = 0;
 	movePos = 0.0f;
@@ -91,7 +97,18 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 }
 void Player::Update()
 {
-	
+	// プレイヤーの再出現処理
+	if (isAlive_ == false)
+	{
+		isAlive_ = true;
+		// 無敵時間
+		invCnt_ = 60;
+	}
+	//無敵時間処理
+	if (invCnt_ > 0)
+	{
+		invCnt_--;
+	}
 	id_=stage_->GetStageId();
 
 
@@ -105,6 +122,11 @@ void Player::Update()
 
 	ElementChange();
 
+	ReSpawn();
+
+	Hp();
+
+	Mp();
 
 
 }
@@ -112,18 +134,48 @@ void Player::Draw()
 {
 	// 画像の描画
 	Vector2 cpos= camera_->GetCameraPos();
-	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y) - cpos.y, 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
+	if (isAlive_)
+	{
+		// 半透明フラグ
+		bool isTrans = false;
+		if (invCnt_ > 0)
+		{
+			if (invCnt_% 2 == 0)
+			{
+				isTrans = true;
+			}
+		}
 
+		if (isTrans)
+		{
+			// 被ダメ時の自機の描画
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 2);
+			DrawRotaGraphF((pos_.x) - cpos.x, (pos_.y) - cpos.y, 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
+			DrawRotaGraphF((pos_.x) - cpos.x, (pos_.y) - cpos.y, 1.0f, armAngle_, armImg_[animaAem_], TRUE);
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		}
+		else
+		{
+			// 自機の描画
+			DrawRotaGraphF((pos_.x) - cpos.x, (pos_.y) - cpos.y, 1.0f, 0.0f, img_[animationCount_], TRUE, dir_ == AsoUtility::DIR::LEFT);
+			DrawRotaGraphF((pos_.x) - cpos.x, (pos_.y) - cpos.y, 1.0f, armAngle_, armImg_[animaAem_], TRUE);
+		}
+
+	}
+	if (isSotd_ == true)
+	{
+		DrawRotaGraphF(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y - cpos.y, 1.0f, armAngle_ + AsoUtility::Deg2RadF(130.0f), sordImg_, true);
+	}
 	//腕の描画
 	//色変更
 	//GraphFilter(armImg_, DX_GRAPH_FILTER_HSB, cr, cr,cr,cr);
 	
- 	DrawRotaGraphF((pos_.x)-cpos.x, (pos_.y) - cpos.y, 1.0f, armAngle_, armImg_[animaAem_], TRUE);
+ 	
 	
 
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
 	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 5, cr_);
-	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y - cpos.y, 5, cr_);
+	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y - cpos.y, 32, cr_,false);
 	if (isPoint_)
 	{
 		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 5, cr_);
@@ -369,6 +421,7 @@ void Player::Anime()
 //攻撃タイプ別処理
 void Player::Attack()
 {
+	isSotd_ = false;
 	//攻撃処理
 	InputManager& ins = InputManager::GetInstance();
 	if (isAttack_)
@@ -548,21 +601,22 @@ void Player::Attack()
 		{
 			if (ins.IsNew(KEY_INPUT_K))
 			{
-
+				isSotd_ = true;
 				if (armAngle_ <= AsoUtility::Deg2RadF(0.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(180.0f);
 				}
 
-				armAngle_ += AsoUtility::Deg2RadF(5.0f);
+				armAngle_ += AsoUtility::Deg2RadF(7.0f);
 
-				if (armAngle_ >= AsoUtility::Deg2RadF(360.0f))
+				if (armAngle_ >= AsoUtility::Deg2RadF(315.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(180.0f);
 				}
 				//
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
+				
 
 			}
 			else if (!ins.IsNew(KEY_INPUT_K))
@@ -574,21 +628,22 @@ void Player::Attack()
 		{
 			if (ins.IsNew(KEY_INPUT_K))
 			{
-
+				isSotd_ = true;
 				if (armAngle_ >= AsoUtility::Deg2RadF(0.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
 				}
 
-				armAngle_ -= AsoUtility::Deg2RadF(5.0f);
+				armAngle_ -= AsoUtility::Deg2RadF(7.0f);
 
-				if (armAngle_ <= AsoUtility::Deg2RadF(-360.0f))
+				if (armAngle_ <= AsoUtility::Deg2RadF(-315.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
 				}
 				//
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
+				
 
 			}
 			else if (!ins.IsNew(KEY_INPUT_K))
@@ -600,6 +655,58 @@ void Player::Attack()
 
 }
 
+void Player::Hp()
+{
+	if (GetHp() < 0)
+	{
+		SetHp(0);
+	}
+}
+
+void Player::DownHp(int Down)
+{
+	if (invCnt_ <= 0)
+	{
+		SetHp(GetHp() - Down);
+		SetIsAlive(false);
+	}
+}
+
+void Player::Mp()
+{
+	if (GetMp() <= 0)
+	{
+		SetMp(0);
+	}
+}
+void Player::DownMp(int Down)
+{
+	SetMp(GetMp() - Down);
+}
+void Player::ReSpawn()
+{
+	if (id_ != 3)
+	{
+		if (pos_.y >= stageSize_ * 13)
+		{
+			pos_.x = stageSize_ * 2;
+			pos_.y = stageSize_ * 8;
+			SetHp(GetHp() - 10);
+		}
+	}
+	else
+	{
+
+		if (pos_.y >= stageSize_ * 25)
+		{
+			pos_.x = stageSize_ * 2;
+			pos_.y = stageSize_ * 8;
+			SetHp(GetHp() - 10);
+		}
+
+	}
+}
+
 //属性攻撃処理
 void Player::AttackChange(void)
 {
@@ -608,25 +715,28 @@ void Player::AttackChange(void)
 	InputManager& ins = InputManager::GetInstance();
 	if (isAttack_)
 	{
-
-		if (ins.IsTrgUp(KEY_INPUT_K))
+		if (GetMp() >= 10)
 		{
-			mp_ -= 10;
-			attackPos_.x = attckAnglePoint_.x;
-			attackPos_.y = attckAnglePoint_.y;
 
-			movePos = upCnt;
-			isPoint_ = true;
-			isAttack_ = false;
+			if (ins.IsTrgUp(KEY_INPUT_K))
+			{
+				mp_ -= 10;
+				attackPos_.x = attckAnglePoint_.x;
+				attackPos_.y = attckAnglePoint_.y;
+
+				movePos = upCnt;
+				isPoint_ = true;
+				isAttack_ = false;
+			}
 		}
 	}
 	if (isPoint_) {
 		attackPos_.y -= movePos;
 		movePos -= GRAVITY;
 	}
-	if (attackPos_.y > (64 * 12))
+	if (attackPos_.y > (stageSize_ * 12))
 	{
-		attackPos_.y = (64 * 12);
+		attackPos_.y = (stageSize_ * 12);
 		isPoint_ = false;
 		isAttack_ = true;
 	}
@@ -1033,7 +1143,7 @@ void Player::CollisionWaterRightSide(void)
 	//右側三点のどれかが当たっていたら
 	if (isHitRightSide_)
 	{
-		SetHp(GetHp() - 50);
+		DownHp(50);
 		pos_.x = wall_->GetWaterPos().x - wall_->FLARE_HALF_SIZE_X;
 		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
 	}
@@ -1048,7 +1158,7 @@ void Player::CollisionWaterLeftSide(void)
 	//左側三点のどれかが当たっていたら
 	if (isHitLeftSide_)
 	{
-		SetHp(GetHp() - 50);
+		DownHp(50);
 		pos_.x = wall_->GetWaterPos().x + wall_->FLARE_SIZE_X+wall_->FLARE_HALF_SIZE_X;
 		//左に移動録があるときは移動量をなくす
 		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
@@ -1067,7 +1177,7 @@ void Player::CollisionFlareRightSide(void)
 	//右側三点のどれかが当たっていたら
 	if (isHitRightSide_)
 	{
-		SetHp(GetHp() - 50);
+		DownHp(50);
 		pos_.x = wall_->GetFlarePos().x - wall_->FLARE_HALF_SIZE_X;
 		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
 	}
@@ -1082,7 +1192,7 @@ void Player::CollisionFlareLeftSide(void)
 	//左側三点のどれかが当たっていたら
 	if (isHitLeftSide_)
 	{
-		SetHp(GetHp() - 50);
+		DownHp(50);
 		pos_.x = wall_->GetFlarePos().x + wall_->FLARE_SIZE_X + wall_->FLARE_HALF_SIZE_X;
 		//左に移動録があるときは移動量をなくす
 		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
@@ -1102,7 +1212,7 @@ void Player::CollisionPlantsRightSide(void)
 	//右側三点のどれかが当たっていたら
 	if (isHitRightSide_)
 	{
-		SetHp(GetHp() - 50);
+		DownHp(50);
 		pos_.x = wall_->GetPlantsPos().x - wall_->FLARE_HALF_SIZE_X;
 		if (movePosX_ > 0.0f)movePosX_ = 0.0f;
 	}
@@ -1117,7 +1227,7 @@ void Player::CollisionPlantsLeftSide(void)
 	//左側三点のどれかが当たっていたら
 	if (isHitLeftSide_)
 	{
-		SetHp(GetHp() - 50);
+		DownHp(50);
 		pos_.x = wall_->GetPlantsPos().x + wall_->FLARE_SIZE_X + wall_->FLARE_HALF_SIZE_X;
 		//左に移動録があるときは移動量をなくす
 		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
@@ -1206,6 +1316,26 @@ unsigned int Player::GetCr(void)
 void Player::SetCr(int cr)
 {
 	cr_ = cr;
+}
+
+bool Player::GetIsAlive()
+{
+	return isAlive_;
+}
+
+void Player::SetIsAlive(bool is)
+{
+	isAlive_ = is;
+}
+
+int Player::GetStageSize()
+{
+	return stageSize_;
+}
+
+void Player::SetStageSize(int size)
+{
+	stageSize_ = size;
 }
 
 

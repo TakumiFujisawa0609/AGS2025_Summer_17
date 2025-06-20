@@ -52,6 +52,7 @@ void GameScene::Init(void)
 
 	playerUi_ = new PlayerUi();
 
+
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 
 	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
@@ -71,6 +72,7 @@ void GameScene::Init(void)
 	blast_->Init(camera_);
 	water_->Init(camera_);
 	plants_->Init(camera_);
+	
 }
 
 void GameScene::Update(void)
@@ -188,4 +190,6 @@ void GameScene::Release()
 	plants_->Release();
 	delete plants_;
 	delete enemyManager_;
+
+	
 }
