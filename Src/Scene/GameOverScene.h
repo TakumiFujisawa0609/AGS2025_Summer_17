@@ -7,7 +7,7 @@
 
 
 
-class GameOverScene
+class GameOverScene : public SceneBase
 {
 public:
 	// コンストラクタ
@@ -23,5 +23,13 @@ public:
 
 	// 描画
 	void Draw(void);
+private:
+
+	int img_;  // 画像ハンドル
+
+	int  blinkCycle; // 点滅周期
+
+	float frameCount;
+
 };
 

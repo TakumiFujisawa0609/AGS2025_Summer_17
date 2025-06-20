@@ -10,6 +10,7 @@ class Fader;
 class Camera;
 
 
+
 class SceneManager
 {
 
@@ -23,6 +24,7 @@ public:
 		TITLE,
 		MENU,
 		GAME,
+		GAMEOVER,
 		CLEAR,
 		
 	};

@@ -23,7 +23,7 @@ void TitleScene::Init(void)
 img_ = LoadGraph((Application::PATH_IMAGE + "Scene/Title.png").c_str());
 
 // 点滅させたい周期（例：30フレームで切り替え、約0.5秒）
-blinkCycle = 60;
+blinkCycle = 120;
 
 //フレームカウントの初期化
 frameCount = 0;
@@ -36,7 +36,7 @@ void TitleScene::Update(void)
 InputManager& ins = InputManager::GetInstance();
 if (ins.IsTrgDown(KEY_INPUT_SPACE))
 {
-	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
+	SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
 }
 }
 
@@ -50,7 +50,7 @@ void TitleScene::Draw(void)
 
   SetFontSize(50);
   if ((static_cast<int>(frameCount) % static_cast<int>(blinkCycle)) < static_cast<int>(blinkCycle) / 2) {  
-      DrawFormatString(725, 700, 0x000000, "START PUSH SPACE KEY");
+      DrawFormatString(720, 700, 0x000000, "SPACEキーを押してスタート\n\n    ENTERでゲーム終了");
   }  
   SetFontSize(16);
 
