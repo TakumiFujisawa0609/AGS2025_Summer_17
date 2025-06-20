@@ -23,10 +23,10 @@ public:
 	enum class ELEMENT_TYPE
 	{
 		NONE,
-		FIRE,
+		NORMAL,
 		WATER,
 		PLANT,
-		NORMAL,
+		FIRE,
 	};
 
 
@@ -112,7 +112,8 @@ private:
 	int hp_;
 	int mp_;
 
-	int 
+	int regeneCnt_;
+	int mpRegene_;
 
 
 

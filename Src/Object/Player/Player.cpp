@@ -94,6 +94,9 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 	hp_ = MAX_HP;
 	mp_ = MAX_MP;
 
+	regeneCnt_ = 30;
+	mpRegene_ = 1;
+
 }
 void Player::Update()
 {
@@ -401,6 +404,16 @@ void Player::Anime()
 	}
 	if (moveType_ == MOVE_TYPE::STOP)
 	{
+		regeneCnt_--;
+		if (regeneCnt_ < 0)
+		{
+			regeneCnt_ = 30;
+			SetMp(GetMp() + 2);
+			if (GetMp() >= 100)
+			{
+				SetMp(MAX_MP);
+			}
+		}
 		animationTime_ += 0.05f;
 		if (animationTime_ >= 1.0f)
 		{
@@ -449,6 +462,19 @@ void Player::Attack()
 			animaAem_ = 0;
 			elementType_ = ELEMENT_TYPE::NORMAL;
 
+		}
+		if (ins.IsTrgDown(KEY_INPUT_T))
+		{
+			if (elementType_ == ELEMENT_TYPE::FIRE)
+			{
+				elementType_ = ELEMENT_TYPE::NORMAL;
+				animaAem_ = 0;
+			}
+			else
+			{
+				animaAem_ += 1;
+				elementType_ = static_cast<ELEMENT_TYPE>(static_cast<int>(elementType_) + 1);
+			}
 		}
 
 	}
