@@ -3,11 +3,13 @@
 #include "../../Common/Vector2F.h"
 class Camera;
 class EnemyFire;
+class Player;
+class Stage;
 
 class EnemyBase {
 public:
 
-    void Init();
+    void Init(Player* player, Camera* camera, Stage* stage);
     void Update();
     void Draw();
 
@@ -25,8 +27,10 @@ protected:
     bool isFire_;
     bool isWater_;
     bool isPlant_;
-  
+
+    Player* player_;
     Camera* camera_;
+    Stage* stage_;
     EnemyFire* enemyFire_;
 
 };

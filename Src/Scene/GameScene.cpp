@@ -54,7 +54,7 @@ void GameScene::Init(void)
 	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
 	stage_->Init(player_, camera_);
 	camera_->Init(player_);
-	enemyManager_->Init();
+	enemyManager_->Init(player_, camera_, stage_);
 
 	//enemy_->Init();
 	wall_->Init(camera_);
