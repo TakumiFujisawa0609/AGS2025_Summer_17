@@ -8,6 +8,8 @@
 #include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
 #include "../Object/Enemy/EnemyManager.h"
+#include "../Object/Enemy/EnemyFire.h"
+#include "../Object/Enemy/EnemyAttack/EnemyAttack.h"
 #include "../Object/Stage/Stage.h"
 #include "../Object/Camera/Camera.h"
 #include "../Object/Wall/Wall.h"
@@ -32,6 +34,8 @@ void GameScene::Init(void)
 	player_ = new Player();
 	//エネミー
 	enemyManager_ = new EnemyManager();
+	enemyFire_ = new EnemyFire();
+	enemyAttack_ = new EnemyAttack();
 	// ステージ
 	stage_ = new Stage();
 	// ステージ
@@ -59,14 +63,14 @@ void GameScene::Init(void)
 	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
 	stage_->Init(player_, camera_);
 	camera_->Init(player_);
-	enemyManager_->Init(player_, camera_, stage_);
+	enemyManager_->Init(enemyAttack_, enemyFire_, player_, camera_, stage_);
 
 	//enemy_->Init();
 	wall_->Init(camera_);
 
 	playerUi_->Init(player_);
 
-	stageManager_->Init(player_, enemyManager_, stage_, camera_, wall_, blast_, plants_, water_);
+	stageManager_->Init(player_, enemyManager_, enemyFire_, stage_, camera_, wall_, blast_, plants_, water_);
 
 
 

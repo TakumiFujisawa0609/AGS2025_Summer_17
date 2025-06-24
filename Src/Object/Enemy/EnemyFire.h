@@ -2,6 +2,8 @@
 #include "EnemyBase.h"
 #include <DxLib.h>
 class EnemyManager;
+class EnemyAttack;
+class EnemyFire;
 class Player;
 class Camera;
 class Stage;
@@ -25,36 +27,72 @@ public:
     static constexpr int ANIM_INTERVAL = 13;
 
     // 索敵範囲
-    static constexpr float FIND_SIZE = 256.0f;
+    static constexpr float FIND_SIZE = 160.0f;
 
-    void Init(Player* player, Camera* camera, Stage* stage);
+    // 初期化
+    void Init(EnemyAttack* enemyAttack, EnemyFire* enemyFire, Player* player, Camera* camera, Stage* stage);
+    // 更新
     void Update();
+    // 描画
     void Draw();
+
+    // 攻撃
     void Attack();
+    // 移動
     void Move();
+    // 被ダメージ
+    void Damage();
+
+    // サイズ
+    int GetSizeX();
+
+    // 座標
+    Vector2F GetPos();
+
+    // 左右判定の取得(trueなら左向き)
+    bool GetLeft();
+
+    // 発見中判定(trueなら発見中)
+    bool GetFind();
 
 private:
 
+    // エネミー
     EnemyManager* enemyManager_;
+    EnemyAttack* enemyAttack_;
+    EnemyFire* enemyFire_;
+    // プレイヤー
     Player* player_;
+    // カメラ
     Camera* camera_;
+    // ステージ
     Stage* stage_;
 
+    // 座標
     Vector2F pos_;
+    // 初期座標の設定用値
+    int setInitPos_;
 
+    // 画像のハンドルID
     int img_;
 
+    // アニメーション数
     int Array_[ANIM_MAX];
+    // アニメーションフレーム数カウント
     int animFrame_;
+    // アニメーションのカウンタ
     int animCnt_;
-    int animInterval_;
 
+    // 移動用のカウンタ
     int moveCnt_;
-    
-    int attackCnt_;
+
+    // 生存中判定
     bool isAlive_;
+    // 攻撃中判定
     bool isAttack_;
+    // 左右判定(trueなら左向き)
     bool isLeft_;
+    // 発見中判定(trueなら発見中)
     bool isFind_;
 
 };

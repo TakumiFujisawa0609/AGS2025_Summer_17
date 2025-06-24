@@ -6,6 +6,8 @@
 class Player;
 class StageManager;
 class EnemyManager;
+class EnemyFire;
+class EnemyAttack;
 class Stage;
 class Camera;
 class Wall;
@@ -26,6 +28,8 @@ private:
 	Player* player_;
 	// エネミー
 	EnemyManager* enemyManager_;
+	EnemyFire* enemyFire_;
+	EnemyAttack* enemyAttack_;
 	// ステージ
 	Stage* stage_;
 	// カメラ

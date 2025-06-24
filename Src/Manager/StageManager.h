@@ -3,6 +3,7 @@
 
 class Player;
 class EnemyManager;
+class EnemyFire;
 class Stage;
 class Camera;
 class Wall;
@@ -28,6 +29,7 @@ private:
 	Player* player_;
 	// エネミー
 	EnemyManager* enemyManager_;
+	EnemyFire* enemyFire_;
 	// ステージ
 	Stage* stage_;
 	// カメラ
@@ -51,7 +53,7 @@ public:
 
 	StageManager();
 	~StageManager();
-	void Init(Player* player_,	EnemyManager* enemyManager_,Stage* stage_,Camera* camera_,Wall* wall_,Blast* blast_,	Plants* plants_,Water* water_);
+	void Init(Player* player_, EnemyManager* enemyManager_, EnemyFire* enemyFire, Stage* stage_, Camera* camera_, Wall* wall_, Blast* blast_, Plants* plants_, Water* water_);
 	void Update();
 	void Draw();
 	void Update1();

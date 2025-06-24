@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Enemy\EnemyAttack\EnemyAttack.h" />
     <ClInclude Include="Src\Scene\GameOverScene.h" />
     <ClInclude Include="Src\Object\Ui\PlayerUi.h" />
     <ClInclude Include="Src\Object\Attack\Blast.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Src\Manager\StageManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Enemy\EnemyAttack\EnemyAttack.cpp" />
     <ClCompile Include="Src\Scene\GameOverScene.cpp" />
     <ClCompile Include="Src\Object\Ui\PlayerUi.cpp" />
     <ClCompile Include="Src\Object\Attack\Blast.cpp" />

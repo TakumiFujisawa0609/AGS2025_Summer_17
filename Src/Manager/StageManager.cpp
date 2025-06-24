@@ -8,6 +8,7 @@
 #include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
 #include "../Object/Enemy/EnemyManager.h"
+#include "../Object/Enemy/EnemyFire.h"
 #include "../Object/Stage/Stage.h"
 #include "../Object/Camera/Camera.h"
 #include "../Object/Wall/Wall.h"
@@ -23,10 +24,11 @@ StageManager::~StageManager()
 {
 
 }
-void StageManager::Init(Player* player, EnemyManager* enemyManager, Stage* stage, Camera* camera, Wall* wall, Blast* blast, Plants* plants, Water* water)
+void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* enemyFire, Stage* stage, Camera* camera, Wall* wall, Blast* blast, Plants* plants, Water* water)
 {
 	player_ = player;
 	enemyManager_ = enemyManager;
+	enemyFire_ = enemyFire;
 	stage_ = stage;
 	camera_ = camera;
 	wall_ = wall;
@@ -171,8 +173,8 @@ void StageManager::Draw2()
 
 	// ステージの描画
 	stage_->DrawStage2();
-	
 
+	
 	
 
 	// エネミーの描画

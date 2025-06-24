@@ -2,9 +2,11 @@
 #include <vector>
 #include "EnemyBase.h"
 #include "EnemyFire.h"
+#include "EnemyAttack/EnemyAttack.h"
 #include "../../Common/Vector2.h"
 class EnemyBase;
 class EnemyFire;
+class EnemyAttack;
 class Camera;
 class Player;
 class Stage;
@@ -14,14 +16,15 @@ class Stage;
 class EnemyManager {
 public:
 
-    void Init(Player* player, Camera* camera, Stage* stage);
-    void Update(void);
-    void Draw(void);
+    void Init(EnemyAttack* enemyAttack, EnemyFire* enemyFire, Player* player, Camera* camera, Stage* stage);
+    void Update();
+    void Draw();
 
 private:
 
     EnemyBase* enemyBase_;
     EnemyFire* enemyFire_;
+    EnemyAttack* enemyAttack_;
     Player* player_;
     Camera* camera_;
     Stage* stage_;

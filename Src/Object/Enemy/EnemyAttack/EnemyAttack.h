@@ -1,0 +1,73 @@
+#pragma once
+#include "../../../Common/Vector2.h"
+#include "../../../Common/Vector2F.h"
+#include <DxLib.h>
+class EnemyFire;
+class Camera;
+
+class EnemyAttack
+{
+public:
+
+    // サイズ
+    static constexpr int SIZE_X = 96;
+    static constexpr int SIZE_Y = 32;
+
+    // アニメーション
+    static constexpr int ANIM_X = 1;
+    static constexpr int ANIM_Y = 5;
+    static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
+    static constexpr int ANIM_INTERVAL = 8;
+
+    // 攻撃
+    static constexpr int ATTACK_INTERVAL = 110;
+
+    // 初期化
+    void Init(EnemyFire* enemyFire, Camera* camera);
+    // 更新
+    void Update();
+    // 描画
+    void Draw();
+
+
+
+    // 再生中判定取得
+    bool GetAttack();
+    // 再生中判定更新
+    void SetAttack(bool isAttack);
+
+    // 再生中判定取得
+    bool GetAlive();
+
+private:
+
+    EnemyFire* enemyFire_;
+    Camera* camera_;
+
+    // 座標
+    Vector2F pos_;
+
+    // 画像のハンドルID
+    int img_;
+
+    // アニメーション数
+    int Array_[ANIM_MAX];
+    // アニメーションフレーム数カウント
+    int animFrame_;
+    // アニメーションのカウンタ
+    int animCnt_;
+
+    // 攻撃用のカウンタ
+    int attackCnt_;
+
+    // 攻撃中判定
+    bool isAttack_;
+
+    // 再生中判定
+    bool isAlive_;
+
+    // 再生折り返し判定
+    bool isCntDown_;
+
+};
+

@@ -1,9 +1,9 @@
 #pragma once
 #include "../../Common/Vector2.h"
 #include "../../Common/Vector2F.h"
-class Camera;
 class EnemyFire;
 class Player;
+class Camera;
 class Stage;
 
 class EnemyBase {
@@ -13,7 +13,7 @@ public:
     void Update();
     void Draw();
 
-protected:
+private:
     
     // ˆÚ“®ˆ—
     void Move();
@@ -27,10 +27,10 @@ protected:
     bool isFire_;
     bool isWater_;
     bool isPlant_;
-
+    
+    EnemyFire* enemyFire_;
     Player* player_;
     Camera* camera_;
     Stage* stage_;
-    EnemyFire* enemyFire_;
-
+    
 };
