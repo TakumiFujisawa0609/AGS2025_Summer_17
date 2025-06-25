@@ -83,6 +83,8 @@ void EnemyAttack::Draw()
     // カメラ座標
     Vector2 cameraPos = camera_->GetCameraPos();
 
+
+
     if (isAlive_ && enemyFire_->GetAlive())
     {
         if (enemyLeft)
@@ -100,6 +102,16 @@ void EnemyAttack::Draw()
             DrawRotaGraphF(pos_.x, pos_.y, 1.0f, 0.0f, Array_[animFrame_], true, true);
         }
     }
+
+#ifdef _DEBUG
+
+    // エネミーの攻撃当たり判定描画
+    if (isAlive_)
+    {
+        DrawBox(pos_.x - SIZE_X / 2, pos_.y - SIZE_Y / 2, pos_.x + SIZE_X / 2, pos_.y + SIZE_Y / 2, 0x000000, false);
+    }
+
+#endif // _DEBUG
 }
 
 bool EnemyAttack::GetAttack()

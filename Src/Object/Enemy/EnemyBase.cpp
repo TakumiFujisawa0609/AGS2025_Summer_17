@@ -26,11 +26,3 @@ void EnemyBase::Update()
 void EnemyBase::Draw()
 {
 }
-
-void EnemyBase::Move()
-{
-}
-
-void EnemyBase::Attack()
-{
-}

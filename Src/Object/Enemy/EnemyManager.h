@@ -19,6 +19,11 @@ public:
     void Init(EnemyAttack* enemyAttack, EnemyFire* enemyFire, Player* player, Camera* camera, Stage* stage);
     void Update();
     void Draw();
+    void CollisionAttack();
+
+    bool GetCollisionAttack();
+    void GetCollisionAttack(bool collisionAttack);
+
 
 private:
 
@@ -28,6 +33,8 @@ private:
     Player* player_;
     Camera* camera_;
     Stage* stage_;
+
+    bool collisionAttack_;
 
     //EnemyWater* enemyWater_;
     //EnemyPlant* enemyPlant_;

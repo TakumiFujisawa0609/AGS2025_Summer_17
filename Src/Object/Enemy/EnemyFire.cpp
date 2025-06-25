@@ -66,6 +66,10 @@ void EnemyFire::Update()
             isFind_ = false;
             // プレイヤー攻撃ヒット判定
             wasHit_ = false;
+            // プレイヤーの攻撃とエネミーの衝突判定
+            collisionDamage_ = false;
+            // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
+            collisionAttack_ = false;
 
             // アニメーションフレーム数カウント
             animFrame_ = 0;
@@ -102,8 +106,12 @@ void EnemyFire::Update()
             isLeft_ = true;
             // 発見中判定(trueなら発見中)
             isFind_ = false;
-            // プレイヤー攻撃ヒット判定
+            // プレイヤー攻撃ヒット済み判定
             wasHit_ = false;
+            // プレイヤーの攻撃とエネミーの衝突判定
+            collisionDamage_ = false;
+            // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
+            collisionAttack_ = false;
 
             // アニメーションフレーム数カウント
             animFrame_ = 0;
@@ -124,6 +132,7 @@ void EnemyFire::Update()
 
     Move();
     Attack();
+    Collision();
     Damage();
     enemyAttack_->Update();
 
@@ -173,9 +182,9 @@ void EnemyFire::Draw()
 #ifdef _DEBUG
 
     // プレイヤー当たり判定円描画
-    DrawCircle(playerPos.x - cameraPos.x, playerPos.y - cameraPos.y, 32, (0, 0, 0), false);
+    DrawCircle(playerPos.x - cameraPos.x, playerPos.y - cameraPos.y, 32, (0x000000), false);
     // エネミー当たり判定円描画
-    DrawCircle(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 32, (0, 0, 0), false);
+    DrawCircle(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 32, (0x000000), false);
 
 #endif // _DEBUG
 
@@ -279,19 +288,102 @@ void EnemyFire::Move()
     }
 }
 
+void EnemyFire::Collision()
+{
+    // エネミーの衝突用半径
+    float enemyRadius = 32.0f;
+    // 魔法の衝突用半径
+    float magicRadius = 5.0f;
+    // 剣の衝突用半径
+    float swordRadius = 32.0f;
+    // プレイヤーの衝突用半径
+    float playerRadius = 32.0f;
+
+    // 攻撃属性を取得
+    int attackColoer = player_->GetCr();
+
+    // 魔法攻撃
+    if (attackColoer != 0xffffff)
+    {
+        // 魔法とエネミーの衝突判定
+        // 魔法の座標を取得
+        Vector2 magicPos = player_->GetAttackPos();
+        // 球体同士の衝突判定
+        bool ret = false;
+        // お互いの半径の合計
+        float radius = enemyRadius + magicRadius;
+        // ２つの座標間の距離をピタゴラスの定理で算出
+        VECTOR distance = VECTOR();
+        distance.x = pos_.x - magicPos.x;
+        distance.y = pos_.y - magicPos.y;
+        float dis = distance.x * distance.x + distance.y * distance.y;
+        // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
+        if (dis < (radius * radius))
+        {
+            // 攻撃ヒット済
+            collisionDamage_ = true;
+        }
+    }
+    //// 剣攻撃
+    //else if (attackColoer == 0xffffff)
+    //{
+    //    //player_->GetSotd();
+    //    // 剣の座標を取得
+    //    Vector2F swordPos = player_->GetAttckAnglePoint();
+    //    // 球体同士の衝突判定
+    //    bool ret = false;
+    //    // お互いの半径の合計
+    //    float radius = enemyRadius + swordRadius;
+    //    // ２つの座標間の距離をピタゴラスの定理で算出
+    //    VECTOR distance = VECTOR();
+    //    distance.x = pos_.x - swordPos.x;
+    //    distance.y = pos_.y - swordPos.y;
+    //    float dis = distance.x * distance.x + distance.y * distance.y;
+    //    // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
+    //    if (dis < (radius * radius))
+    //    {
+    //        // 攻撃ヒット済
+    //        collisionDamage_ = true;
+    //    }
+    //}
+
+
+
+    // プレイヤーとエネミーの衝突判定
+    // プレイヤー座標の取得
+    Vector2F playerPos = player_->GetPlayerPos();
+    // 球体同士の衝突判定
+    bool ret = false;
+    // お互いの半径の合計
+    float radius = enemyRadius + playerRadius;
+    // ２つの座標間の距離をピタゴラスの定理で算出
+    VECTOR distance = VECTOR();
+    distance.x = pos_.x - playerPos.x;
+    distance.y = pos_.y - playerPos.y;
+    float dis = distance.x * distance.x + distance.y * distance.y;
+    // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
+    if (dis < (radius * radius))
+    {
+        // 攻撃ヒット済
+        collisionAttack_ = true;
+    }
+
+    // プレイヤーとエネミーの攻撃の衝突判定
+
+
+}
+
 void EnemyFire::Damage()
 {
     // 攻撃属性を取得
     int attackColoer = player_->GetCr();
-    // 魔法の座標を取得
-    Vector2 attackPos = player_->GetAttackPos();
-
     // 攻撃中かどうかを取得
     bool isAttack = player_->GetAttack();
 
     // 攻撃中でない
     if (isAttack) {
         wasHit_ = false;
+        collisionDamage_ = false;
         return;
     }
 
@@ -321,20 +413,11 @@ void EnemyFire::Damage()
         damage_ = 5.0f;
     }
 
-    // 球体と点の衝突判定
-    // // ２つの座標間の距離をピタゴラスの定理で算出
-    VECTOR distance;
-    distance.x = pos_.x - attackPos.x;
-    distance.y = pos_.y - attackPos.y;
-    float dis = distance.x * distance.x + distance.y * distance.y;
-    // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
-    float radius = 32.0f;
-    if (radius * radius > dis)
+    // 衝突したかつエネミー生存中
+    if (collisionDamage_ && isAlive_)
     {
         // ダメージを与える
         hp_ -= damage_;
-        // 攻撃ヒット済
-        wasHit_ = true;
         // 攻撃エフェクト削除
         player_->SetPoint(false);
         // 再攻撃可能
@@ -344,6 +427,7 @@ void EnemyFire::Damage()
     // HPが0になったら撃破
     if (hp_ <= 0.0f)
     {
+        hp_ = 0.0f;
         isAlive_ = false;
     }
 }
@@ -358,9 +442,19 @@ Vector2F EnemyFire::GetPos()
     return pos_;
 }
 
+void EnemyFire::SetPos(Vector2F pos)
+{
+    pos_ = pos;
+}
+
 bool EnemyFire::GetAlive()
 {
     return isAlive_;
+}
+
+void EnemyFire::SetAlive(bool isAlive)
+{
+    isAlive_ = isAlive;
 }
 
 bool EnemyFire::GetLeft()
@@ -368,7 +462,27 @@ bool EnemyFire::GetLeft()
     return isLeft_;
 }
 
+void EnemyFire::SetLeft(bool isLeft)
+{
+    isLeft_ = isLeft;
+}
+
 bool EnemyFire::GetFind()
 {
     return isFind_;
+}
+
+void EnemyFire::SetFind(bool isFind)
+{
+    isFind_ = isFind;
+}
+
+bool EnemyFire::GetcollisionAttack()
+{
+    return collisionAttack_;
+}
+
+void EnemyFire::SetcollisionAttack(bool collisionAttack)
+{
+    collisionAttack_ = collisionAttack;
 }

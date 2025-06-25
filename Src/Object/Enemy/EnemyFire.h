@@ -40,6 +40,8 @@ public:
     void Attack();
     // 移動
     void Move();
+    // 衝突判定
+    void Collision();
     // 被ダメージ
     void Damage();
 
@@ -48,15 +50,23 @@ public:
 
     // 座標
     Vector2F GetPos();
+    void SetPos(Vector2F pos);
 
     // 生存中判定
     bool GetAlive();
+    void SetAlive(bool isAlive);
 
     // 左右判定の取得(trueなら左向き)
     bool GetLeft();
+    void SetLeft(bool isLeft);
 
     // 発見中判定(trueなら発見中)
     bool GetFind();
+    void SetFind(bool isFind);
+
+    // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
+    bool GetcollisionAttack();
+    void SetcollisionAttack(bool collisionAttack);
 
 private:
 
@@ -102,6 +112,11 @@ private:
     bool isLeft_;
     // 発見中判定(trueなら発見中)
     bool isFind_;
-    // プレイヤー攻撃ヒット判定
+    // プレイヤー攻撃ヒット済み判定
     bool wasHit_;
+    // プレイヤーの攻撃とエネミーの衝突判定
+    bool collisionDamage_;
+    // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
+    bool collisionAttack_;
+
 };

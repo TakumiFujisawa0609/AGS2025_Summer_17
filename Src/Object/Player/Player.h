@@ -281,5 +281,8 @@ public:
 	bool GetPoint();
 	void SetPoint(bool isPoint);
 
+	Vector2F GetAttckAnglePoint();
+	void SetAttckAnglePoint(Vector2F attckAnglePoint);
+
 };
 

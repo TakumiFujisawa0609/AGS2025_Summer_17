@@ -1394,6 +1394,16 @@ void Player::SetPoint(bool isPoint)
 	isPoint_ = isPoint;
 }
 
+Vector2F Player::GetAttckAnglePoint()
+{
+	return attckAnglePoint_;
+}
+
+void Player::SetAttckAnglePoint(Vector2F attckAnglePoint)
+{
+	attckAnglePoint_ = attckAnglePoint;
+}
+
 
 
 

@@ -14,11 +14,6 @@ public:
     void Draw();
 
 private:
-    
-    // ˆÚ“®ˆ—
-    void Move();
-    // UŒ‚ˆ—
-    void Attack();
 
     int imgF_;
     int imgW_;
