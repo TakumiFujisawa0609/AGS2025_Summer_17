@@ -48,7 +48,7 @@ public:
 	static constexpr float MAX_GRAVITY = 8.5f;
 
 	//ƒWƒƒƒ“ƒv—Í
-	static constexpr float JUMP_POW = -23.5f;
+	static constexpr float JUMP_POW = -9.5f;
 
 	//‰Á‘¬“x
 	static constexpr float MOVE_ACC_POW = 0.5f;
