@@ -3,6 +3,7 @@
 #include "../../../Common/Vector2F.h"
 #include <DxLib.h>
 class EnemyFire;
+class Player;
 class Camera;
 
 class EnemyAttack
@@ -23,7 +24,7 @@ public:
     static constexpr int ATTACK_INTERVAL = 110;
 
     // ‰Šú‰»
-    void Init(EnemyFire* enemyFire, Camera* camera);
+    void Init(EnemyFire* enemyFire, Player* player, Camera* camera);
     // XV
     void Update();
     // •`‰æ
@@ -42,6 +43,7 @@ public:
 private:
 
     EnemyFire* enemyFire_;
+    Player* player_;
     Camera* camera_;
 
     // À•W

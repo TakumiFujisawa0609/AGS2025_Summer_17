@@ -1364,6 +1364,36 @@ void Player::SetStageSize(int size)
 	stageSize_ = size;
 }
 
+Vector2 Player::GetAttackPos()
+{
+	return attackPos_;
+}
+
+void Player::SetAttackPos(Vector2 attackPos)
+{
+	attackPos_ = attackPos;
+}
+
+bool Player::GetAttack()
+{
+	return isAttack_;
+}
+
+void Player::SetAttack(bool isAttack)
+{
+	isAttack_ = isAttack;
+}
+
+bool Player::GetPoint()
+{
+	return isPoint_;
+}
+
+void Player::SetPoint(bool isPoint)
+{
+	isPoint_ = isPoint;
+}
+
 
 
 

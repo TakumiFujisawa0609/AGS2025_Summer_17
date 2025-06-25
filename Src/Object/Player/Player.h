@@ -48,7 +48,7 @@ public:
 	static constexpr float MAX_GRAVITY = 8.5f;
 
 	//ƒWƒƒƒ“ƒv—Í
-	static constexpr float JUMP_POW = -9.5f;
+	static constexpr float JUMP_POW = -23.5f;
 
 	//‰Á‘¬“x
 	static constexpr float MOVE_ACC_POW = 0.5f;
@@ -271,6 +271,15 @@ public:
 
 	int GetStageSize();
 	void SetStageSize(int size);
+
+	Vector2 GetAttackPos();
+	void SetAttackPos(Vector2 attackPos);
+
+	bool GetAttack();
+	void SetAttack(bool isAttack);
+
+	bool GetPoint();
+	void SetPoint(bool isPoint);
 
 };
 

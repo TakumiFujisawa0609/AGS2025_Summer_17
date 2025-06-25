@@ -1,12 +1,15 @@
 #include "EnemyAttack.h"
 #include "../EnemyFire.h"
+#include "../../Player/Player.h"
 #include "../../Camera/Camera.h"
 #include <DxLib.h>
 
-void EnemyAttack::Init(EnemyFire* enemyFire, Camera* camera)
+void EnemyAttack::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
 {
     enemyFire_ = enemyFire;
+    player_ = player;
     camera_ = camera;
+
     // 初期座標
     pos_.x = 100.0f;
     pos_.y = 100.0f;
@@ -20,8 +23,8 @@ void EnemyAttack::Init(EnemyFire* enemyFire, Camera* camera)
     // アニメーションのカウンタ
     animCnt_ = 0;
 
-    // 攻撃用のカウンタ
-    attackCnt_ = 100;
+    // 攻撃のクールダウン
+    attackCnt_ = 50;
 
     // 攻撃中判定
     isAttack_ = false;
@@ -80,7 +83,7 @@ void EnemyAttack::Draw()
     // カメラ座標
     Vector2 cameraPos = camera_->GetCameraPos();
 
-    if (isAlive_)
+    if (isAlive_ && enemyFire_->GetAlive())
     {
         if (enemyLeft)
         {

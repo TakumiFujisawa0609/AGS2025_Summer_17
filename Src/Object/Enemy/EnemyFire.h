@@ -49,6 +49,9 @@ public:
     // 座標
     Vector2F GetPos();
 
+    // 生存中判定
+    bool GetAlive();
+
     // 左右判定の取得(trueなら左向き)
     bool GetLeft();
 
@@ -71,7 +74,7 @@ private:
     // 座標
     Vector2F pos_;
     // 初期座標の設定用値
-    int setInitPos_;
+    int setInit_;
 
     // 画像のハンドルID
     int img_;
@@ -86,6 +89,11 @@ private:
     // 移動用のカウンタ
     int moveCnt_;
 
+    // HP
+    float hp_;
+    // 被ダメージ
+    float damage_;
+
     // 生存中判定
     bool isAlive_;
     // 攻撃中判定
@@ -94,5 +102,6 @@ private:
     bool isLeft_;
     // 発見中判定(trueなら発見中)
     bool isFind_;
-
+    // プレイヤー攻撃ヒット判定
+    bool wasHit_;
 };
