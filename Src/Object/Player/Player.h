@@ -98,6 +98,7 @@ private:
 	//攻撃中かどうか
 	bool isAttack_;//攻撃中かどうか
 	bool isPoint_;
+	bool eF_;
 	bool dirChange_;
 	bool isSotd_;
 	int upCnt;
@@ -115,7 +116,7 @@ private:
 	int regeneCnt_;
 	int mpRegene_;
 
-
+	int radius_;
 
 	//足元
 	//（デバッグ表示のためメンバー変数化）
@@ -164,6 +165,7 @@ private:
 	AsoUtility::DIR dir_;
 
 	
+	Vector2 cameraPos_;
 
 
 	//デバック表示==============================================================================
@@ -271,6 +273,11 @@ public:
 
 	int GetStageSize();
 	void SetStageSize(int size);
+
+	bool GetIsEF();
+	void SetIsEF(bool is);
+
+	Vector2 GetCamera();
 
 };
 

@@ -71,7 +71,7 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 	elementType_ = ELEMENT_TYPE::NORMAL;
 	cr_ = 0xffffff;
 	
-
+	cameraPos_ = camera_->GetCameraPos();
 
 
 	//攻撃
@@ -182,6 +182,22 @@ void Player::Draw()
 	if (isPoint_)
 	{
 		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 5, cr_);
+	}
+	if (GetIsEF() == true)
+	{
+		radius_++;
+		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_, GetCr(), false);
+		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_ + 1, GetCr(), false);
+		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_ + 2, GetCr(), false);
+		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_ + 3, GetCr(), false);
+		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_ + 4, GetCr(), false);
+		if (radius_ >= 60)
+		{
+
+			radius_ = 0;
+			SetIsEF(false);
+
+		}
 	}
 #ifdef _DEBUG
 	//当たり判定の可視化
@@ -439,41 +455,50 @@ void Player::Attack()
 	InputManager& ins = InputManager::GetInstance();
 	if (isAttack_)
 	{
-		if (ins.IsTrgDown(KEY_INPUT_1))
+		if (GetIsEF() == false)
 		{
-			animaAem_ = 3;
-			elementType_ = ELEMENT_TYPE::FIRE;
-
-		}
-		if (ins.IsTrgDown(KEY_INPUT_2))
-		{
-			animaAem_ = 1;
-			elementType_ = ELEMENT_TYPE::WATER;
-
-		}
-		if (ins.IsTrgDown(KEY_INPUT_3))
-		{
-			animaAem_ = 2;
-			elementType_ = ELEMENT_TYPE::PLANT;
-
-		}
-		if (ins.IsTrgDown(KEY_INPUT_4))
-		{
-			animaAem_ = 0;
-			elementType_ = ELEMENT_TYPE::NORMAL;
-
-		}
-		if (ins.IsTrgDown(KEY_INPUT_T))
-		{
-			if (elementType_ == ELEMENT_TYPE::FIRE)
+			if (ins.IsTrgDown(KEY_INPUT_1))
 			{
-				elementType_ = ELEMENT_TYPE::NORMAL;
-				animaAem_ = 0;
+				SetIsEF(true);
+				
+				elementType_ = ELEMENT_TYPE::PLANT;
+			
 			}
-			else
+			if (ins.IsTrgDown(KEY_INPUT_2))
 			{
-				animaAem_ += 1;
-				elementType_ = static_cast<ELEMENT_TYPE>(static_cast<int>(elementType_) + 1);
+				SetIsEF(true);
+				
+				elementType_ = ELEMENT_TYPE::WATER;
+
+			}
+			if (ins.IsTrgDown(KEY_INPUT_3))
+			{
+				SetIsEF(true);
+				
+				elementType_ = ELEMENT_TYPE::FIRE;
+
+
+			}
+			if (ins.IsTrgDown(KEY_INPUT_4))
+			{
+				SetIsEF(true);
+				
+				elementType_ = ELEMENT_TYPE::NORMAL;
+
+			}
+			if (ins.IsTrgDown(KEY_INPUT_T))
+			{
+				SetIsEF(true);
+				if (elementType_ == ELEMENT_TYPE::FIRE)
+				{
+					elementType_ = ELEMENT_TYPE::NORMAL;
+					
+				}
+				else
+				{
+					
+					elementType_ = static_cast<ELEMENT_TYPE>(static_cast<int>(elementType_) + 1);
+				}
 			}
 		}
 
@@ -488,7 +513,7 @@ void Player::Attack()
 		{
 			if (id_ == 3)
 			{
-				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage3(attackPos_) == true)
+				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || wall_->IsWaterCollision2(attackPos_) == true || wall_->IsFlaereCollision2(attackPos_) == true ||wall_->IsWaterCollision3(attackPos_) == true || wall_->IsFlaereCollision3(attackPos_) == true ||stage_->IsCollisionStage3(attackPos_) == true)
 				{
 					isPoint_ = false;
 					isAttack_ = true;
@@ -501,6 +526,23 @@ void Player::Attack()
 					blast_->SetBlastPos(attackPos_);
 					blast_->SetIsBlast(true);
 				}
+				else if (wall_->IsPlantsCollision2(attackPos_) == true)
+				{
+					wall_->SetIsPlants2(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					blast_->SetBlastPos(attackPos_);
+					blast_->SetIsBlast(true);
+				}
+				else if (wall_->IsPlantsCollision2(attackPos_) == true)
+				{
+					wall_->SetIsPlants3(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					blast_->SetBlastPos(attackPos_);
+					blast_->SetIsBlast(true);
+				}
+
 			}
 			else if (id_ == 1 || id_ == 2)
 			{
@@ -531,7 +573,7 @@ void Player::Attack()
 		{
 			if (id_ == 3)
 			{
-				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true || stage_->IsCollisionStage3(attackPos_) == true)
+				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true || wall_->IsWaterCollision2(attackPos_) == true || wall_->IsPlantsCollision2(attackPos_) == true || wall_->IsWaterCollision3(attackPos_) == true || wall_->IsPlantsCollision3(attackPos_) == true || stage_->IsCollisionStage3(attackPos_) == true)
 				{
 
 
@@ -544,6 +586,20 @@ void Player::Attack()
 				else if (wall_->IsFlaereCollision(attackPos_) == true)
 				{
 					wall_->SetIsFlare(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					water_->CreateEffect(attackPos_);
+				}
+				else if (wall_->IsFlaereCollision2(attackPos_) == true)
+				{
+					wall_->SetIsFlare2(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					water_->CreateEffect(attackPos_);
+				}
+				else if (wall_->IsFlaereCollision3(attackPos_) == true)
+				{
+					wall_->SetIsFlare3(false);
 					isPoint_ = false;
 					isAttack_ = true;
 					water_->CreateEffect(attackPos_);
@@ -577,7 +633,7 @@ void Player::Attack()
 		{
 			if (id_ == 3)
 			{
-				if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || wall_->IsWaterCollision(attackPos_) == true ||stage_->IsCollisionStage3(attackPos_) == true)
+				if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision2(attackPos_) == true || wall_->IsFlaereCollision2(attackPos_) == true || wall_->IsWaterCollision2(attackPos_) == true || wall_->IsPlantsCollision3(attackPos_) == true || wall_->IsFlaereCollision3(attackPos_) == true || wall_->IsWaterCollision3(attackPos_) == true || stage_->IsCollisionStage3(attackPos_) == true)
 				{
 
 
@@ -589,6 +645,24 @@ void Player::Attack()
 				else if (wall_->IsSphereCollision(attackPos_) == true)
 				{
 					wall_->SetIsSphere(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					plants_->SetPlantsPos(attackPos_);
+					plants_->SetIsPlants(true);
+
+				}
+				else if (wall_->IsSphereCollision2(attackPos_) == true)
+				{
+					wall_->SetIsSphere2(false);
+					isPoint_ = false;
+					isAttack_ = true;
+					plants_->SetPlantsPos(attackPos_);
+					plants_->SetIsPlants(true);
+
+				}
+				else if (wall_->IsSphereCollision3(attackPos_) == true)
+				{
+					wall_->SetIsSphere3(false);
 					isPoint_ = false;
 					isAttack_ = true;
 					plants_->SetPlantsPos(attackPos_);
@@ -760,11 +834,23 @@ void Player::AttackChange(void)
 		attackPos_.y -= movePos;
 		movePos -= GRAVITY;
 	}
-	if (attackPos_.y > (stageSize_ * 12))
+	if (id_ == 2 || id_ == 1)
 	{
-		attackPos_.y = (stageSize_ * 12);
-		isPoint_ = false;
-		isAttack_ = true;
+		if (attackPos_.y > (stageSize_ * 12))
+		{
+			
+			isPoint_ = false;
+			isAttack_ = true;
+		}
+	}
+	else if (id_ == 3)
+	{
+		if (attackPos_.y > (stageSize_ * 24))
+		{
+			
+			isPoint_ = false;
+			isAttack_ = true;
+		}
 	}
 
 	if (dir_ == AsoUtility::DIR::RIGHT)
@@ -999,51 +1085,142 @@ bool Player::IsHitLeftPos(void)
 //右側
 bool Player::IsWaterHitRightPos(void)
 {
-	return wall_->IsWaterCollision(rightPosC_)
-		|| wall_->IsWaterCollision(rightPosU_)
-		|| wall_->IsWaterCollision(rightPosD_);
-
+	if (id_ == 3)
+	{
+		return wall_->IsWaterCollision(rightPosC_)
+			|| wall_->IsWaterCollision(rightPosU_)
+			|| wall_->IsWaterCollision(rightPosD_)
+			|| wall_->IsWaterCollision2(rightPosC_)
+			|| wall_->IsWaterCollision2(rightPosU_)
+			|| wall_->IsWaterCollision2(rightPosD_)
+			|| wall_->IsWaterCollision3(rightPosC_)
+			|| wall_->IsWaterCollision3(rightPosU_)
+			|| wall_->IsWaterCollision3(rightPosD_);
+	}
+	else
+	{
+		return wall_->IsWaterCollision(rightPosC_)
+			|| wall_->IsWaterCollision(rightPosU_)
+			|| wall_->IsWaterCollision(rightPosD_);
+	}
 }
 //左側
 bool Player::IsWaterHitLeftPos(void)
 {
-	return wall_->IsWaterCollision(leftPosC_)
-		|| wall_->IsWaterCollision(leftPosU_)
-		|| wall_->IsWaterCollision(leftPosD_);
+	if (id_ == 3)
+	{
+		return wall_->IsWaterCollision(leftPosC_)
+			|| wall_->IsWaterCollision(leftPosU_)
+			|| wall_->IsWaterCollision(leftPosD_)
+			|| wall_->IsWaterCollision2(leftPosC_)
+			|| wall_->IsWaterCollision2(leftPosU_)
+			|| wall_->IsWaterCollision2(leftPosD_)
+			|| wall_->IsWaterCollision3(leftPosC_)
+			|| wall_->IsWaterCollision3(leftPosU_)
+			|| wall_->IsWaterCollision3(leftPosD_);
 
+	}
+	else
+	{
+		return wall_->IsWaterCollision(leftPosC_)
+			|| wall_->IsWaterCollision(leftPosU_)
+			|| wall_->IsWaterCollision(leftPosD_);
+	}
+	
 }
 
 //炎
 //右側
 bool Player::IsFlareHitRightPos(void)
 {
-	return wall_->IsFlaereCollision(rightPosC_)
-		|| wall_->IsFlaereCollision(rightPosU_)
-		|| wall_->IsFlaereCollision(rightPosD_);
+	if (id_ == 3)
+	{
+		return wall_->IsFlaereCollision(rightPosC_)
+			|| wall_->IsFlaereCollision(rightPosU_)
+			|| wall_->IsFlaereCollision(rightPosD_)
+			|| wall_->IsFlaereCollision2(rightPosC_)
+			|| wall_->IsFlaereCollision2(rightPosU_)
+			|| wall_->IsFlaereCollision2(rightPosD_)
+			|| wall_->IsFlaereCollision3(rightPosC_)
+			|| wall_->IsFlaereCollision3(rightPosU_)
+			|| wall_->IsFlaereCollision3(rightPosD_);
+	}
+	else
+	{
+		return wall_->IsFlaereCollision(rightPosC_)
+			|| wall_->IsFlaereCollision(rightPosU_)
+			|| wall_->IsFlaereCollision(rightPosD_);
+	}
 
 }
 //左側
 bool Player::IsFlareHitLeftPos(void)
 {
-	return wall_->IsFlaereCollision(leftPosC_)
-		|| wall_->IsFlaereCollision(leftPosU_)
-		|| wall_->IsFlaereCollision(leftPosD_);
+	if (id_ == 3)
+	{
+		return wall_->IsFlaereCollision(leftPosC_)
+			|| wall_->IsFlaereCollision(leftPosU_)
+			|| wall_->IsFlaereCollision(leftPosD_)
+			|| wall_->IsFlaereCollision2(leftPosC_)
+			|| wall_->IsFlaereCollision2(leftPosU_)
+			|| wall_->IsFlaereCollision2(leftPosD_)
+			|| wall_->IsFlaereCollision3(leftPosC_)
+			|| wall_->IsFlaereCollision3(leftPosU_)
+			|| wall_->IsFlaereCollision3(leftPosD_);
+
+	}
+	else
+	{
+		return wall_->IsFlaereCollision(leftPosC_)
+			|| wall_->IsFlaereCollision(leftPosU_)
+			|| wall_->IsFlaereCollision(leftPosD_);
+	}
 }
 
 //植物
 //右側
 bool Player::IsPlantsHitRightPos(void)
 {
-	return wall_->IsPlantsCollision(rightPosC_)
-		|| wall_->IsPlantsCollision(rightPosU_)
-		|| wall_->IsPlantsCollision(rightPosD_);
+	if (id_ == 3)
+	{
+		return wall_->IsPlantsCollision(rightPosC_)
+			|| wall_->IsPlantsCollision(rightPosU_)
+			|| wall_->IsPlantsCollision(rightPosD_)
+			|| wall_->IsPlantsCollision2(rightPosC_)
+			|| wall_->IsPlantsCollision2(rightPosU_)
+			|| wall_->IsPlantsCollision2(rightPosD_)
+			|| wall_->IsPlantsCollision3(rightPosC_)
+			|| wall_->IsPlantsCollision3(rightPosU_)
+			|| wall_->IsPlantsCollision3(rightPosD_);
+	}
+	else
+	{
+		return wall_->IsPlantsCollision(rightPosC_)
+			|| wall_->IsPlantsCollision(rightPosU_)
+			|| wall_->IsPlantsCollision(rightPosD_);
+	}
 }
 //左側
 bool Player::IsPlantsHitLeftPos(void)
 {
-	return wall_->IsPlantsCollision(leftPosC_)
-		|| wall_->IsPlantsCollision(leftPosU_)
-		|| wall_->IsPlantsCollision(leftPosD_);
+	if (id_ == 3)
+	{
+		return wall_->IsPlantsCollision(leftPosC_)
+			|| wall_->IsPlantsCollision(leftPosU_)
+			|| wall_->IsPlantsCollision(leftPosD_)
+			|| wall_->IsPlantsCollision2(leftPosC_)
+			|| wall_->IsPlantsCollision2(leftPosU_)
+			|| wall_->IsPlantsCollision2(leftPosD_)
+			|| wall_->IsPlantsCollision3(leftPosC_)
+			|| wall_->IsPlantsCollision3(leftPosU_)
+			|| wall_->IsPlantsCollision3(leftPosD_);
+	}
+	else
+	{
+		return wall_->IsPlantsCollision(leftPosC_)
+			|| wall_->IsPlantsCollision(leftPosU_)
+			|| wall_->IsPlantsCollision(leftPosD_);
+	}
 }
 
 //ブロックとの当たり判定＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
@@ -1364,6 +1541,21 @@ void Player::SetStageSize(int size)
 	stageSize_ = size;
 }
 
+bool Player::GetIsEF()
+{
+	return eF_;
+}
+
+void Player::SetIsEF(bool is)
+{
+	eF_ = is;
+}
+
+Vector2 Player::GetCamera()
+{
+	return cameraPos_;
+}
+
 
 
 
@@ -1390,18 +1582,22 @@ void Player::ElementChange()
 	{
 
 	case ELEMENT_TYPE::FIRE:
+		animaAem_ = 3;
 		cr_ = 0xff0000;
 		
 		break;
 	case ELEMENT_TYPE::WATER:
+		animaAem_ = 1;
 		cr_ = 0x0000ff;
 		
 		break;
 	case ELEMENT_TYPE::PLANT:
+		animaAem_ = 2;
 		cr_ = 0x00ff00;
 		
 		break;
 	case ELEMENT_TYPE::NORMAL:
+		animaAem_ = 0;
 		cr_ = 0xffffff;
 		break;
 	}

@@ -34,7 +34,7 @@ void Stage::Init(Player*player,Camera*camera)
 	
 	// 分割された画像を読み込み
 	
-	InitStage1();
+	InitStage3();
 	
 
 }
@@ -66,30 +66,22 @@ void Stage::Draw()
 			int mapChipWorldPosX = x * CHIP_SIZE_X;
 			int mapChipWorldPosY = y * CHIP_SIZE_Y;
 
-			
+
 
 			//マップチップのスクリーン座標
 			//２Dでは「スクリーン座標＝ワールド座標ーカメラ座標」
 			int mapChipScreenPosX = mapChipWorldPosX - cameraPos.x;
 			int mapChipScreenPosY = mapChipWorldPosY - cameraPos.y;
 
-			
-				//DrawRotaGraphF(mapChipScreenPosX, mapChipScreenPosY, 1.0, 0.0, imgHandle, true);
 
-				
-				
-				DrawGraph(mapChipScreenPosX, mapChipScreenPosY,imgHandle, true);
-				
+			//DrawRotaGraphF(mapChipScreenPosX, mapChipScreenPosY, 1.0, 0.0, imgHandle, true);
+
+
+
+			DrawGraph(mapChipScreenPosX, mapChipScreenPosY, imgHandle, true);
+
 		}
 	}
-	DrawGraph(CHIP_SIZE_X - cameraPos.x, CHIP_SIZE_X*2, m_, true);
-	DrawGraph(CHIP_SIZE_X * 12 - cameraPos.x, CHIP_SIZE_X*2, j_, true);
-	DrawGraph(CHIP_SIZE_X * 22 - cameraPos.x, CHIP_SIZE_X*2, d_, true);
-	DrawGraph(CHIP_SIZE_X * 27 - cameraPos.x, CHIP_SIZE_X*2, rgb_, true);
-	DrawGraph(CHIP_SIZE_X * 32 - cameraPos.x, CHIP_SIZE_X*2, g_, true);
-	DrawGraph(CHIP_SIZE_X * 45 - cameraPos.x, CHIP_SIZE_X*2, r_, true);
-	DrawGraph(CHIP_SIZE_X * 59 - cameraPos.x, CHIP_SIZE_X*2, b_, true);
-	DrawGraph(CHIP_SIZE_X * 37 - cameraPos.x, CHIP_SIZE_X * 2, k_, true);
 }
 
 void Stage::Release()
@@ -99,14 +91,7 @@ void Stage::Release()
 	{
 		DeleteGraph(mapChip_[i]);
 	}
-	DeleteGraph(m_);
-	DeleteGraph(j_);
-	DeleteGraph(d_);
-	DeleteGraph(rgb_);
-	DeleteGraph(g_);
-	DeleteGraph(r_);
-	DeleteGraph(b_);
-	DeleteGraph(k_);
+	
 }
 
 void Stage::LoadGroundCsvData(void)
@@ -218,21 +203,71 @@ void Stage::InitStage1()
 	ResourceManager& res = ResourceManager::GetInstance();
 	mapChip_ = res.Load(ResourceManager::SRC::MAPCHIP).handleIds_;
 
-	b_ = LoadGraph("Data/Image/Stage/B.png");
-	g_ = LoadGraph("Data/Image/Stage/G.png");
-	j_ = LoadGraph("Data/Image/Stage/Janp.png");
-	r_ = LoadGraph("Data/Image/Stage/R.png");
-	rgb_ = LoadGraph("Data/Image/Stage/RGB.png");
-	m_ = LoadGraph("Data/Image/Stage/Move.png");
-	d_ = LoadGraph("Data/Image/Stage/Move+.png");
-	k_ = LoadGraph("Data/Image/Stage/k.png");
+	b_ = res.Load(ResourceManager::SRC::B).handleIds_;
+	g_ = res.Load(ResourceManager::SRC::P).handleIds_;
+	j_ = res.Load(ResourceManager::SRC::JANP).handleIds_;
+	r_ = res.Load(ResourceManager::SRC::F).handleIds_;
+	rgb_ = res.Load(ResourceManager::SRC::NBPF).handleIds_;
+	m_ = res.Load(ResourceManager::SRC::MOVE).handleIds_;
+	d_ = res.Load(ResourceManager::SRC::MOVES).handleIds_;
+	k_ = res.Load(ResourceManager::SRC::K).handleIds_;
+	n_ = res.Load(ResourceManager::SRC::N).handleIds_;
 	// 外部ファイルからマップデータを読み込む
 	LoadGroundCsvDataStage1();
 	id_ = 1;
+
+	rCnt_=0;
+	gCnt_=0;
+	bCnt_=0;
+	rgbCnt_=0;
+	jCnt_=0;
+	mCnt_=0;
+	dCnt_=0;
+	kCnt_=0;
+	nCnt_=0;
+
+	Cnt_ = 0;
 }
 
 void Stage::UpdateStage1()
 {
+	Cnt_++;
+	if (Cnt_ > 20)
+	{
+		Cnt_ = 0;
+		rCnt_++;
+		gCnt_++;
+		bCnt_++;
+		rgbCnt_++;
+		jCnt_++;
+		mCnt_++;
+		dCnt_++;
+		kCnt_++;
+		nCnt_++;
+	}
+
+	if (rCnt_ >=ANIM_MAX_NO||
+		gCnt_ >= ANIM_MAX_NO ||
+		bCnt_ >= ANIM_MAX_NO ||
+		nCnt_ >= ANIM_MAX_NO )
+	{
+		rCnt_ = 0;
+		gCnt_ = 0;
+		bCnt_ = 0;
+		nCnt_ = 0;
+	}
+	if (rgbCnt_ >= MAX_ANIM_NO ||
+		jCnt_ >= MAX_ANIM_NO ||
+		mCnt_ >= MAX_ANIM_NO ||
+		dCnt_ >= MAX_ANIM_NO ||
+		kCnt_ >= MAX_ANIM_NO)
+	{
+		rgbCnt_ = 0;
+		jCnt_ = 0;
+		mCnt_ = 0;
+		dCnt_ = 0;
+		kCnt_ = 0;
+	}
 
 }
 void Stage::DrawStage1()
@@ -272,14 +307,15 @@ void Stage::DrawStage1()
 
 		}
 	}
-	DrawGraph(CHIP_SIZE_X - cameraPos.x, CHIP_SIZE_X * 2, m_, true);
-	DrawGraph(CHIP_SIZE_X * 12 - cameraPos.x, CHIP_SIZE_X * 2, j_, true);
-	DrawGraph(CHIP_SIZE_X * 22 - cameraPos.x, CHIP_SIZE_X * 2, d_, true);
-	DrawGraph(CHIP_SIZE_X * 27 - cameraPos.x, CHIP_SIZE_X * 2, rgb_, true);
-	DrawGraph(CHIP_SIZE_X * 32 - cameraPos.x, CHIP_SIZE_X * 2, g_, true);
-	DrawGraph(CHIP_SIZE_X * 45 - cameraPos.x, CHIP_SIZE_X * 2, r_, true);
-	DrawGraph(CHIP_SIZE_X * 59 - cameraPos.x, CHIP_SIZE_X * 2, b_, true);
-	DrawGraph(CHIP_SIZE_X * 37 - cameraPos.x, CHIP_SIZE_X * 2, k_, true);
+	DrawGraph(CHIP_SIZE_X - cameraPos.x, CHIP_SIZE_X * 2, m_[mCnt_], true);
+	DrawGraph(CHIP_SIZE_X * 12 - cameraPos.x, CHIP_SIZE_X * 2, j_[jCnt_], true);
+	DrawGraph(CHIP_SIZE_X * 22 - cameraPos.x, CHIP_SIZE_X * 2, d_[dCnt_], true);
+	DrawGraph(CHIP_SIZE_X * 27 - cameraPos.x, CHIP_SIZE_X * 2, rgb_[rgbCnt_], true);
+	DrawGraph(CHIP_SIZE_X * 32 - cameraPos.x, CHIP_SIZE_X * 2, g_[gCnt_], true);
+	DrawGraph(CHIP_SIZE_X * 45 - cameraPos.x, CHIP_SIZE_X * 2, r_[rCnt_], true);
+	DrawGraph(CHIP_SIZE_X * 59 - cameraPos.x, CHIP_SIZE_X * 2, b_[bCnt_], true);
+	DrawGraph(CHIP_SIZE_X * 37 - cameraPos.x, CHIP_SIZE_X * 2, k_[kCnt_], true);
+	DrawGraph(CHIP_SIZE_X * 65 - cameraPos.x, CHIP_SIZE_X * 2, n_[nCnt_], true);
 }
 
 void Stage::LoadGroundCsvDataStage1(void)

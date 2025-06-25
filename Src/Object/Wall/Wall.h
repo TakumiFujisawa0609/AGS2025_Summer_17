@@ -56,6 +56,30 @@ private:
 	bool isWaterAlive_;
 	bool isSphereAlive_;
 
+	//座標
+	Vector2F plantsPos2_;
+	Vector2F flarePos2_;
+	Vector2F waterPos2_;
+	Vector2F spherePos2_;
+
+	//生存フラグ
+	bool isPlantsAlive2_;
+	bool isFlareAlive2_;
+	bool isWaterAlive2_;
+	bool isSphereAlive2_;
+
+	//座標
+	Vector2F plantsPos3_;
+	Vector2F flarePos3_;
+	Vector2F waterPos3_;
+	Vector2F spherePos3_;
+
+	//生存フラグ
+	bool isPlantsAlive3_;
+	bool isFlareAlive3_;
+	bool isWaterAlive3_;
+	bool isSphereAlive3_;
+
 	//アニメーションカウント
 	int flareAnimCount_;
 	int waterAnimCount_;
@@ -69,7 +93,12 @@ public:
 	void Init(Camera*camera);
 	void Update();
 	void Draw();
-
+	void Init1();
+	void Update1();
+	void Draw1();
+	void Init2();
+	void Update2();
+	void Draw2();
 	void AnimUpdate();
 
 
@@ -84,14 +113,36 @@ public:
 	void SetPlantsPos(Vector2F pos);
 	void SetFlarePos(Vector2F pos);
 	void SetWaterPos(Vector2F pos);
+	
 	void SetIsPlants(bool isAlive);
 	void SetIsFlare(bool isAlive);
 	void SetIsWater(bool isAlive);
 	void SetIsSphere(bool isAlive);
 
+	void SetIsPlants2(bool isAlive);
+	void SetIsFlare2(bool isAlive);
+	void SetIsWater2(bool isAlive);
+	void SetIsSphere2(bool isAlive);
+	
+	void SetIsPlants3(bool isAlive);
+	void SetIsFlare3(bool isAlive);
+	void SetIsWater3(bool isAlive);
+	void SetIsSphere3(bool isAlive);
+
+	
 	bool IsWaterCollision(Vector2 pos);
 	bool IsFlaereCollision(Vector2 pos);
 	bool IsPlantsCollision(Vector2 pos);
 	bool IsSphereCollision(Vector2 pos);
+
+	bool IsWaterCollision2(Vector2 pos);
+	bool IsFlaereCollision2(Vector2 pos);
+	bool IsPlantsCollision2(Vector2 pos);
+	bool IsSphereCollision2(Vector2 pos);
+
+	bool IsWaterCollision3(Vector2 pos);
+	bool IsFlaereCollision3(Vector2 pos);
+	bool IsPlantsCollision3(Vector2 pos);
+	bool IsSphereCollision3(Vector2 pos);
 };
 

@@ -35,6 +35,8 @@ void PlayerUi::Init(Player*player)
 	mpPos_.x = uiPos_.x + stageSize_ * 4;
 	mpPos_.y = uiPos_.y + stageSize_ * 2;
 
+
+
 }
 void PlayerUi::Update()
 {
@@ -42,6 +44,9 @@ void PlayerUi::Update()
 }
 void PlayerUi::Draw()
 {
+	
+
+	
 	float hpS_ = 0.0f;
 
 	hpS_ = static_cast<float>(player_->GetHp()) / static_cast<float>(player_->MAX_HP);
@@ -63,5 +68,7 @@ void PlayerUi::Draw()
 	DrawRotaGraph(uiPos_.x, uiPos_.y, 1.0f, 0.0f, hpUi_, true);
 	DrawBox(stageSize_*2-10, 16, static_cast<int>(hpDrawS_)+(stageSize_ * 2 - 10), 50, 0xFF0000, true);
 	DrawBox(stageSize_ * 2 - 10, 56, static_cast<int>(mpDrawS_) + (stageSize_ * 2 - 10), 90, 0x0000FF, true);
+	
+
 	
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "../../Common/Vector2.h"
+#include "../../Common/Vector2F.h"
 
 class Playr;
 
@@ -16,14 +17,19 @@ public:
 private:
 
 	int hpUi_;
-	int stageSize_;
+	int radius_;
+	
+int stageSize_;
 	Vector2 uiPos_;
 	Vector2 crPos_;
 	Vector2 hpPos_;
 	Vector2 mpPos_;
+	Vector2 cmPos_;
 	
 
 	Player* player_;
+
+	Vector2F pPos_;
 
 public:
 	PlayerUi();
