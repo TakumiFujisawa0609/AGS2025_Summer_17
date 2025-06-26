@@ -21,9 +21,8 @@ public:
     void Draw();
     void CollisionAttack();
 
-    bool GetCollisionAttack();
-    void SetCollisionAttack(bool collisionAttack);
-
+    bool GetCollisionEnemy();
+    void SetCollisionEnemy(bool collisionEnemy);
 
 private:
 
@@ -34,7 +33,11 @@ private:
     Camera* camera_;
     Stage* stage_;
 
-    bool collisionAttack_;
+    bool fireCollision_;
+    bool waterCollision_;
+    bool plantCollision_;
+
+    bool collisionEnemy_;
 
     //EnemyWater* enemyWater_;
     //EnemyPlant* enemyPlant_;

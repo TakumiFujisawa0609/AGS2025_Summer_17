@@ -26,9 +26,6 @@ public:
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
     static constexpr int ANIM_INTERVAL = 13;
 
-    // 索敵範囲
-    static constexpr float FIND_SIZE = 160.0f;
-
     // 初期化
     void Init(EnemyAttack* enemyAttack, EnemyFire* enemyFire, Player* player, Camera* camera, Stage* stage);
     // 更新
@@ -41,7 +38,8 @@ public:
     // 移動
     void Move();
     // 衝突判定
-    void Collision();
+    void PlayerAttackCollision();
+    void EnemyAttackCollision();
     // 被ダメージ
     void Damage();
 
@@ -65,8 +63,8 @@ public:
     void SetFind(bool isFind);
 
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定の取得・更新
-    bool GetCollisionAttack();
-    void SetCollisionAttack(bool collisionAttack);
+    bool GetCollisionFire();
+    void SetCollisionFire(bool collisionFire);
 
 private:
 
@@ -85,6 +83,15 @@ private:
     Vector2F pos_;
     // 初期座標の設定用値
     int setInit_;
+
+    // エネミーの攻撃の当たり判定座標
+    float leftAttackPos;
+    float rightAttackPos;
+    float topAttackPos;
+    float bottomAttackPos;
+
+    // 索敵範囲
+    float findSize_ = 160.0f;
 
     // 画像のハンドルID
     int img_;
@@ -117,6 +124,6 @@ private:
     // プレイヤーの攻撃とエネミーの衝突判定
     bool collisionDamage_;
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
-    bool collisionAttack_;
+    bool collisionFire_;
 
 };

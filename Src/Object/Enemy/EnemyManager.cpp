@@ -16,8 +16,8 @@ void EnemyManager::Init(EnemyAttack* enemyAttack, EnemyFire* enemyFire, Player* 
 	camera_ = camera;
 	stage_ = stage;
 
-	collisionAttack_ = false;
-
+	collisionEnemy_ = false;
+	
 	/*enemyBase_ = new EnemyBase();
 	enemyBase_->Init(player_, camera_, stage_);*/
 
@@ -27,8 +27,10 @@ void EnemyManager::Init(EnemyAttack* enemyAttack, EnemyFire* enemyFire, Player* 
 
 void EnemyManager::Update()
 {
+	CollisionAttack();
 	enemyBase_->Update();
 	enemyFire_->Update();
+
 }
 
 void EnemyManager::Draw()
@@ -39,14 +41,24 @@ void EnemyManager::Draw()
 
 void EnemyManager::CollisionAttack()
 {
+	fireCollision_ = enemyFire_->GetCollisionFire();
+	if (fireCollision_)
+	{
+		collisionEnemy_ = true;
+	}
+	else
+	{
+		collisionEnemy_ = false;
+		enemyFire_->SetCollisionFire(false);
+	}
 }
 
-bool EnemyManager::GetCollisionAttack()
+bool EnemyManager::GetCollisionEnemy()
 {
-	return collisionAttack_;
+	return collisionEnemy_;
 }
 
-void EnemyManager::SetCollisionAttack(bool collisionAttack)
+void EnemyManager::SetCollisionEnemy(bool collisionEnemy)
 {
-	collisionAttack_ = collisionAttack;
+	collisionEnemy_ = collisionEnemy;
 }

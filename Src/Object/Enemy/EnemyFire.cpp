@@ -4,7 +4,6 @@
 #include "../Camera/Camera.h"
 #include "../Player/Player.h"
 #include "../Stage/Stage.h"
-#include <cmath>
 
 void EnemyFire::Init(EnemyAttack* enemyAttack, EnemyFire* enemyFire, Player* player, Camera* camera, Stage* stage)
 {   
@@ -57,6 +56,9 @@ void EnemyFire::Update()
             pos_.x = 2460.0f;
             pos_.y = 352.0f;
 
+            // 索敵範囲
+            findSize_ = 200.0f;
+
             // 生存判定
             isAlive_ = true;
             // 攻撃中判定
@@ -70,7 +72,7 @@ void EnemyFire::Update()
             // プレイヤーの攻撃とエネミーの衝突判定
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
-            collisionAttack_ = false;
+            collisionFire_ = false;
 
             // アニメーションフレーム数カウント
             animFrame_ = 0;
@@ -98,6 +100,9 @@ void EnemyFire::Update()
             // 仮
             pos_.x = 300.0f;
             pos_.y = 300.0f;
+            
+            // 索敵範囲
+            findSize_ = 120.0f;
 
             // 生存判定
             isAlive_ = true;
@@ -112,7 +117,7 @@ void EnemyFire::Update()
             // プレイヤーの攻撃とエネミーの衝突判定
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
-            collisionAttack_ = false;
+            collisionFire_ = false;
 
             // アニメーションフレーム数カウント
             animFrame_ = 0;
@@ -133,7 +138,8 @@ void EnemyFire::Update()
 
     Move();
     Attack();
-    Collision();
+    PlayerAttackCollision();
+    EnemyAttackCollision();
     Damage();
     enemyAttack_->Update();
 
@@ -143,8 +149,8 @@ void EnemyFire::Update()
     if (isAlive_)
     {
         // 一定範囲(正方形)に入ったらtrue
-        if (!(playerPos.x < pos_.x - FIND_SIZE || playerPos.x > pos_.x + FIND_SIZE) &&
-            !(playerPos.y < pos_.y - FIND_SIZE || playerPos.y > pos_.y + FIND_SIZE))
+        if (!(playerPos.x < pos_.x - findSize_ || playerPos.x > pos_.x + findSize_) &&
+            !(playerPos.y < pos_.y - findSize_ || playerPos.y > pos_.y + findSize_))
         {
             // 発見中
             isFind_ = true;
@@ -165,6 +171,7 @@ void EnemyFire::Update()
     {
         hp_ = 25.0f;
         isAlive_ = true;
+        collisionFire_ = false;
     }
 
 #endif // DEBUG
@@ -289,7 +296,7 @@ void EnemyFire::Move()
     }
 }
 
-void EnemyFire::Collision()
+void EnemyFire::PlayerAttackCollision()
 {
     // エネミーの衝突用半径
     float enemyRadius = 32.0f;
@@ -347,39 +354,86 @@ void EnemyFire::Collision()
     //        collisionDamage_ = true;
     //    }
     //}
+}
 
-    // プレイヤーとエネミーの衝突判定
-    // プレイヤー座標の取得
-    Vector2F playerPos = player_->GetPlayerPos();
-    // 球体同士の衝突判定
-    bool ret = false;
-    // お互いの半径の合計
-    float radius = enemyRadius + playerRadius;
-    // ２つの座標間の距離をピタゴラスの定理で算出
-    VECTOR distance = VECTOR();
-    distance.x = pos_.x - playerPos.x;
-    distance.y = pos_.y - playerPos.y;
-    float dis = distance.x * distance.x + distance.y * distance.y;
-    // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
-    if (dis < (radius * radius))
-    {
-        // 攻撃ヒット済
-        collisionAttack_ = true;
+void EnemyFire::EnemyAttackCollision()
+{
+    if (isAlive_) {
+        // エネミーの衝突用半径
+        float enemyRadius = 32.0f;
+        // 魔法の衝突用半径
+        float magicRadius = 5.0f;
+        // 剣の衝突用半径
+        float swordRadius = 32.0f;
+        // プレイヤーの衝突用半径
+        float playerRadius = 32.0f;
+
+        // プレイヤーとエネミーの衝突判定
+        //プレイヤー座標の取得
+        Vector2F playerPos = player_->GetPlayerPos();
+        // 球体同士の衝突判定
+        bool ret = false;
+        // お互いの半径の合計
+        float radius = enemyRadius + playerRadius;
+        // ２つの座標間の距離をピタゴラスの定理で算出
+        VECTOR distance = VECTOR();
+        distance.x = pos_.x - playerPos.x;
+        distance.y = pos_.y - playerPos.y;
+        float dis = distance.x * distance.x + distance.y * distance.y;
+        // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
+        if (dis < (radius * radius))
+        {
+            // 衝突した
+            collisionFire_ = true;
+        }
+
+        // プレイヤーとエネミーの攻撃の衝突判定
+        // エネミーの攻撃座標の取得
+        Vector2F attackPos = enemyAttack_->GetPos();
+        // エネミーの攻撃画像のサイズ取得
+        int attackSizeX = enemyAttack_->GetSizeX();
+        int attackSizeY = enemyAttack_->GetSizeY();
+        // カメラ座標の取得
+        Vector2 cameraPos = camera_->GetCameraPos();
+        
+        if (enemyAttack_->GetAlive()) {
+            // エネミーの攻撃の当たり判定座標
+            // 左向きのとき
+            if (isLeft_) {
+                // 右
+                leftAttackPos = pos_.x - attackSizeX + SIZE_X / 2;
+                // 左
+                rightAttackPos = pos_.x;
+                // 上
+                topAttackPos = pos_.y;
+                // 下
+                bottomAttackPos = pos_.y + attackSizeY;
+            }
+            // 右向きのとき
+            else
+            {
+                leftAttackPos = pos_.x + SIZE_X;
+                // 左
+                rightAttackPos = pos_.x + SIZE_X / 2 + attackSizeX;
+                // 上
+                topAttackPos = pos_.y;
+                // 下
+                bottomAttackPos = pos_.y + attackSizeY;
+            }
+
+            // プレイヤー画像のサイズ
+            float playrSize = 64.0f;
+            // 衝突判定
+            if (rightAttackPos > playerPos.x &&
+                leftAttackPos < playerPos.x + playrSize &&
+                topAttackPos < playerPos.y + playrSize &&
+                bottomAttackPos > playerPos.y)
+            {
+                // 衝突した
+                collisionFire_ = true;
+            }
+        }
     }
-
-    // プレイヤーとエネミーの攻撃の衝突判定
-    // エネミーの攻撃座標の取得
-    Vector2F attakPos = enemyAttack_->GetPos();
-    // エネミーの攻撃画像のサイズ取得
-    int attackSizeX = enemyAttack_->GetSizeX();
-    int attackSizeY = enemyAttack_->GetSizeY();
-
-    // エネミーの攻撃画像の描画座標
-    float leftPos = attakPos.x - attackSizeX / 2;
-    float rightPos = attakPos.x + attackSizeX / 2;
-    float topPos = attakPos.y - attackSizeY / 2;
-    float bottomPos = attakPos.y + attackSizeY / 2;
-    
 }
 
 void EnemyFire::Damage()
@@ -486,12 +540,12 @@ void EnemyFire::SetFind(bool isFind)
     isFind_ = isFind;
 }
 
-bool EnemyFire::GetCollisionAttack()
+bool EnemyFire::GetCollisionFire()
 {
-    return collisionAttack_;
+    return collisionFire_;
 }
 
-void EnemyFire::SetCollisionAttack(bool collisionAttack)
+void EnemyFire::SetCollisionFire(bool collisionFire)
 {
-    collisionAttack_ = collisionAttack;
+    collisionFire_ = collisionFire;
 }

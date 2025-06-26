@@ -107,7 +107,7 @@ void EnemyAttack::Draw()
     // エネミーの攻撃当たり判定描画
     if (isAlive_)
     {
-        // 当たり判定用座標
+        //// 当たり判定用座標
         DrawBox(pos_.x - SIZE_X / 2, pos_.y - SIZE_Y / 2, pos_.x + SIZE_X / 2, pos_.y + SIZE_Y / 2, 0x000000, false);
     }
 
