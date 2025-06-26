@@ -36,19 +36,34 @@ public:
 	// 地上マップのサイズ(縦枚数×横枚数)
 	static constexpr int MAP3_GROUND_SIZE_X = 100;
 	static constexpr int MAP3_GROUND_SIZE_Y = 24;
+
+	static constexpr int MAX_ANIM_NO = 8;
+
+	static constexpr int ANIM_MAX_NO = 3;
 private:
 	
 
-	int r_;
-	int g_;
-	int b_;
-	int rgb_;
-	int j_;
-	int m_;
-	int d_;
-	int k_;
+	int* r_;
+	int* g_;
+	int* b_;
+	int* rgb_;
+	int* j_;
+	int* m_;
+	int* d_;
+	int* k_;
+	int* n_;
 
+	int rCnt_;
+	int gCnt_;
+	int bCnt_;
+	int rgbCnt_;
+	int jCnt_;
+	int mCnt_;
+	int dCnt_;
+	int kCnt_;
+	int nCnt_;
 
+	int Cnt_;
 
 	// マップ画像
 	int* mapChip_;

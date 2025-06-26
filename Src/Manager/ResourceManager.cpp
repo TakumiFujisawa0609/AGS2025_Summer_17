@@ -55,7 +55,32 @@ void ResourceManager::Init(void)
 	res = std::make_unique<RES>(RES_T::IMG, PATH_IMG + "Player/Ui.png");
 	resourcesMap_.emplace(SRC::HPUI, std::move(res));
 
-	
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Stage/NC.png", 3, 1, 320, 192);
+	resourcesMap_.emplace(SRC::N, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Stage/BC.png", 3, 1, 320, 192);
+	resourcesMap_.emplace(SRC::B, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Stage/GC.png", 3, 1, 320, 192);
+	resourcesMap_.emplace(SRC::P, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Stage/RC.png", 3, 1, 320, 192);
+	resourcesMap_.emplace(SRC::F, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Stage/MoveDC.png",8,1,320,192 );
+	resourcesMap_.emplace(SRC::MOVE, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Stage/MoveD+C.png", 8, 1, 320, 192);
+	resourcesMap_.emplace(SRC::MOVES, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Stage/KC.png", 8, 1, 320, 192);
+	resourcesMap_.emplace(SRC::K, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Stage/WBGR.png", 8, 1, 320, 192);
+	resourcesMap_.emplace(SRC::NBPF, std::move(res));
+
+	res = std::make_unique<RES>(RES_T::IMGS, PATH_IMG + "Stage/JANPC.png", 8, 1, 320, 192);
+	resourcesMap_.emplace(SRC::JANP, std::move(res));
 	
 
 	//âÊëúÇÃì«Ç›çûÇ›
