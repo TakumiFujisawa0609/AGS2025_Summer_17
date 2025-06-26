@@ -22,7 +22,7 @@ public:
     void CollisionAttack();
 
     bool GetCollisionAttack();
-    void GetCollisionAttack(bool collisionAttack);
+    void SetCollisionAttack(bool collisionAttack);
 
 
 private:

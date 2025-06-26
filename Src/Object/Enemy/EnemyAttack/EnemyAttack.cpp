@@ -2,7 +2,6 @@
 #include "../EnemyFire.h"
 #include "../../Player/Player.h"
 #include "../../Camera/Camera.h"
-#include <DxLib.h>
 
 void EnemyAttack::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
 {
@@ -108,10 +107,31 @@ void EnemyAttack::Draw()
     // エネミーの攻撃当たり判定描画
     if (isAlive_)
     {
+        // 当たり判定用座標
         DrawBox(pos_.x - SIZE_X / 2, pos_.y - SIZE_Y / 2, pos_.x + SIZE_X / 2, pos_.y + SIZE_Y / 2, 0x000000, false);
     }
 
 #endif // _DEBUG
+}
+
+Vector2F EnemyAttack::GetPos()
+{
+    return pos_;
+}
+
+void EnemyAttack::SetPos(Vector2F pos)
+{
+    pos_ = pos;
+}
+
+int EnemyAttack::GetSizeX()
+{
+    return SIZE_X;
+}
+
+int EnemyAttack::GetSizeY()
+{
+    return SIZE_Y;
 }
 
 bool EnemyAttack::GetAttack()
@@ -127,4 +147,9 @@ void EnemyAttack::SetAttack(bool isAttack)
 bool EnemyAttack::GetAlive()
 {
     return isAlive_;
+}
+
+void EnemyAttack::SetAlive(bool isAlive)
+{
+    isAlive_ = isAlive;
 }

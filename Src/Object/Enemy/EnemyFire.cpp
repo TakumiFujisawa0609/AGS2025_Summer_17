@@ -4,6 +4,7 @@
 #include "../Camera/Camera.h"
 #include "../Player/Player.h"
 #include "../Stage/Stage.h"
+#include <cmath>
 
 void EnemyFire::Init(EnemyAttack* enemyAttack, EnemyFire* enemyFire, Player* player, Camera* camera, Stage* stage)
 {   
@@ -64,7 +65,7 @@ void EnemyFire::Update()
             isLeft_ = true;
             // 発見中判定(trueなら発見中)
             isFind_ = false;
-            // プレイヤー攻撃ヒット判定
+            // プレイヤー攻撃ヒット済み判定
             wasHit_ = false;
             // プレイヤーの攻撃とエネミーの衝突判定
             collisionDamage_ = false;
@@ -300,10 +301,10 @@ void EnemyFire::Collision()
     float playerRadius = 32.0f;
 
     // 攻撃属性を取得
-    int attackColoer = player_->GetCr();
+    int magicColoer = player_->GetCr();
 
     // 魔法攻撃
-    if (attackColoer != 0xffffff)
+    if (magicColoer != 0xffffff)
     {
         // 魔法とエネミーの衝突判定
         // 魔法の座標を取得
@@ -325,7 +326,7 @@ void EnemyFire::Collision()
         }
     }
     //// 剣攻撃
-    //else if (attackColoer == 0xffffff)
+    //else if (magicColoer == 0xffffff)
     //{
     //    //player_->GetSotd();
     //    // 剣の座標を取得
@@ -347,8 +348,6 @@ void EnemyFire::Collision()
     //    }
     //}
 
-
-
     // プレイヤーとエネミーの衝突判定
     // プレイヤー座標の取得
     Vector2F playerPos = player_->GetPlayerPos();
@@ -369,8 +368,18 @@ void EnemyFire::Collision()
     }
 
     // プレイヤーとエネミーの攻撃の衝突判定
+    // エネミーの攻撃座標の取得
+    Vector2F attakPos = enemyAttack_->GetPos();
+    // エネミーの攻撃画像のサイズ取得
+    int attackSizeX = enemyAttack_->GetSizeX();
+    int attackSizeY = enemyAttack_->GetSizeY();
 
-
+    // エネミーの攻撃画像の描画座標
+    float leftPos = attakPos.x - attackSizeX / 2;
+    float rightPos = attakPos.x + attackSizeX / 2;
+    float topPos = attakPos.y - attackSizeY / 2;
+    float bottomPos = attakPos.y + attackSizeY / 2;
+    
 }
 
 void EnemyFire::Damage()
@@ -477,12 +486,12 @@ void EnemyFire::SetFind(bool isFind)
     isFind_ = isFind;
 }
 
-bool EnemyFire::GetcollisionAttack()
+bool EnemyFire::GetCollisionAttack()
 {
     return collisionAttack_;
 }
 
-void EnemyFire::SetcollisionAttack(bool collisionAttack)
+void EnemyFire::SetCollisionAttack(bool collisionAttack)
 {
     collisionAttack_ = collisionAttack;
 }

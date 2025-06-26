@@ -30,15 +30,21 @@ public:
     // 描画
     void Draw();
 
+    // 座標の取得・更新
+    Vector2F GetPos();
+    void SetPos(Vector2F pos);
 
+    // サイズ
+    int GetSizeX();
+    int GetSizeY();
 
-    // 再生中判定取得
+    // 再生中判定の取得・更新
     bool GetAttack();
-    // 再生中判定更新
     void SetAttack(bool isAttack);
 
-    // 再生中判定取得
+    // 再生中判定の取得・更新
     bool GetAlive();
+    void SetAlive(bool isAlive);
 
 private:
 
@@ -48,6 +54,11 @@ private:
 
     // 座標
     Vector2F pos_;
+
+    float leftPos_;
+    float rightPos_;
+    float topPos_;
+    float bottomPos_;
 
     // 画像のハンドルID
     int img_;

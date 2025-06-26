@@ -39,10 +39,6 @@ void EnemyManager::Draw()
 
 void EnemyManager::CollisionAttack()
 {
-	if (enemyFire_->GetcollisionAttack())
-	{
-		collisionAttack_ = true;
-	}
 }
 
 bool EnemyManager::GetCollisionAttack()
@@ -50,7 +46,7 @@ bool EnemyManager::GetCollisionAttack()
 	return collisionAttack_;
 }
 
-void EnemyManager::GetCollisionAttack(bool collisionAttack)
+void EnemyManager::SetCollisionAttack(bool collisionAttack)
 {
 	collisionAttack_ = collisionAttack;
 }

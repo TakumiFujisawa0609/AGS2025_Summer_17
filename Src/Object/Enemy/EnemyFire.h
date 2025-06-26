@@ -48,25 +48,25 @@ public:
     // サイズ
     int GetSizeX();
 
-    // 座標
+    // 座標の取得・更新
     Vector2F GetPos();
     void SetPos(Vector2F pos);
 
-    // 生存中判定
+    // 生存中判定の取得・更新
     bool GetAlive();
     void SetAlive(bool isAlive);
 
-    // 左右判定の取得(trueなら左向き)
+    // 左右判定の取得・更新(trueなら左向き)
     bool GetLeft();
     void SetLeft(bool isLeft);
 
-    // 発見中判定(trueなら発見中)
+    // 発見中判定の取得・更新(trueなら発見中)
     bool GetFind();
     void SetFind(bool isFind);
 
-    // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
-    bool GetcollisionAttack();
-    void SetcollisionAttack(bool collisionAttack);
+    // エネミー(エネミーの攻撃)とプレイヤーの衝突判定の取得・更新
+    bool GetCollisionAttack();
+    void SetCollisionAttack(bool collisionAttack);
 
 private:
 
