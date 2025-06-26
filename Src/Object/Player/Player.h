@@ -219,6 +219,28 @@ public:
 	bool IsPlantsHitRightPos(void);
 	bool IsPlantsHitLeftPos(void);
 
+	bool IsWaterHitRightPos2(void);
+	bool IsWaterHitLeftPos2(void);
+
+
+	bool IsFlareHitRightPos2(void);
+	bool IsFlareHitLeftPos2(void);
+
+
+	bool IsPlantsHitRightPos2(void);
+	bool IsPlantsHitLeftPos2(void);
+
+	bool IsWaterHitRightPos3(void);
+	bool IsWaterHitLeftPos3(void);
+
+
+	bool IsFlareHitRightPos3(void);
+	bool IsFlareHitLeftPos3(void);
+
+
+	bool IsPlantsHitRightPos3(void);
+	bool IsPlantsHitLeftPos3(void);
+
 	
 
 	//è’ìÀîªíË
@@ -239,6 +261,27 @@ public:
 	void CollisionPlantsRightSide(void);
 	void CollisionPlantsLeftSide(void);
 
+	void CollisionWaterRightSide2(void);
+	void CollisionWaterLeftSide2(void);
+
+
+	void CollisionFlareRightSide2(void);
+	void CollisionFlareLeftSide2(void);
+
+
+	void CollisionPlantsRightSide2(void);
+	void CollisionPlantsLeftSide2(void);
+
+	void CollisionWaterRightSide3(void);
+	void CollisionWaterLeftSide3(void);
+
+
+	void CollisionFlareRightSide3(void);
+	void CollisionFlareLeftSide3(void);
+
+
+	void CollisionPlantsRightSide3(void);
+	void CollisionPlantsLeftSide3(void);
 	
 
 	//è’ìÀîªíËï`âÊ

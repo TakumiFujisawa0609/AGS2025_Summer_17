@@ -34,7 +34,7 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, Stage* stage
 	plants_ = plants;
 	water_ = water;
 
-	stageType = STAGE_TYPE::STAGE3;
+	stageType = STAGE_TYPE::STAGE1;
 
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.jpg").c_str());

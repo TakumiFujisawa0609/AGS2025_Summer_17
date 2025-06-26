@@ -215,34 +215,131 @@ void Wall::Init2()
 	isFlareAlive3_ = true;
 	isWaterAlive3_ = true;
 	isSphereAlive3_ = true;
+
+	reWallF_=180;
+	reWallP_=210;
+	reWallS_=600;
+	reWallF2_ = 180;
+	reWallP2_ = 210;
+	reWallS2_ = 600;
+	reWallF3_ = 180;
+	reWallP3_ = 210;
+	reWallS3_ = 600;
 }
 
 void Wall::Update2()
 {
+	if (isPlantsAlive_==false)
+	{
+		reWallP_--;
+		if (reWallP_ <= 0)
+		{
+			isPlantsAlive_ = true;
+			reWallP_ = 210;
+		}
+	}
+	if (isPlantsAlive2_ == false)
+	{
+		reWallP2_--;
+		if (reWallP2_ <= 0)
+		{
+			isPlantsAlive2_ = true;
+			reWallP2_ = 210;
+		}
+	}
+	if (isPlantsAlive3_ == false)
+	{
+		reWallP3_--;
+		if (reWallP3_ <= 0)
+		{
+			isPlantsAlive3_ = true;
+			reWallP3_ = 210;
+		}
+	}
+	if (isFlareAlive_ == false)
+	{
+		reWallF_--;
+		if (reWallF_ <= 0)
+		{
+			isFlareAlive_ = true;
+			reWallF_ = 210;
+		}
+	}
+	if (isFlareAlive2_ == false)
+	{
+		reWallF2_--;
+		if (reWallF2_ <= 0)
+		{
+			isFlareAlive2_ = true;
+			reWallF2_ = 210;
+		}
+	}
+	if (isFlareAlive3_ == false)
+	{
+		reWallF3_--;
+		if (reWallF3_ <= 0)
+		{
+			isFlareAlive3_ = true;
+			reWallF3_ = 210;
+		}
+	}
+	if (isSphereAlive_ == false)
+	{
+		reWallS_--;
+		if (reWallS_ <= 0)
+		{
+			isSphereAlive_ = true;
+			reWallS_ = 600;
+		}
+	}
+	if (isSphereAlive2_ == false)
+	{
+		reWallS2_--;
+		if (reWallS2_ <= 0)
+		{
+			isSphereAlive2_ = true;
+			reWallS2_ = 600;
+		}
+	}
+	if (isSphereAlive3_ == false)
+	{
+		reWallS3_--;
+		if (reWallS3_ <= 0)
+		{
+			isSphereAlive3_ = true;
+			reWallS3_ = 600;
+		}
+	}
+
+
+
 	AnimUpdate();
 	if (isSphereAlive_)
 	{
-
-	}
-	else
-	{
-		isWaterAlive2_ = false;
-	}
-	if (isSphereAlive2_)
-	{
-
+		isWaterAlive3_ = true;
 	}
 	else
 	{
 		isWaterAlive3_ = false;
 	}
-	if (isSphereAlive3_)
+	if (isSphereAlive2_)
 	{
-
+		isWaterAlive_ = true;
 	}
 	else
 	{
 		isWaterAlive_ = false;
+
+		
+	}
+	if (isSphereAlive3_)
+	{
+		isWaterAlive2_ = true;
+	}
+	else
+	{
+		
+		isWaterAlive2_ = false;
 	}
 }
 
@@ -327,6 +424,30 @@ Vector2F Wall::GetFlarePos()
 Vector2F Wall::GetWaterPos() 
 {
 	return waterPos_;
+}
+Vector2F Wall::GetPlantsPos2()
+{
+	return plantsPos2_;
+}
+Vector2F Wall::GetFlarePos2()
+{
+	return flarePos2_;
+}
+Vector2F Wall::GetWaterPos2()
+{
+	return waterPos2_;
+}
+Vector2F Wall::GetPlantsPos3()
+{
+	return plantsPos3_;
+}
+Vector2F Wall::GetFlarePos3()
+{
+	return flarePos3_;
+}
+Vector2F Wall::GetWaterPos3()
+{
+	return waterPos3_;
 }
 bool Wall::IsPlantsAlive() 
 {
@@ -570,7 +691,7 @@ bool Wall::IsSphereCollision3(Vector2 pos)
 {
 	Vector2 pPos = pos;
 
-	if (isSphereAlive_)
+	if (isSphereAlive3_)
 	{
 		if (pPos.x > spherePos3_.x && pPos.y > spherePos3_.y && pPos.x < spherePos3_.x + PLANTS_SIZE_X && pPos.y < spherePos3_.y + PLANTS_SIZE_X)
 		{

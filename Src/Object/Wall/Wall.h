@@ -39,6 +39,18 @@ private:
 
 	int stageSize_;
 
+	int reWallF_;
+	int reWallP_;
+	int reWallS_;
+
+	int reWallF2_;
+	int reWallP2_;
+	int reWallS2_;
+
+	int reWallF3_;
+	int reWallP3_;
+	int reWallS3_;
+
 	//âÊëúÇÃêî
 	int flareNo_;
 	int waterNo_;
@@ -107,9 +119,19 @@ public:
 	Vector2F GetPlantsPos();
 	Vector2F GetFlarePos();
 	Vector2F GetWaterPos();
+
+	Vector2F GetPlantsPos2();
+	Vector2F GetFlarePos2();
+	Vector2F GetWaterPos2();
+
+	Vector2F GetPlantsPos3();
+	Vector2F GetFlarePos3();
+	Vector2F GetWaterPos3();
+
 	bool IsPlantsAlive();
 	bool IsFlareAlive();
 	bool IsWaterAlive();
+
 	void SetPlantsPos(Vector2F pos);
 	void SetFlarePos(Vector2F pos);
 	void SetWaterPos(Vector2F pos);

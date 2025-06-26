@@ -34,7 +34,7 @@ void Stage::Init(Player*player,Camera*camera)
 	
 	// •ªŠ„‚³‚ê‚½‰æ‘œ‚ğ“Ç‚İ‚İ
 	
-	InitStage3();
+	InitStage1();
 	
 
 }
