@@ -216,6 +216,7 @@ void StageManager::ChangeStage(STAGE_TYPE type)
 	{
 	case STAGE_TYPE::STAGE1:
 		stage_->InitStage1();
+		wall_->Init1();
 		break;
 	case STAGE_TYPE::STAGE2:
 		player_->SetPlayerPos(pos);

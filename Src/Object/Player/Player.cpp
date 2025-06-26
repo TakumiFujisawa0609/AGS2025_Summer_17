@@ -336,12 +336,15 @@ void Player::Move()
 	if (prePos.x > pos_.x)CollisionWaterLeftSide();
 	if (prePos.x > pos_.x)CollisionFlareLeftSide();
 	if (prePos.x > pos_.x)CollisionPlantsLeftSide();
-	if (prePos.x > pos_.x)CollisionWaterLeftSide2();
-	if (prePos.x > pos_.x)CollisionFlareLeftSide2();
-	if (prePos.x > pos_.x)CollisionPlantsLeftSide2();
-	if (prePos.x > pos_.x)CollisionWaterLeftSide3();
-	if (prePos.x > pos_.x)CollisionFlareLeftSide3();
-	if (prePos.x > pos_.x)CollisionPlantsLeftSide3();
+	if (id_ == 3)
+	{
+		if (prePos.x > pos_.x)CollisionWaterLeftSide2();
+		if (prePos.x > pos_.x)CollisionFlareLeftSide2();
+		if (prePos.x > pos_.x)CollisionPlantsLeftSide2();
+		if (prePos.x > pos_.x)CollisionWaterLeftSide3();
+		if (prePos.x > pos_.x)CollisionFlareLeftSide3();
+		if (prePos.x > pos_.x)CollisionPlantsLeftSide3();
+	}
 	//‰E‚Ö‚ÌˆÚ“®ˆ—
 	if (ins.IsNew(KEY_INPUT_D))
 	{
@@ -398,12 +401,15 @@ void Player::Move()
 	if (prePos.x < pos_.x)CollisionWaterRightSide();
 	if (prePos.x < pos_.x)CollisionFlareRightSide();
 	if (prePos.x < pos_.x)CollisionPlantsRightSide();
-	if (prePos.x < pos_.x)CollisionWaterRightSide2();
-	if (prePos.x < pos_.x)CollisionFlareRightSide2();
-	if (prePos.x < pos_.x)CollisionPlantsRightSide2();
-	if (prePos.x < pos_.x)CollisionWaterRightSide3();
-	if (prePos.x < pos_.x)CollisionFlareRightSide3();
-	if (prePos.x < pos_.x)CollisionPlantsRightSide3();
+	if (id_ == 3)
+	{
+		if (prePos.x < pos_.x)CollisionWaterRightSide2();
+		if (prePos.x < pos_.x)CollisionFlareRightSide2();
+		if (prePos.x < pos_.x)CollisionPlantsRightSide2();
+		if (prePos.x < pos_.x)CollisionWaterRightSide3();
+		if (prePos.x < pos_.x)CollisionFlareRightSide3();
+		if (prePos.x < pos_.x)CollisionPlantsRightSide3();
+	}
 
 	if(!ins.IsNew(KEY_INPUT_D) && !ins.IsNew(KEY_INPUT_A))
 	{

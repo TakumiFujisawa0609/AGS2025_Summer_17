@@ -34,7 +34,7 @@ void Wall::Init(Camera*camera)
 	wSphereImg_ = res.Load(ResourceManager::SRC::WSPHERE).handleIds_;
 
 	
-	Init2();
+	
 
 	
 
@@ -46,7 +46,7 @@ void Wall::Init(Camera*camera)
 	sphereNo_ = 0;
 	
 	
-	
+	Init1();
 }
 void Wall::Update()
 {
@@ -117,6 +117,7 @@ void Wall::Init1()
 	isFlareAlive_ = true;
 	isWaterAlive_ = true;
 	isSphereAlive_ = true;
+
 }
 
 void Wall::Update1()
@@ -139,8 +140,6 @@ void Wall::Draw1()
 	if (isPlantsAlive_)
 	{
 		DrawGraph(plantsPos_.x - cameraPos.x, plantsPos_.y - cameraPos.y, plantsImg_, TRUE);
-
-
 
 	}
 
