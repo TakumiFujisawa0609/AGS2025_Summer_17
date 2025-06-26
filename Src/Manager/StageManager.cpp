@@ -71,7 +71,7 @@ void StageManager::Update1()
 	player_->Update();
 	
 	// 壁の更新
-	wall_->Update();
+	wall_->Update1();
 	blast_->Update();
 	water_->Update();
 	plants_->Update();
@@ -114,6 +114,8 @@ void StageManager::Update3()
 
 	// エネミーの更新
 	enemyManager_->Update();
+
+	wall_->Update2();
 	blast_->Update();
 	water_->Update();
 	plants_->Update();
@@ -146,7 +148,7 @@ void StageManager::Draw1()
 
 	DrawGraph(0, 0, backImg_, true);
 	//壁の描画
-	wall_->Draw();
+	wall_->Draw1();
 	
 
 	// プレイヤーの描画
@@ -188,7 +190,7 @@ void StageManager::Draw3()
 {
 	DrawGraph( 0, 0,back3Img_, true);
 	//壁の描画
-	wall_->Draw();
+	wall_->Draw2();
 	
 
 	// プレイヤーの描画
@@ -216,6 +218,7 @@ void StageManager::ChangeStage(STAGE_TYPE type)
 	{
 	case STAGE_TYPE::STAGE1:
 		stage_->InitStage1();
+		wall_->Init1();
 		break;
 	case STAGE_TYPE::STAGE2:
 		player_->SetPlayerPos(pos);
@@ -225,6 +228,7 @@ void StageManager::ChangeStage(STAGE_TYPE type)
 	case STAGE_TYPE::STAGE3:
 		player_->SetPlayerPos(pos);
 		stage_->InitStage3();
+		wall_->Init2();
 		break;
 
 	}

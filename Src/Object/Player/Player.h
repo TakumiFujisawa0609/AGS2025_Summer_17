@@ -98,6 +98,7 @@ private:
 	//攻撃中かどうか
 	bool isAttack_;//攻撃中かどうか
 	bool isPoint_;
+	bool eF_;
 	bool dirChange_;
 	bool isSotd_;
 	int upCnt;
@@ -115,7 +116,7 @@ private:
 	int regeneCnt_;
 	int mpRegene_;
 
-
+	int radius_;
 
 	//足元
 	//（デバッグ表示のためメンバー変数化）
@@ -164,6 +165,7 @@ private:
 	AsoUtility::DIR dir_;
 
 	
+	Vector2 cameraPos_;
 
 
 	//デバック表示==============================================================================
@@ -217,6 +219,28 @@ public:
 	bool IsPlantsHitRightPos(void);
 	bool IsPlantsHitLeftPos(void);
 
+	bool IsWaterHitRightPos2(void);
+	bool IsWaterHitLeftPos2(void);
+
+
+	bool IsFlareHitRightPos2(void);
+	bool IsFlareHitLeftPos2(void);
+
+
+	bool IsPlantsHitRightPos2(void);
+	bool IsPlantsHitLeftPos2(void);
+
+	bool IsWaterHitRightPos3(void);
+	bool IsWaterHitLeftPos3(void);
+
+
+	bool IsFlareHitRightPos3(void);
+	bool IsFlareHitLeftPos3(void);
+
+
+	bool IsPlantsHitRightPos3(void);
+	bool IsPlantsHitLeftPos3(void);
+
 	
 
 	//衝突判定
@@ -237,6 +261,27 @@ public:
 	void CollisionPlantsRightSide(void);
 	void CollisionPlantsLeftSide(void);
 
+	void CollisionWaterRightSide2(void);
+	void CollisionWaterLeftSide2(void);
+
+
+	void CollisionFlareRightSide2(void);
+	void CollisionFlareLeftSide2(void);
+
+
+	void CollisionPlantsRightSide2(void);
+	void CollisionPlantsLeftSide2(void);
+
+	void CollisionWaterRightSide3(void);
+	void CollisionWaterLeftSide3(void);
+
+
+	void CollisionFlareRightSide3(void);
+	void CollisionFlareLeftSide3(void);
+
+
+	void CollisionPlantsRightSide3(void);
+	void CollisionPlantsLeftSide3(void);
 	
 
 	//衝突判定描画
@@ -272,6 +317,7 @@ public:
 	int GetStageSize();
 	void SetStageSize(int size);
 
+
 	Vector2 GetAttackPos();
 	void SetAttackPos(Vector2 attackPos);
 
@@ -283,6 +329,12 @@ public:
 
 	Vector2F GetAttckAnglePoint();
 	void SetAttckAnglePoint(Vector2F attckAnglePoint);
+
+	bool GetIsEF();
+	void SetIsEF(bool is);
+
+	Vector2 GetCamera();
+
 
 };
 
