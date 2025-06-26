@@ -59,6 +59,11 @@ void StageManager::Update()
 
 	}
 
+	if (player_->GetHp() <= 0)
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
+	}
+
 }
 void StageManager::Update1()
 {

@@ -178,7 +178,7 @@ void Player::Draw()
 
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
 	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 5, cr_);
-	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y - cpos.y, 32, cr_,false);
+	
 	if (isPoint_)
 	{
 		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 5, cr_);
@@ -202,7 +202,7 @@ void Player::Draw()
 #ifdef _DEBUG
 	//“–‚½‚è”»’è‚Ì‰ÂŽ‹‰»
 	DrawHitCollision();
-
+	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y - cpos.y, 32, cr_, false);
 	
 
 #endif // DEBUG
@@ -441,8 +441,8 @@ void Player::Anime()
 		regeneCnt_--;
 		if (regeneCnt_ < 0)
 		{
-			regeneCnt_ = 30;
-			SetMp(GetMp() + 2);
+			regeneCnt_ = 60;
+			SetMp(GetMp() + 1);
 			if (GetMp() >= 100)
 			{
 				SetMp(MAX_MP);
