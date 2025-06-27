@@ -154,6 +154,9 @@ void GameScene::Draw(void)
 	
 	stageManager_->Draw();
 	playerUi_->Draw();
+	SetFontSize(32);
+	DrawFormatString(1650, 0, 0xFFFFFF, "ESCでメニュー");
+	SetFontSize(16);
 	//// ステージの描画
 	//stage_->Draw();
 

@@ -58,7 +58,7 @@ void TitleScene::Draw(void)
 
   SetFontSize(50);
   if ((static_cast<int>(frameCount) % static_cast<int>(blinkCycle)) < static_cast<int>(blinkCycle) / 2) {  
-      DrawFormatString(720, 700, 0x000000, "SPACEキーを押してスタート\n\n    ESCでポーズメニュー");
+      DrawFormatString(650, 700, 0x000000, "SPACEキーを押してスタート\n\n  ESCでポーズメニュー");
   }  
   SetFontSize(16);
 
