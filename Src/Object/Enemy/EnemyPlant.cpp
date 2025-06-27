@@ -17,6 +17,8 @@ void EnemyPlant::Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player
 
     // 初期座標の設定用値
     setInit_ = 2;
+    // プレイヤー座標取得判定
+    isGetPos_ = false;
 
     // 属性管理用
     fire_ = 0xff0000;
@@ -388,6 +390,7 @@ void EnemyPlant::EnemyAttackCollision()
         {
             // 衝突した
             collisionPlant_ = true;
+            isAlive_ = false;
         }
 
         // プレイヤーとエネミーの攻撃の衝突判定
@@ -399,42 +402,35 @@ void EnemyPlant::EnemyAttackCollision()
         // カメラ座標の取得
         Vector2 cameraPos = camera_->GetCameraPos();
 
-        if (enemyAttackP_->GetAlive()) {
+        if (enemyAttackP_->GetAlive() && !isGetPos_)
+        {
             // エネミーの攻撃の当たり判定座標
-            // 左向きのとき
-            if (isLeft_) {
-                // 右
-                leftAttackPos = pos_.x - attackSizeX + SIZE_X / 2;
-                // 左
-                rightAttackPos = pos_.x;
-                // 上
-                topAttackPos = pos_.y;
-                // 下
-                bottomAttackPos = pos_.y + attackSizeY;
-            }
-            // 右向きのとき
-            else
-            {
-                leftAttackPos = pos_.x + SIZE_X;
-                // 左
-                rightAttackPos = pos_.x + SIZE_X / 2 + attackSizeX;
-                // 上
-                topAttackPos = pos_.y;
-                // 下
-                bottomAttackPos = pos_.y + attackSizeY;
-            }
+            leftAttackPos = playerPos.x - attackSizeX / 2;
+            // 左
+            rightAttackPos = playerPos.x + attackSizeX / 2;
+            // 上
+            topAttackPos = playerPos.y - attackSizeY / 2;
+            // 下
+            bottomAttackPos = playerPos.y + attackSizeY / 2;
+            // プレイヤー座標取得済み
+            isGetPos_ = true;
+        }
+        else
+        {
+            isGetPos_ = false;
+        }
 
-            // プレイヤー画像のサイズ
-            float playrSize = 64.0f;
-            // 衝突判定
-            if (rightAttackPos > playerPos.x &&
-                leftAttackPos < playerPos.x + playrSize &&
-                topAttackPos < playerPos.y + playrSize &&
-                bottomAttackPos > playerPos.y)
-            {
-                // 衝突した
-                collisionPlant_ = true;
-            }
+        // プレイヤー画像のサイズ
+        float playerSize = 64.0f;
+        // 衝突判定
+        if (enemyAttackP_->GetAlive() &&
+            rightAttackPos < playerPos.x &&
+            leftAttackPos > playerPos.x + playerSize &&
+            topAttackPos < playerPos.y + playerSize &&
+            bottomAttackPos > playerPos.y)
+        {
+            // 衝突した
+            isAlive_ = false;
         }
     }
 }

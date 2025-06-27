@@ -37,11 +37,6 @@ void EnemyAttackF::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
 
 void EnemyAttackF::Update()
 {
-
-}
-
-void EnemyAttackF::Draw()
-{
     // 発見中のみ攻撃クールダウン消費
     if (enemyFire_->GetFind())
     {
@@ -75,14 +70,17 @@ void EnemyAttackF::Draw()
 
         }
     }
+}
+
+void EnemyAttackF::Draw()
+{
+
 
     int enemySize = enemyFire_->GetSizeX();
     bool enemyLeft = enemyFire_->GetLeft();
     Vector2F enemyPos = enemyFire_->GetPos();
     // カメラ座標
     Vector2 cameraPos = camera_->GetCameraPos();
-
-
 
     if (isAlive_ && enemyFire_->GetAlive())
     {

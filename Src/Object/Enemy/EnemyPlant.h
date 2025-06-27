@@ -133,5 +133,7 @@ private:
     bool collisionDamage_;
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
     bool collisionPlant_;
+    // プレイヤー座標取得判定
+    bool isGetPos_;
 
 };

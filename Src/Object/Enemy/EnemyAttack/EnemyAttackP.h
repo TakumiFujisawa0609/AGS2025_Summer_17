@@ -15,10 +15,10 @@ public:
     static constexpr int SIZE_Y = 96;
 
     // アニメーション
-    static constexpr int ANIM_X = 1;
-    static constexpr int ANIM_Y = 9;
+    static constexpr int ANIM_X = 10;
+    static constexpr int ANIM_Y = 1;
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
-    static constexpr int ANIM_INTERVAL = 8;
+    static constexpr int ANIM_INTERVAL = 5;
 
     // 攻撃
     static constexpr int ATTACK_INTERVAL = 110;
@@ -81,6 +81,9 @@ private:
 
     // 再生折り返し判定
     bool isCntUp_;
+
+    // プレイヤー座標取得判定
+    bool isGetPos_;
 
 };
 

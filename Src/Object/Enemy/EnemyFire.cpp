@@ -167,6 +167,23 @@ void EnemyFire::Update()
         }
     }
 
+    // アニメーション処理
+    if (!enemyAttackF_->GetAlive())
+    {
+        animCnt_++;
+        if (animCnt_ >= ANIM_INTERVAL) {
+            animCnt_ = 0;
+            animFrame_++;
+            if (animFrame_ >= ANIM_MAX) {
+                animFrame_ = 0;
+            }
+        }
+    }
+    else
+    {
+        animCnt_ = 0;
+    }
+
 #ifdef _DEBUG
 
     // 再出現(デバッグ用)
@@ -198,23 +215,6 @@ void EnemyFire::Draw()
     DrawCircle(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 32, (0x000000), false);
 
 #endif // _DEBUG
-
-    // アニメーション処理
-    if (!enemyAttackF_->GetAlive())
-    {
-        animCnt_++;
-        if (animCnt_ >= ANIM_INTERVAL) {
-            animCnt_ = 0;
-            animFrame_++;
-            if (animFrame_ >= ANIM_MAX) {
-                animFrame_ = 0;
-            }
-        }
-    }
-    else
-    {
-        animCnt_ = 0;
-    }
 
     if (isAlive_)
     {
@@ -425,15 +425,16 @@ void EnemyFire::EnemyAttackCollision()
             }
 
             // プレイヤー画像のサイズ
-            float playrSize = 64.0f;
+            float playerSize = 64.0f;
             // 衝突判定
             if (rightAttackPos > playerPos.x &&
-                leftAttackPos < playerPos.x + playrSize &&
-                topAttackPos < playerPos.y + playrSize &&
+                leftAttackPos < playerPos.x + playerSize &&
+                topAttackPos < playerPos.y + playerSize &&
                 bottomAttackPos > playerPos.y)
             {
                 // 衝突した
                 collisionFire_ = true;
+                isAlive_ = false;
             }
         }
     }

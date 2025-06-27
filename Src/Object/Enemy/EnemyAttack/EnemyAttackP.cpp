@@ -33,14 +33,12 @@ void EnemyAttackP::Init(EnemyPlant* enemyPlant, Player* player, Camera* camera)
 
     // 再生折り返し判定
     isCntUp_ = true;
+
+    // プレイヤー座標取得判定
+    isGetPos_ = false;
 }
 
 void EnemyAttackP::Update()
-{
-
-}
-
-void EnemyAttackP::Draw()
 {
     // 発見中のみ攻撃クールダウン消費
     if (enemyPlant_->GetFind())
@@ -53,19 +51,20 @@ void EnemyAttackP::Draw()
     {
         isAlive_ = true;
         animCnt_++;
-        if (animCnt_ <= ANIM_INTERVAL) {
+        if (animCnt_ >= ANIM_INTERVAL) {
             animCnt_ = 0;
             if (isCntUp_)
             {
                 animFrame_++;
-                if (animFrame_ <= ANIM_MAX) {
+                if (animFrame_ >= ANIM_MAX) {
+                    animFrame_ = 8;
                     isCntUp_ = false;
                 }
             }
             else
             {
-                animFrame_++;
-                if (animFrame_ >= ANIM_MAX) {
+                animFrame_--;
+                if (animFrame_ <= 0) {
                     isCntUp_ = true;
                     isAlive_ = false;
                     isAttack_ = false;
@@ -75,31 +74,31 @@ void EnemyAttackP::Draw()
 
         }
     }
+}
 
-    int enemySize = enemyPlant_->GetSizeX();
-    bool enemyLeft = enemyPlant_->GetLeft();
-    Vector2F enemyPos = enemyPlant_->GetPos();
-    // カメラ座標
+void EnemyAttackP::Draw()
+{
+    // プレイヤー座標の取得
+    Vector2F playerPos = player_->GetPlayerPos();
+    // カメラ座標の取得
     Vector2 cameraPos = camera_->GetCameraPos();
-
-
-
-    if (isAlive_ && enemyPlant_->GetAlive())
+    // プレイヤー画像のサイズ
+    float playerSize = 64.0f;
+    if (isAlive_ )
     {
-        if (enemyLeft)
+        // 一度だけプレイヤー座標を取得
+        if (!isGetPos_)
         {
-            pos_.x = enemyPos.x - SIZE_X + enemySize / 2 - cameraPos.x;
-            pos_.y = enemyPos.y - cameraPos.y;
-            // 左向きに描画
-            DrawRotaGraphF(pos_.x, pos_.y, 1.0f, 0.0f, Array_[animFrame_], true, false);
+            pos_.x = playerPos.x;
+            pos_.y = playerPos.y;
+            isGetPos_ = true;
         }
-        else
-        {
-            pos_.x = enemyPos.x + enemySize - cameraPos.x;
-            pos_.y = enemyPos.y - cameraPos.y;
-            // 右向きに描画
-            DrawRotaGraphF(pos_.x, pos_.y, 1.0f, 0.0f, Array_[animFrame_], true, true);
-        }
+        // 左向きに描画
+        DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, false);
+    }
+    else
+    {
+        isGetPos_ = false;
     }
 
 #ifdef _DEBUG
