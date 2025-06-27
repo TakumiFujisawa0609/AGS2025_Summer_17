@@ -1,23 +1,6 @@
 #include "EnemyManager.h"
 #include "EnemyBase.h"
 #include "EnemyFire.h"
-<<<<<<< HEAD
-#include "../Camera/Camera.h"
-//#include "EnemyWater.h"
-//#include "EnemyPlant.h"
-
-void EnemyManager::Init(Camera*camera)
-{
-	camera_ = camera;
-
-
-
-	enemyBase_ = new EnemyBase();
-	enemyBase_->Init();
-
-	enemyFire_ = new EnemyFire();
-	enemyFire_->Init(camera_);
-=======
 #include "EnemyPlant.h"
 #include "EnemyAttack/EnemyAttackF.h"
 #include "EnemyAttack/EnemyAttackP.h"
@@ -46,7 +29,6 @@ void EnemyManager::Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyAttac
 	enemyFire_->Init(enemyFire_, enemyAttackF_, player_, camera_, stage_);
 	enemyPlant_ = new EnemyPlant();
 	enemyPlant_->Init(enemyPlant_, enemyAttackP_, player_, camera_, stage_);
->>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
 }
 
 void EnemyManager::Update()

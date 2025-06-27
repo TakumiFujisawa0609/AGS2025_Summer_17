@@ -2,15 +2,12 @@
 #include "EnemyBase.h"
 #include <DxLib.h>
 class EnemyManager;
-<<<<<<< HEAD
 class Camera;
-=======
 class EnemyFire;
 class EnemyAttackF;
 class Player;
 class Camera;
 class Stage;
->>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
 
 class EnemyFire
 {
@@ -26,15 +23,11 @@ public:
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
     static constexpr int ANIM_INTERVAL = 13;
 
-<<<<<<< HEAD
-    void Init(Camera*camera);
-=======
     // 初期化
     void Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* player, Camera* camera, Stage* stage);
     void InitStage2();
     void InitStage3();
     // 更新
->>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
     void Update();
     // 描画
     void Draw();
@@ -73,10 +66,6 @@ public:
     void SetCollisionFire(bool collisionFire);
 
 private:
-<<<<<<< HEAD
-    
-    EnemyManager* enemyManager_;
-=======
 
     // エネミー
     EnemyManager* enemyManager_;
@@ -85,7 +74,6 @@ private:
     // プレイヤー
     Player* player_;
     // カメラ
->>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
     Camera* camera_;
     // ステージ
     Stage* stage_;

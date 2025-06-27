@@ -8,11 +8,7 @@
 #include "../../Common/Vector2.h"
 class EnemyBase;
 class EnemyFire;
-<<<<<<< HEAD
-class Camera;
-=======
 class EnemyPlant;
->>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
 //class EnemyWater;
 class EnemyAttackF;
 class EnemyAttackP;
@@ -26,11 +22,6 @@ class Stage;
 class EnemyManager {
 public:
 
-<<<<<<< HEAD
-    void Init(Camera*camera);
-    void Update(void);
-    void Draw(void);
-=======
     void Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyAttackF* enemyAttackF, EnemyAttackP* enemyAttackP, Player* player, Camera* camera, Stage* stage);
     void Update();
     void Draw();
@@ -38,11 +29,9 @@ public:
 
     bool GetCollisionEnemy();
     void SetCollisionEnemy(bool collisionEnemy);
->>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
 
 private:
 
-    Camera* camera_;
     EnemyBase* enemyBase_;
     EnemyFire* enemyFire_;
     EnemyPlant* enemyPlant_;

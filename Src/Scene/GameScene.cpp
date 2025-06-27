@@ -65,15 +65,9 @@ void GameScene::Init(void)
 
 
 	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
-<<<<<<< HEAD
-	stage_->Init(this, player_, camera_);
-	camera_->Init(player_, this);
-	enemyManager_->Init(camera_);
-=======
 	stage_->Init(player_, camera_);
 	camera_->Init(player_);
 	enemyManager_->Init(enemyFire_, enemyPlant_, enemyAttackF_, enemyAttackP_, player_, camera_, stage_);
->>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
 
 	//enemy_->Init();
 	wall_->Init(camera_);
@@ -97,19 +91,6 @@ void GameScene::Update(void)
 
 	stageManager_->Update();
 
-<<<<<<< HEAD
-	// カメラの更新
-	camera_->Update();
-
-	// エネミーの更新
-	enemyManager_->Update();
-
-	// 壁の更新
-	wall_->Update();
-	blast_->Update();
-	water_->Update();
-	plants_->Update();
-=======
 	playerUi_->Update();
 
 	//// ステージの更新
@@ -117,7 +98,6 @@ void GameScene::Update(void)
 
 	//// プレイヤーの更新
 	//player_->Update();
->>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
 
 	//// エネミーの更新
 	//enemyManager_->Update();

@@ -1,16 +1,5 @@
 #include "EnemyFire.h"
 #include "EnemyManager.h"
-<<<<<<< HEAD
-#include "../Camera/Camera.h"
-#include <DxLib.h>
-
-void EnemyFire::Init(Camera*camera)
-{
-    //6Vector2 cameraPos = camera_->GetCameraPos();
-
-    pos_.x = 1500.0f;
-    pos_.y = 544.0f;
-=======
 #include "EnemyAttack/EnemyAttackF.h"
 #include "../Camera/Camera.h"
 #include "../Player/Player.h"
@@ -23,7 +12,6 @@ void EnemyFire::Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* p
     player_ = player;
     camera_ = camera;
     stage_ = stage;
->>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
 
     enemyAttackF_->Init(enemyFire_, player_, camera_);
 
@@ -149,8 +137,6 @@ void EnemyFire::InitStage3()
 
 void EnemyFire::Update()
 {
-<<<<<<< HEAD
-=======
     InitStage2();
     InitStage3();
     Move();
@@ -162,7 +148,6 @@ void EnemyFire::Update()
 
     // プレイヤー座標
     Vector2F playerPos = player_->GetPlayerPos();
->>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
 
     if (isAlive_)
     {
