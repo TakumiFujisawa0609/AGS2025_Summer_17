@@ -6,7 +6,7 @@ class EnemyFire;
 class Player;
 class Camera;
 
-class EnemyAttack
+class EnemyAttackF
 {
 public:
 

@@ -2,13 +2,13 @@
 #include "EnemyBase.h"
 #include <DxLib.h>
 class EnemyManager;
-class EnemyFire;
-class EnemyAttackF;
+class EnemyAttackP;
+class EnemyPlant;
 class Player;
 class Camera;
 class Stage;
 
-class EnemyFire
+class EnemyPlant
 {
 public:
 
@@ -17,13 +17,13 @@ public:
     static constexpr int SIZE_Y = 64;
 
     // アニメーション
-    static constexpr int ANIM_X = 4;
-    static constexpr int ANIM_Y = 1;
+    static constexpr int ANIM_X = 8;
+    static constexpr int ANIM_Y = 3;
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
     static constexpr int ANIM_INTERVAL = 13;
 
     // 初期化
-    void Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* player, Camera* camera, Stage* stage);
+    void Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player* player, Camera* camera, Stage* stage);
     void InitStage2();
     void InitStage3();
     // 更新
@@ -61,15 +61,15 @@ public:
     void SetFind(bool isFind);
 
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定の取得・更新
-    bool GetCollisionFire();
-    void SetCollisionFire(bool collisionFire);
+    bool GetCollisionPlant();
+    void SetCollisionPlant(bool collisionPlant);
 
 private:
 
     // エネミー
     EnemyManager* enemyManager_;
-    EnemyFire* enemyFire_;
-    EnemyAttackF* enemyAttackF_;
+    EnemyAttackP* enemyAttackP_;
+    EnemyPlant* enemyPlant_;
     // プレイヤー
     Player* player_;
     // カメラ
@@ -132,6 +132,6 @@ private:
     // プレイヤーの攻撃とエネミーの衝突判定
     bool collisionDamage_;
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
-    bool collisionFire_;
+    bool collisionPlant_;
 
 };

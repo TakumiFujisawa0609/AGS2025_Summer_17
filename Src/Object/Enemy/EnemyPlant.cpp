@@ -1,19 +1,22 @@
-#include "EnemyFire.h"
+#include "EnemyPlant.h"
 #include "EnemyManager.h"
-#include "EnemyAttack/EnemyAttackF.h"
+#include "EnemyAttack/EnemyAttackP.h"
 #include "../Camera/Camera.h"
 #include "../Player/Player.h"
 #include "../Stage/Stage.h"
 
-void EnemyFire::Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* player, Camera* camera, Stage* stage)
-{   
-    enemyFire_ = enemyFire;
-    enemyAttackF_ = enemyAttackF;
+void EnemyPlant::Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player* player, Camera* camera, Stage* stage)
+{
+    enemyAttackP_ = enemyAttackP;
+    enemyPlant_ = enemyPlant;
     player_ = player;
     camera_ = camera;
     stage_ = stage;
 
-    enemyAttackF_->Init(enemyFire_, player_, camera_);
+    enemyAttackP_->Init(enemyPlant_, player_, camera_);
+
+    // 初期座標の設定用値
+    setInit_ = 2;
 
     // 属性管理用
     fire_ = 0xff0000;
@@ -21,15 +24,12 @@ void EnemyFire::Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* p
     water_ = 0x0000ff;
     normal_ = 0xffffff;
 
-    // 初期座標の設定用値
-    setInit_ = 2;
-
     // 画像の読み込み
     img_ = LoadDivGraph
-    ("Data/Image/Enemy/EnemyF.png", ANIM_MAX, ANIM_X, ANIM_Y, SIZE_X, SIZE_Y, Array_);
+    ("Data/Image/Enemy/EnemyP.png", ANIM_MAX, ANIM_X, ANIM_Y, SIZE_X, SIZE_Y, Array_);
 }
 
-void EnemyFire::InitStage2()
+void EnemyPlant::InitStage2()
 {
     if (setInit_ == 2)
     {
@@ -39,15 +39,15 @@ void EnemyFire::InitStage2()
         if (stageId == 2)
         {
             // 初期座標
-            pos_.x = 2460.0f;
-            pos_.y = 352.0f;
+            pos_.x = 5240.0f;
+            pos_.y = 672.0f;
 
             // 移動速度
-            moveSpeed_ = 1.5f;
-            moveMax_ = 240;
+            moveSpeed_ = 1.0f;
+            moveMax_ = 150;
 
             // 索敵範囲
-            findSize_ = 200.0f;
+            findSize_ = 300.0f;
 
             // 生存判定
             isAlive_ = true;
@@ -62,10 +62,10 @@ void EnemyFire::InitStage2()
             // プレイヤーの攻撃とエネミーの衝突判定
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
-            collisionFire_ = false;
+            collisionPlant_ = false;
 
             // アニメーションフレーム数カウント
-            animFrame_ = 0;
+            animFrame_ = 16;
             // アニメーションのカウンタ
             animCnt_ = 0;
 
@@ -82,7 +82,7 @@ void EnemyFire::InitStage2()
     }
 }
 
-void EnemyFire::InitStage3()
+void EnemyPlant::InitStage3()
 {
     if (setInit_ == 3)
     {
@@ -115,10 +115,10 @@ void EnemyFire::InitStage3()
             // プレイヤーの攻撃とエネミーの衝突判定
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
-            collisionFire_ = false;
+            collisionPlant_ = false;
 
             // アニメーションフレーム数カウント
-            animFrame_ = 0;
+            animFrame_ = 16;
             // アニメーションのカウンタ
             animCnt_ = 0;
 
@@ -135,7 +135,7 @@ void EnemyFire::InitStage3()
     }
 }
 
-void EnemyFire::Update()
+void EnemyPlant::Update()
 {
     InitStage2();
     InitStage3();
@@ -144,7 +144,7 @@ void EnemyFire::Update()
     PlayerAttackCollision();
     EnemyAttackCollision();
     Damage();
-    enemyAttackF_->Update();
+    enemyAttackP_->Update();
 
     // プレイヤー座標
     Vector2F playerPos = player_->GetPlayerPos();
@@ -157,33 +157,33 @@ void EnemyFire::Update()
         {
             // 発見中
             isFind_ = true;
-            enemyAttackF_->SetAttack(true);
+            enemyAttackP_->SetAttack(true);
         }
         else
         {
             // 発見中でない
             isFind_ = false;
-            enemyAttackF_->SetAttack(false);
+            enemyAttackP_->SetAttack(false);
         }
     }
 
 #ifdef _DEBUG
 
     // 再出現(デバッグ用)
-    if (CheckHitKey(KEY_INPUT_B))
+    if (CheckHitKey(KEY_INPUT_N))
     {
         hp_ = 25.0f;
         isAlive_ = true;
-        collisionFire_ = false;
+        collisionPlant_ = false;
     }
 
 #endif // DEBUG
 }
 
-void EnemyFire::Draw()
+void EnemyPlant::Draw()
 {
 
-    enemyAttackF_->Draw();
+    enemyAttackP_->Draw();
 
     // プレイヤー座標
     Vector2F playerPos = player_->GetPlayerPos();
@@ -200,14 +200,14 @@ void EnemyFire::Draw()
 #endif // _DEBUG
 
     // アニメーション処理
-    if (!enemyAttackF_->GetAlive())
+    if (!isFind_ && !enemyAttackP_->GetAlive())
     {
         animCnt_++;
         if (animCnt_ >= ANIM_INTERVAL) {
             animCnt_ = 0;
             animFrame_++;
             if (animFrame_ >= ANIM_MAX) {
-                animFrame_ = 0;
+                animFrame_ = 16;
             }
         }
     }
@@ -227,7 +227,7 @@ void EnemyFire::Draw()
                 // 左向きに描画
                 DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, isLeft_);
 
-                if (!enemyAttackF_->GetAlive())
+                if (!enemyAttackP_->GetAlive())
                 {
                     isLeft_ = true;
                 }
@@ -237,7 +237,7 @@ void EnemyFire::Draw()
                 // 右向きに描画
                 DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, isLeft_);
 
-                if (!enemyAttackF_->GetAlive())
+                if (!enemyAttackP_->GetAlive())
                 {
                     isLeft_ = false;
                 }
@@ -262,7 +262,7 @@ void EnemyFire::Draw()
     }
 }
 
-void EnemyFire::Attack()
+void EnemyPlant::Attack()
 {
     if (isAttack_)
     {
@@ -270,9 +270,9 @@ void EnemyFire::Attack()
     }
 }
 
-void EnemyFire::Move()
+void EnemyPlant::Move()
 {
-    if (isAlive_ && !enemyAttackF_->GetAlive())
+    if (isAlive_ && !enemyAttackP_->GetAlive())
     {
         // 発見中でないなら動かす
         if (!isFind_)
@@ -299,7 +299,7 @@ void EnemyFire::Move()
     }
 }
 
-void EnemyFire::PlayerAttackCollision()
+void EnemyPlant::PlayerAttackCollision()
 {
     // エネミーの衝突用半径
     float enemyRadius = 32.0f;
@@ -359,7 +359,7 @@ void EnemyFire::PlayerAttackCollision()
     //}
 }
 
-void EnemyFire::EnemyAttackCollision()
+void EnemyPlant::EnemyAttackCollision()
 {
     if (isAlive_) {
         // エネミーの衝突用半径
@@ -387,19 +387,19 @@ void EnemyFire::EnemyAttackCollision()
         if (dis < (radius * radius))
         {
             // 衝突した
-            collisionFire_ = true;
+            collisionPlant_ = true;
         }
 
         // プレイヤーとエネミーの攻撃の衝突判定
         // エネミーの攻撃座標の取得
-        Vector2F attackPos = enemyAttackF_->GetPos();
+        Vector2F attackPos = enemyAttackP_->GetPos();
         // エネミーの攻撃画像のサイズ取得
-        int attackSizeX = enemyAttackF_->GetSizeX();
-        int attackSizeY = enemyAttackF_->GetSizeY();
+        int attackSizeX = enemyAttackP_->GetSizeX();
+        int attackSizeY = enemyAttackP_->GetSizeY();
         // カメラ座標の取得
         Vector2 cameraPos = camera_->GetCameraPos();
-        
-        if (enemyAttackF_->GetAlive()) {
+
+        if (enemyAttackP_->GetAlive()) {
             // エネミーの攻撃の当たり判定座標
             // 左向きのとき
             if (isLeft_) {
@@ -433,13 +433,13 @@ void EnemyFire::EnemyAttackCollision()
                 bottomAttackPos > playerPos.y)
             {
                 // 衝突した
-                collisionFire_ = true;
+                collisionPlant_ = true;
             }
         }
     }
 }
 
-void EnemyFire::Damage()
+void EnemyPlant::Damage()
 {
     // 攻撃属性を取得
     int attackColoer = player_->GetCr();
@@ -460,20 +460,20 @@ void EnemyFire::Damage()
     }
 
     // プレイヤーの攻撃属性が
-    // FireまたはNormalのとき
-    if (attackColoer == fire_ || attackColoer == normal_)
+    // PlantまたはNormalのとき
+    if (attackColoer == plant_ || attackColoer == normal_)
     {
         // 等倍
         damage_ = 10.0f;
     }
-    // Waterのとき
-    else if (attackColoer == water_)
+    // Fireのとき
+    else if (attackColoer == fire_)
     {
         // 抜群
         damage_ = 20.0f;
     }
-    // Plantのとき
-    else if (attackColoer == plant_)
+    // Waterのとき
+    else if (attackColoer == water_)
     {
         // 半減
         damage_ = 5.0f;
@@ -498,57 +498,57 @@ void EnemyFire::Damage()
     }
 }
 
-int EnemyFire::GetSizeX()
+int EnemyPlant::GetSizeX()
 {
     return SIZE_X;
 }
 
-Vector2F EnemyFire::GetPos()
+Vector2F EnemyPlant::GetPos()
 {
     return pos_;
 }
 
-void EnemyFire::SetPos(Vector2F pos)
+void EnemyPlant::SetPos(Vector2F pos)
 {
     pos_ = pos;
 }
 
-bool EnemyFire::GetAlive()
+bool EnemyPlant::GetAlive()
 {
     return isAlive_;
 }
 
-void EnemyFire::SetAlive(bool isAlive)
+void EnemyPlant::SetAlive(bool isAlive)
 {
     isAlive_ = isAlive;
 }
 
-bool EnemyFire::GetLeft()
+bool EnemyPlant::GetLeft()
 {
     return isLeft_;
 }
 
-void EnemyFire::SetLeft(bool isLeft)
+void EnemyPlant::SetLeft(bool isLeft)
 {
     isLeft_ = isLeft;
 }
 
-bool EnemyFire::GetFind()
+bool EnemyPlant::GetFind()
 {
     return isFind_;
 }
 
-void EnemyFire::SetFind(bool isFind)
+void EnemyPlant::SetFind(bool isFind)
 {
     isFind_ = isFind;
 }
 
-bool EnemyFire::GetCollisionFire()
+bool EnemyPlant::GetCollisionPlant()
 {
-    return collisionFire_;
+    return collisionPlant_;
 }
 
-void EnemyFire::SetCollisionFire(bool collisionFire)
+void EnemyPlant::SetCollisionPlant(bool collisionPlant)
 {
-    collisionFire_ = collisionFire;
+    collisionPlant_ = collisionPlant;
 }

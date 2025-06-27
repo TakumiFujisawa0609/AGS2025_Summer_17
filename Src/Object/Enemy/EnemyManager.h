@@ -2,21 +2,27 @@
 #include <vector>
 #include "EnemyBase.h"
 #include "EnemyFire.h"
-#include "EnemyAttack/EnemyAttack.h"
+#include "EnemyPlant.h"
+#include "EnemyAttack/EnemyAttackF.h"
+#include "EnemyAttack/EnemyAttackP.h"
 #include "../../Common/Vector2.h"
 class EnemyBase;
 class EnemyFire;
-class EnemyAttack;
+class EnemyPlant;
+//class EnemyWater;
+class EnemyAttackF;
+class EnemyAttackP;
+//class EnemyAttackW;
 class Camera;
 class Player;
 class Stage;
-//class EnemyWater;
-//class EnemyPlant;
+
+
 
 class EnemyManager {
 public:
 
-    void Init(EnemyAttack* enemyAttack, EnemyFire* enemyFire, Player* player, Camera* camera, Stage* stage);
+    void Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyAttackF* enemyAttackF, EnemyAttackP* enemyAttackP, Player* player, Camera* camera, Stage* stage);
     void Update();
     void Draw();
     void CollisionAttack();
@@ -28,7 +34,11 @@ private:
 
     EnemyBase* enemyBase_;
     EnemyFire* enemyFire_;
-    EnemyAttack* enemyAttack_;
+    EnemyPlant* enemyPlant_;
+    //EnemyWater* enemyWater_;
+    EnemyAttackF* enemyAttackF_;
+    EnemyAttackP* enemyAttackP_;
+    //EnemyAttackW* enemyAttackW_;
     Player* player_;
     Camera* camera_;
     Stage* stage_;
@@ -38,8 +48,5 @@ private:
     bool plantCollision_;
 
     bool collisionEnemy_;
-
-    //EnemyWater* enemyWater_;
-    //EnemyPlant* enemyPlant_;
 
 };

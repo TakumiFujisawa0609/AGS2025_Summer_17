@@ -1,9 +1,9 @@
-#include "EnemyAttack.h"
+#include "EnemyAttackF.h"
 #include "../EnemyFire.h"
 #include "../../Player/Player.h"
 #include "../../Camera/Camera.h"
 
-void EnemyAttack::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
+void EnemyAttackF::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
 {
     enemyFire_ = enemyFire;
     player_ = player;
@@ -35,12 +35,12 @@ void EnemyAttack::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
     isCntDown_ = true;
 }
 
-void EnemyAttack::Update()
+void EnemyAttackF::Update()
 {
 
 }
 
-void EnemyAttack::Draw()
+void EnemyAttackF::Draw()
 {
     // 発見中のみ攻撃クールダウン消費
     if (enemyFire_->GetFind())
@@ -114,42 +114,42 @@ void EnemyAttack::Draw()
 #endif // _DEBUG
 }
 
-Vector2F EnemyAttack::GetPos()
+Vector2F EnemyAttackF::GetPos()
 {
     return pos_;
 }
 
-void EnemyAttack::SetPos(Vector2F pos)
+void EnemyAttackF::SetPos(Vector2F pos)
 {
     pos_ = pos;
 }
 
-int EnemyAttack::GetSizeX()
+int EnemyAttackF::GetSizeX()
 {
     return SIZE_X;
 }
 
-int EnemyAttack::GetSizeY()
+int EnemyAttackF::GetSizeY()
 {
     return SIZE_Y;
 }
 
-bool EnemyAttack::GetAttack()
+bool EnemyAttackF::GetAttack()
 {
     return isAttack_;
 }
 
-void EnemyAttack::SetAttack(bool isAttack)
+void EnemyAttackF::SetAttack(bool isAttack)
 {
     isAttack_ = isAttack;
 }
 
-bool EnemyAttack::GetAlive()
+bool EnemyAttackF::GetAlive()
 {
     return isAlive_;
 }
 
-void EnemyAttack::SetAlive(bool isAlive)
+void EnemyAttackF::SetAlive(bool isAlive)
 {
     isAlive_ = isAlive;
 }
