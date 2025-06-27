@@ -95,7 +95,7 @@ void Water::Draw(void)
 		//SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(particles_[i].blendRate));
 
 		//ï`âÊ
-		DrawRotaGraphF(particles_[i].pos.x-camera_->GetCameraPos().x, particles_[i].pos.y, 2.0, 0.0, images_[particles_[i].size], true);
+		DrawRotaGraphF(particles_[i].pos.x-camera_->GetCameraPos().x, particles_[i].pos.y - camera_->GetCameraPos().y, 2.0, 0.0, images_[particles_[i].size], true);
 		//ï`âÊÉÇÅ[ÉhÇÇ‡Ç∆Ç…ñﬂÇ∑
 		//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}

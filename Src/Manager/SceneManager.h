@@ -10,6 +10,7 @@ class Fader;
 class Camera;
 
 
+
 class SceneManager
 {
 
@@ -21,7 +22,9 @@ public:
 		NONE,
 		
 		TITLE,
+		MENU,
 		GAME,
+		GAMEOVER,
 		CLEAR,
 		
 	};
@@ -58,6 +61,8 @@ public:
 private:
 
 	int clearTime_;
+
+	
 
 	// 静的インスタンス
 	static SceneManager* instance_;
@@ -97,5 +102,10 @@ private:
 
 	// フェード
 	void Fade(void);
+
+
+	
+	bool manew_;
+	int count_;
 
 };

@@ -38,6 +38,10 @@ public:
 	// 解放成功／失敗の判定
 	bool IsReleaseFail(void) const;
 
+	bool GetExit(void) const;
+
+	void SetExit(bool exit);
+
 private:
 
 	// 静的インスタンス
@@ -49,6 +53,8 @@ private:
 	// 解放失敗
 	bool isReleaseFail_;
 
+	bool exitFlag_;
+
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする
 	Application(void);
@@ -57,5 +63,7 @@ private:
 
 	// Effekseerの初期化
 	void InitEffekseer(void);
+
+	
 
 };

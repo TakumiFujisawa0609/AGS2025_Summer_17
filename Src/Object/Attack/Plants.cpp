@@ -57,7 +57,7 @@ void Plants::Draw(void)
 			/*DrawBillboard3D(
 				plantsPos, plants_SIZE_X, plants_SIZE_Y, plants_Z, 0.0f,
 				plantsImgs[plantsImgAnimCount], true);*/
-			DrawRotaGraphF(plantsPos.x - camera_->GetCameraPos().x, plantsPos.y, 1.0f, 0.0f, plantsImgs[plantsImgAnimCount], TRUE);
+			DrawRotaGraphF(plantsPos.x - camera_->GetCameraPos().x, plantsPos.y - camera_->GetCameraPos().y, 1.0f, 0.0f, plantsImgs[plantsImgAnimCount], TRUE);
 		}
 		else
 		{

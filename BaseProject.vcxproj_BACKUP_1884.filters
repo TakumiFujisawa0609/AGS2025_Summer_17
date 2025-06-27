@@ -63,7 +63,6 @@
     <ClInclude Include="Src\Object\Stage\Stage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="Src\Object\Enemy\EnemyManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -71,9 +70,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Enemy\EnemyFire.h">
-=======
+	  <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Fps\FpsControll.h">
->>>>>>> 846023c67e41f426cee2805089b0484ec0ea1fe5
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -126,7 +125,6 @@
     <ClCompile Include="Src\Object\Stage\Stage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -134,9 +132,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Enemy\EnemyFire.cpp">
-=======
+	  <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Fps\FpsControll.cpp">
->>>>>>> 846023c67e41f426cee2805089b0484ec0ea1fe5
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,7 +1,6 @@
 #pragma once
 #include"../../Common/Vector2.h"
 class Player;
-class GameScene;
 
 class Camera
 {
@@ -17,7 +16,6 @@ private:
 
 
 	//クラス読み込み
-	GameScene* gameScene_;//ゲームシーンのポインタ
 	Player* player_;//プレイヤーのポインタ
 
 
@@ -27,7 +25,7 @@ public:
 	//デストラクタ
 	~Camera();
 	//初期化
-	void Init(Player*player,GameScene*gameScene);
+	void Init(Player*player);
 	//更新
 	void Update();
 	//描画

@@ -4,12 +4,20 @@
 #include <vector>
 
 class Player;
+class StageManager;
 class EnemyManager;
+class EnemyFire;
+class EnemyPlant;
+//class EnemyWater;
+class EnemyAttackF;
+class EnemyAttackP;
+//class EnemyAttackW;
 class Stage;
 class Camera;
 class Wall;
 class Blast;
 class Plants;
+class PlayerUi;
 class Water;
 
 class GameScene : public SceneBase
@@ -24,6 +32,12 @@ private:
 	Player* player_;
 	// エネミー
 	EnemyManager* enemyManager_;
+	EnemyFire* enemyFire_;
+	EnemyPlant* enemyPlant_;
+	//EnemyWater* enemyWater_;
+	EnemyAttackF* enemyAttackF_;
+	EnemyAttackP* enemyAttackP_;
+	//EnemyAttackW* enemyAttackW_;
 	// ステージ
 	Stage* stage_;
 	// カメラ
@@ -38,10 +52,13 @@ private:
 	//水
 	Water* water_;
 
+	StageManager* stageManager_;
+	PlayerUi* playerUi_;
 
 
 	//背景
 	int backImg_;
+
 
 	
 

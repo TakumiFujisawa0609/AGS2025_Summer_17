@@ -1,25 +1,31 @@
 #pragma once
+#include<DxLib.h>
 #include "SceneBase.h"
-class ClearScene : public SceneBase
-{
+#include "../Manager/ResourceManager.h"
+#include "../Manager/SceneManager.h"
 
+
+
+
+class GameOverScene : public SceneBase
+{
 public:
 	// コンストラクタ
-	ClearScene(void) = default;
+	GameOverScene(void);
+
 	// デストラクタ
-	~ClearScene(void) = default;
+	~GameOverScene(void);
 	// 初期化
 	void Init(void);
+
 	// 更新
 	void Update(void);
+
 	// 描画
 	void Draw(void);
-	
 private:
 
-	int Img_; // 背景画像
-
-	int clearImg_; // クリア画像
+	int img_;  // 画像ハンドル
 
 	int  blinkCycle; // 点滅周期
 

@@ -3,15 +3,21 @@
 #include "../Common/Vector2.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/SceneManager.h"
+#include "../Manager/StageManager.h"
 #include "../Manager/ResourceManager.h"
 #include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
 #include "../Object/Enemy/EnemyManager.h"
+#include "../Object/Enemy/EnemyFire.h"
+#include "../Object/Enemy/EnemyPlant.h"
+#include "../Object/Enemy/EnemyAttack/EnemyAttackF.h"
+#include "../Object/Enemy/EnemyAttack/EnemyAttackP.h"
 #include "../Object/Stage/Stage.h"
 #include "../Object/Camera/Camera.h"
 #include "../Object/Wall/Wall.h"
 #include "../Object/Attack/Blast.h"
 #include "../Object/Attack/Plants.h"
+#include "../Object/Ui/PlayerUi.h"
 #include "../Object/Attack/Water.h"
 #include "GameScene.h"
 
@@ -30,6 +36,10 @@ void GameScene::Init(void)
 	player_ = new Player();
 	//エネミー
 	enemyManager_ = new EnemyManager();
+	enemyFire_ = new EnemyFire();
+	enemyPlant_ = new EnemyPlant();
+	enemyAttackF_ = new EnemyAttackF();
+	enemyAttackP_ = new EnemyAttackP();
 	// ステージ
 	stage_ = new Stage();
 	// ステージ
@@ -46,36 +56,48 @@ void GameScene::Init(void)
 	//水
 	water_ = new Water();
 
+	stageManager_ = new StageManager();
+
+	playerUi_ = new PlayerUi();
+
 
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 
+
 	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
+<<<<<<< HEAD
 	stage_->Init(this, player_, camera_);
 	camera_->Init(player_, this);
 	enemyManager_->Init(camera_);
+=======
+	stage_->Init(player_, camera_);
+	camera_->Init(player_);
+	enemyManager_->Init(enemyFire_, enemyPlant_, enemyAttackF_, enemyAttackP_, player_, camera_, stage_);
+>>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
 
 	//enemy_->Init();
 	wall_->Init(camera_);
 
+	playerUi_->Init(player_);
 
+	stageManager_->Init(player_, enemyManager_, enemyFire_, stage_, camera_, wall_, blast_, plants_, water_);
 
 
 
 	blast_->Init(camera_);
 	water_->Init(camera_);
 	plants_->Init(camera_);
+	
 }
 
 void GameScene::Update(void)
 {
 	// 入力の更新
 	InputManager& ins = InputManager::GetInstance();
-	// ステージの更新
-	stage_->Update();
 
-	// プレイヤーの更新
-	player_->Update();
+	stageManager_->Update();
 
+<<<<<<< HEAD
 	// カメラの更新
 	camera_->Update();
 
@@ -87,8 +109,29 @@ void GameScene::Update(void)
 	blast_->Update();
 	water_->Update();
 	plants_->Update();
+=======
+	playerUi_->Update();
 
-	if (ins.IsTrgDown(KEY_INPUT_N))
+	//// ステージの更新
+	//stage_->Update();
+
+	//// プレイヤーの更新
+	//player_->Update();
+>>>>>>> c8f9213a9d361dd0a45de5ff887909b6360d66f3
+
+	//// エネミーの更新
+	//enemyManager_->Update();
+
+	//// カメラの更新
+	//camera_->Update();
+
+	//// 壁の更新
+	//wall_->Update();
+	//blast_->Update();
+	//water_->Update();
+	//plants_->Update();
+
+	/*if (ins.IsTrgDown(KEY_INPUT_N))
 	{
 		Vector2 pos;
 		pos.x = 100;
@@ -117,42 +160,46 @@ void GameScene::Update(void)
 		
 		plants_->SetPlantsPos(pos);
 		plants_->SetIsPlants(true);
-	}
+	}*/
 	// シーン遷移
-	if (ins.IsTrgDown(KEY_INPUT_R)||player_->GetPlayerPos().x>64 * 78)
+	/*if (player_->GetPlayerPos().x>64 * 78)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
-	}
+	}*/
 
 }
 
 void GameScene::Draw(void)
 {
-
-	//背景の描画
-	DrawGraph(0, 0, backImg_, true);
 	
-	// ステージの描画
-	stage_->Draw();
+	stageManager_->Draw();
+	playerUi_->Draw();
+	//// ステージの描画
+	//stage_->Draw();
 
-	// プレイヤーの描画
-	player_->Draw();
+	//// プレイヤーの描画
+	//player_->Draw();
 
-	//壁の描画
-	wall_->Draw();
+	////壁の描画
+	//wall_->Draw();
+	//
+	//// ステージの描画
+	//stage_->Draw();
+	//
+	//// エネミーの描画
+	//enemyManager_->Draw();
+
+	//blast_->Draw();
+	//water_->Draw();
+	//plants_->Draw();
+
 	
-	// ステージの描画
-	stage_->Draw();
-	
-	// エネミーの描画
-	enemyManager_->Draw();
-
-	blast_->Draw();
-	water_->Draw();
-	plants_->Draw();
-
+#ifdef _DEBUG
 	DrawFormatString(0, 0, 0x000000, "GameScene");
-	
+
+
+
+#endif // DEBUG
 
 }
 
@@ -168,4 +215,7 @@ void GameScene::Release()
 	delete water_;
 	plants_->Release();
 	delete plants_;
+	delete enemyManager_;
+
+	
 }

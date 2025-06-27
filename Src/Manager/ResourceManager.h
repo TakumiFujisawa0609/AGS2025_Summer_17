@@ -19,6 +19,18 @@ public:
 		FWALL,
 		WWALL,
 		WSPHERE,
+		HPUI,
+		N,
+		B,
+		P,
+		F,
+		MOVE,
+		MOVES,
+		K,
+		NBPF,
+		JANP,
+
+		
 
 
 		//‰æ‘œ‚Ì—ñ‹“
