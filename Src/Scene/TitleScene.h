@@ -28,4 +28,6 @@ private:
 
 	float frameCount;
 
+	int count_;
+
 };

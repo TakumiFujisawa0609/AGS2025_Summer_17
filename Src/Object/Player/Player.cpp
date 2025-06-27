@@ -27,111 +27,116 @@ Player::~Player()
 void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water* water, Plants* plants)
 {
 
+	
+
 	//カメラの取得
-	camera_ = camera;
+	camera_ = camera; // 引数で渡されたカメラを保持
 
 	//ステージの取得
-	stage_ = stage;
+	stage_ = stage; // ステージ情報を保持
 
 	//壁の取得
-	wall_ = wall;
+	wall_ = wall; // 壁オブジェクトを保持
 
-	blast_ = blast;
+	blast_ = blast; // 爆発（攻撃エフェクトなど）を保持
 
-	water_ = water;
+	water_ = water; // 水エフェクト（攻撃判定等）を保持
 
-	plants_ = plants;
-
-	
+	plants_ = plants; // 植物オブジェクト（当たり判定等）を保持
 
 	// 画像の読み込み
-	ResourceManager& res = ResourceManager::GetInstance();
-	img_ = res.Load(ResourceManager::SRC::PLAYERS).handleIds_;
+	ResourceManager& res = ResourceManager::GetInstance(); // リソースマネージャのインスタンス取得
 
-	armImg_ = res.Load(ResourceManager::SRC::PLAYERARM).handleIds_;
+	img_ = res.Load(ResourceManager::SRC::PLAYERS).handleIds_; // プレイヤー画像の読み込み（分割画像）
 
-	sordImg_ = LoadGraph("Data/Image/Player/Sord.png");
-	stageSize_=stage_->CHIP_SIZE_X;
-	
+	armImg_ = res.Load(ResourceManager::SRC::PLAYERARM).handleIds_; // プレイヤーの腕画像の読み込み
+
+	sordImg_ = LoadGraph("Data/Image/Player/Sord.png"); // 剣の画像を読み込み（単体）
+
+	stageSize_ = stage_->CHIP_SIZE_X; // ステージの1マスの幅を取得（横チップサイズ）
+
 	// 初期位置設定
-	pos_.x = stageSize_*2;
-	pos_.y = stageSize_*8;
-	invCnt_ = 0;
-	isAlive_ = true;
-	
+	pos_.x = stageSize_ * 2; // X座標を2マス目に設定
+	pos_.y = stageSize_ * 8; // Y座標を8マス目に設定
+
+	invCnt_ = 0; // 無敵時間カウンタを初期化
+	isAlive_ = true; // 生存フラグをtrueに設定
+
 	//アニメーション初期化
-	armAngle_= AsoUtility::Deg2RadF(0.0f);
-	animationTime_ = 0.0f;
-	animationCount_ = 0;
+	armAngle_ = AsoUtility::Deg2RadF(0.0f); // 腕の初期角度を0度に設定（ラジアン）
+	animationTime_ = 0.0f; // アニメーション経過時間を初期化
+	animationCount_ = 0; // アニメーションカウントを初期化
 
 	//移動タイプ
-	moveType_ = MOVE_TYPE::STOP;
-	
-	//属性タイプ
-	elementType_ = ELEMENT_TYPE::NORMAL;
-	cr_ = 0xffffff;
-	
-	cameraPos_ = camera_->GetCameraPos();
+	moveType_ = MOVE_TYPE::STOP; // プレイヤーの移動状態を停止に設定
 
+	//属性タイプ
+	elementType_ = ELEMENT_TYPE::NORMAL; // 属性タイプをノーマルに設定
+	cr_ = 0xffffff; // プレイヤーの色（白）を設定（RGB）
+
+	cameraPos_ = camera_->GetCameraPos(); // 現在のカメラ位置を取得して保持
 
 	//攻撃
-	isAttack_ = true;
-	isPoint_ = false;
-	dirChange_ = true;
-	isSotd_ = false;
-	attackPos_.x = 0;
-	attackPos_.y = 0;
-	movePos = 0.0f;
+	isAttack_ = true; // 攻撃状態をtrueに設定（初期値としては注意が必要）
+	isPoint_ = false; // 攻撃ポイント判定を無効に
+	dirChange_ = true; // 向き変更フラグをtrueに
+	isSword_ = false; // 剣の表示・使用フラグをfalseに（スペルミスの可能性あり）
+
+	attackPos_.x = 0; // 攻撃座標Xを初期化
+	attackPos_.y = 0; // 攻撃座標Yを初期化
+	movePos = 0.0f; // 移動距離（方向ベクトルの倍率など）を初期化
+
 	//攻撃ポイント(Init)
-	attckAnglePoint_.x = 0;
-	attckAnglePoint_.y = 0;
+	attckAnglePoint_.x = 0; // 攻撃角度に対応するX座標を初期化
+	attckAnglePoint_.y = 0; // 攻撃角度に対応するY座標を初期化
 
 	/*attckPoint_.x = pos_.x + cosf(armAngle_) * 100;
 	attckPoint_.y = pos_.y + cosf(armAngle_) * 100;*/
+	// 攻撃ポイントのベクトル計算（未使用のままコメントアウト）
 
-	id_ = 0;
+	id_ = 0; // プレイヤーの識別IDを0に初期化
 
-	hp_ = MAX_HP;
-	mp_ = MAX_MP;
+	hp_ = MAX_HP; // HPを最大値に設定
+	mp_ = MAX_MP; // MPを最大値に設定
 
-	regeneCnt_ = 30;
-	mpRegene_ = 1;
+	regeneCnt_ = 30; // 自動回復用のカウント間隔を設定（30フレームごと）
+	mpRegene_ = 1; // MPの自動回復量を設定（1ポイント）
 
 }
 void Player::Update()
 {
+	
+
 	// プレイヤーの再出現処理
-	if (isAlive_ == false)
+	if (isAlive_ == false) // プレイヤーが死亡状態なら
 	{
-		isAlive_ = true;
+		isAlive_ = true; // 生存状態に戻す（復活）
 		// 無敵時間
-		invCnt_ = 60;
+		invCnt_ = 60; // 復活直後は60フレームの無敵時間
 	}
 	//無敵時間処理
-	if (invCnt_ > 0)
+	if (invCnt_ > 0) // 無敵時間が残っていれば
 	{
-		invCnt_--;
+		invCnt_--; // フレームごとにカウントを減らす
 	}
-	id_=stage_->GetStageId();
 
+	id_ = stage_->GetStageId(); // 現在のステージIDを取得して保持
 
-	MoveChange();
+	MoveChange(); // プレイヤーの移動タイプ変更処理
 
-	Move();
+	Move(); // プレイヤーの移動処理
 
-	Anime();
+	Anime(); // アニメーション更新処理（フレームに応じた画像の切り替え）
 
-	Attack();
+	Attack(); // 攻撃処理
 
-	ElementChange();
+	ElementChange(); // 属性変更処理
 
-	ReSpawn();
+	ReSpawn(); // 再出現処理
 
-	Hp();
+	Hp(); // HPに関する処理
 
-	Mp();
-
-
+	Mp(); // MPに関する処理
 }
 void Player::Draw()
 {
@@ -165,7 +170,7 @@ void Player::Draw()
 		}
 
 	}
-	if (isSotd_ == true)
+	if (isSword_ == true)
 	{
 		DrawRotaGraphF(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y - cpos.y, 1.0f, armAngle_ + AsoUtility::Deg2RadF(130.0f), sordImg_, true);
 	}
@@ -186,6 +191,7 @@ void Player::Draw()
 	if (GetIsEF() == true)
 	{
 		radius_+=3;
+		//属性変更時のエフェクト
 		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_, GetCr(), false);
 		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_ + 1, GetCr(), false);
 		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_ + 2, GetCr(), false);
@@ -441,7 +447,7 @@ void Player::Anime()
 		regeneCnt_--;
 		if (regeneCnt_ < 0)
 		{
-			regeneCnt_ = 60;
+			regeneCnt_ = 30;
 			SetMp(GetMp() + 1);
 			if (GetMp() >= 100)
 			{
@@ -468,81 +474,75 @@ void Player::Anime()
 //攻撃タイプ別処理
 void Player::Attack()
 {
-	isSotd_ = false;
+	
+
+	isSword_ = false; // 剣を振っていない状態に初期化
+
 	//攻撃処理
-	InputManager& ins = InputManager::GetInstance();
-	if (isAttack_)
+	InputManager& ins = InputManager::GetInstance(); // 入力マネージャのインスタンス取得
+
+	if (isAttack_) // 攻撃状態の場合のみ処理する
 	{
-		if (GetIsEF() == false)
+		if (GetIsEF() == false) // 属性変更中でなければ実行
 		{
-			if (ins.IsTrgDown(KEY_INPUT_1))
+			if (ins.IsTrgDown(KEY_INPUT_1)) // キー1押下で属性を植物に
 			{
-				SetIsEF(true);
-				
-				elementType_ = ELEMENT_TYPE::PLANT;
-			
+				SetIsEF(true); // 属性変更フラグを立てる
+				elementType_ = ELEMENT_TYPE::PLANT; // 植物属性に変更
 			}
-			if (ins.IsTrgDown(KEY_INPUT_2))
+			if (ins.IsTrgDown(KEY_INPUT_2)) // キー2押下で属性を水に
 			{
 				SetIsEF(true);
-				
 				elementType_ = ELEMENT_TYPE::WATER;
-
 			}
-			if (ins.IsTrgDown(KEY_INPUT_3))
+			if (ins.IsTrgDown(KEY_INPUT_3)) // キー3押下で属性を火に
 			{
 				SetIsEF(true);
-				
 				elementType_ = ELEMENT_TYPE::FIRE;
-
-
 			}
-			if (ins.IsTrgDown(KEY_INPUT_4))
+			if (ins.IsTrgDown(KEY_INPUT_4)) // キー4押下で属性をノーマルに
 			{
 				SetIsEF(true);
-				
 				elementType_ = ELEMENT_TYPE::NORMAL;
-
 			}
-			if (ins.IsTrgDown(KEY_INPUT_T))
+			if (ins.IsTrgDown(KEY_INPUT_T)) // キーTで属性を順送り変更
 			{
 				SetIsEF(true);
-				if (elementType_ == ELEMENT_TYPE::FIRE)
+				if (elementType_ == ELEMENT_TYPE::FIRE) // 最後（火）ならノーマルに戻す
 				{
 					elementType_ = ELEMENT_TYPE::NORMAL;
-					
 				}
 				else
 				{
-					
-					elementType_ = static_cast<ELEMENT_TYPE>(static_cast<int>(elementType_) + 1);
+					elementType_ = static_cast<ELEMENT_TYPE>(static_cast<int>(elementType_) + 1); // 次の属性に進める
 				}
 			}
 		}
-
 	}
 
-
-
+	// 火属性攻撃処理
 	if (elementType_ == ELEMENT_TYPE::FIRE)
 	{
-		AttackChange();
-		if (isPoint_)
+		AttackChange(); // 攻撃時の状態変更処理
+		if (isPoint_) // 攻撃座標が有効なら
 		{
-			if (id_ == 3)
+			if (id_ == 3) // ステージID 3 のとき
 			{
-				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || wall_->IsWaterCollision2(attackPos_) == true || wall_->IsFlaereCollision2(attackPos_) == true ||wall_->IsWaterCollision3(attackPos_) == true || wall_->IsFlaereCollision3(attackPos_) == true ||stage_->IsCollisionStage3(attackPos_) == true)
+				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true ||
+					wall_->IsWaterCollision2(attackPos_) == true || wall_->IsFlaereCollision2(attackPos_) == true ||
+					wall_->IsWaterCollision3(attackPos_) == true || wall_->IsFlaereCollision3(attackPos_) == true ||
+					stage_->IsCollisionStage3(attackPos_) == true)
 				{
 					isPoint_ = false;
 					isAttack_ = true;
 				}
 				else if (wall_->IsPlantsCollision(attackPos_) == true)
 				{
-					wall_->SetIsPlants(false);
+					wall_->SetIsPlants(false); // 植物を消す
 					isPoint_ = false;
 					isAttack_ = true;
-					blast_->SetBlastPos(attackPos_);
-					blast_->SetIsBlast(true);
+					blast_->SetBlastPos(attackPos_); // 爆発位置をセット
+					blast_->SetIsBlast(true); // 爆発フラグを立てる
 				}
 				else if (wall_->IsPlantsCollision2(attackPos_) == true)
 				{
@@ -560,16 +560,14 @@ void Player::Attack()
 					blast_->SetBlastPos(attackPos_);
 					blast_->SetIsBlast(true);
 				}
-
 			}
-			else if (id_ == 1 || id_ == 2)
+			else if (id_ == 1 || id_ == 2) // 他のステージ
 			{
-				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true ||
+					stage_->IsCollisionStage(attackPos_) == true)
 				{
-
 					isPoint_ = false;
 					isAttack_ = true;
-
 				}
 				else if (wall_->IsPlantsCollision(attackPos_) == true)
 				{
@@ -579,11 +577,11 @@ void Player::Attack()
 					blast_->SetBlastPos(attackPos_);
 					blast_->SetIsBlast(true);
 				}
-
 			}
 		}
 	}
 
+	// 水属性攻撃処理
 	if (elementType_ == ELEMENT_TYPE::WATER)
 	{
 		AttackChange();
@@ -591,22 +589,20 @@ void Player::Attack()
 		{
 			if (id_ == 3)
 			{
-				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true || wall_->IsWaterCollision2(attackPos_) == true || wall_->IsPlantsCollision2(attackPos_) == true || wall_->IsWaterCollision3(attackPos_) == true || wall_->IsPlantsCollision3(attackPos_) == true || stage_->IsCollisionStage3(attackPos_) == true)
+				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true ||
+					wall_->IsWaterCollision2(attackPos_) == true || wall_->IsPlantsCollision2(attackPos_) == true ||
+					wall_->IsWaterCollision3(attackPos_) == true || wall_->IsPlantsCollision3(attackPos_) == true ||
+					stage_->IsCollisionStage3(attackPos_) == true)
 				{
-
-
-
 					isPoint_ = false;
 					isAttack_ = true;
-
-
 				}
 				else if (wall_->IsFlaereCollision(attackPos_) == true)
 				{
-					wall_->SetIsFlare(false);
+					wall_->SetIsFlare(false); // 炎オブジェクトを削除
 					isPoint_ = false;
 					isAttack_ = true;
-					water_->CreateEffect(attackPos_);
+					water_->CreateEffect(attackPos_); // 水エフェクト生成
 				}
 				else if (wall_->IsFlaereCollision2(attackPos_) == true)
 				{
@@ -623,14 +619,13 @@ void Player::Attack()
 					water_->CreateEffect(attackPos_);
 				}
 			}
-			else if(id_ == 1 || id_ == 2)
+			else if (id_ == 1 || id_ == 2)
 			{
-				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
+				if (wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision(attackPos_) == true ||
+					stage_->IsCollisionStage(attackPos_) == true)
 				{
-
 					isPoint_ = false;
 					isAttack_ = true;
-
 				}
 				else if (wall_->IsFlaereCollision(attackPos_) == true)
 				{
@@ -640,10 +635,10 @@ void Player::Attack()
 					water_->CreateEffect(attackPos_);
 				}
 			}
-
 		}
-
 	}
+
+	// 植物属性攻撃処理
 	if (elementType_ == ELEMENT_TYPE::PLANT)
 	{
 		AttackChange();
@@ -651,23 +646,22 @@ void Player::Attack()
 		{
 			if (id_ == 3)
 			{
-				if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision2(attackPos_) == true || wall_->IsFlaereCollision2(attackPos_) == true || wall_->IsWaterCollision2(attackPos_) == true || wall_->IsPlantsCollision3(attackPos_) == true || wall_->IsFlaereCollision3(attackPos_) == true || wall_->IsWaterCollision3(attackPos_) == true || stage_->IsCollisionStage3(attackPos_) == true)
+				if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true ||
+					wall_->IsWaterCollision(attackPos_) == true || wall_->IsPlantsCollision2(attackPos_) == true ||
+					wall_->IsFlaereCollision2(attackPos_) == true || wall_->IsWaterCollision2(attackPos_) == true ||
+					wall_->IsPlantsCollision3(attackPos_) == true || wall_->IsFlaereCollision3(attackPos_) == true ||
+					wall_->IsWaterCollision3(attackPos_) == true || stage_->IsCollisionStage3(attackPos_) == true)
 				{
-
-
-
 					isPoint_ = false;
 					isAttack_ = true;
-
 				}
 				else if (wall_->IsSphereCollision(attackPos_) == true)
 				{
-					wall_->SetIsSphere(false);
+					wall_->SetIsSphere(false); // 球体オブジェクト消去
 					isPoint_ = false;
 					isAttack_ = true;
-					plants_->SetPlantsPos(attackPos_);
-					plants_->SetIsPlants(true);
-
+					plants_->SetPlantsPos(attackPos_); // 植物の出現位置設定
+					plants_->SetIsPlants(true); // 植物出現フラグを立てる
 				}
 				else if (wall_->IsSphereCollision2(attackPos_) == true)
 				{
@@ -676,7 +670,6 @@ void Player::Attack()
 					isAttack_ = true;
 					plants_->SetPlantsPos(attackPos_);
 					plants_->SetIsPlants(true);
-
 				}
 				else if (wall_->IsSphereCollision3(attackPos_) == true)
 				{
@@ -685,19 +678,15 @@ void Player::Attack()
 					isAttack_ = true;
 					plants_->SetPlantsPos(attackPos_);
 					plants_->SetIsPlants(true);
-
 				}
-
-				
 			}
 			else if (id_ == 1 || id_ == 2)
 			{
-				if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true || wall_->IsWaterCollision(attackPos_) == true ||stage_->IsCollisionStage(attackPos_) == true)
+				if (wall_->IsPlantsCollision(attackPos_) == true || wall_->IsFlaereCollision(attackPos_) == true ||
+					wall_->IsWaterCollision(attackPos_) == true || stage_->IsCollisionStage(attackPos_) == true)
 				{
-
 					isPoint_ = false;
 					isAttack_ = true;
-
 				}
 				else if (wall_->IsSphereCollision(attackPos_) == true)
 				{
@@ -706,63 +695,52 @@ void Player::Attack()
 					isAttack_ = true;
 					plants_->SetPlantsPos(attackPos_);
 					plants_->SetIsPlants(true);
-
-
-
 				}
 			}
 		}
 	}
+
+	// ノーマル属性（剣による攻撃）
 	if (elementType_ == ELEMENT_TYPE::NORMAL)
 	{
-		if (dir_ == AsoUtility::DIR::RIGHT)
+		if (dir_ == AsoUtility::DIR::RIGHT) // 右向き
 		{
-			if (ins.IsNew(KEY_INPUT_K))
+			if (ins.IsNew(KEY_INPUT_K)) // Kキーが押された瞬間
 			{
-				isSotd_ = true;
+				isSword_ = true; // 剣を振っている状態に
 				if (armAngle_ <= AsoUtility::Deg2RadF(0.0f))
 				{
-					armAngle_ = AsoUtility::Deg2RadF(180.0f);
+					armAngle_ = AsoUtility::Deg2RadF(180.0f); // 剣振りの開始角度
 				}
-
-				armAngle_ += AsoUtility::Deg2RadF(7.0f);
-
-				if (armAngle_ >= AsoUtility::Deg2RadF(315.0f))
+				armAngle_ += AsoUtility::Deg2RadF(7.0f); // 回転速度で腕を動かす
+				if (armAngle_ >= AsoUtility::Deg2RadF(315.0f)) // 1周したらリセット
 				{
 					armAngle_ = AsoUtility::Deg2RadF(180.0f);
 				}
-				//
-				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
-				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
-				
-
+				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100; // 攻撃方向のX座標
+				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100; // 攻撃方向のY座標
 			}
-			else if (!ins.IsNew(KEY_INPUT_K))
+			else if (!ins.IsNew(KEY_INPUT_K)) // キーが離されたら初期化
 			{
 				armAngle_ = AsoUtility::Deg2RadF(0.0f);
 			}
 		}
-		else if (dir_ == AsoUtility::DIR::LEFT)
+		else if (dir_ == AsoUtility::DIR::LEFT) // 左向き
 		{
 			if (ins.IsNew(KEY_INPUT_K))
 			{
-				isSotd_ = true;
+				isSword_ = true;
 				if (armAngle_ >= AsoUtility::Deg2RadF(0.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
 				}
-
-				armAngle_ -= AsoUtility::Deg2RadF(7.0f);
-
-				if (armAngle_ <= AsoUtility::Deg2RadF(-315.0f))
+				armAngle_ -= AsoUtility::Deg2RadF(7.0f); // 左方向に回転
+				if (armAngle_ <= AsoUtility::Deg2RadF(-315.0f)) // -360度を超えたらリセット
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
 				}
-				//
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
-				
-
 			}
 			else if (!ins.IsNew(KEY_INPUT_K))
 			{
@@ -770,8 +748,6 @@ void Player::Attack()
 			}
 		}
 	}
-
-
 }
 
 void Player::Hp()
@@ -831,57 +807,75 @@ void Player::AttackChange(void)
 {
 
 
+	
+
+	// 入力マネージャのインスタンスを取得
 	InputManager& ins = InputManager::GetInstance();
+
+	// 攻撃が可能な状態かどうか
 	if (isAttack_)
 	{
+		// MPが10以上あれば攻撃できる
 		if (GetMp() >= 10)
 		{
-
+			// キーKが離された瞬間（キーアップ）を検出
 			if (ins.IsTrgUp(KEY_INPUT_K))
 			{
-				mp_ -= 10;
+				mp_ -= 10; // 攻撃にMPを10消費
+
+				// 攻撃位置を現在の角度から計算されたポイントに設定
 				attackPos_.x = attckAnglePoint_.x;
 				attackPos_.y = attckAnglePoint_.y;
 
-				movePos = upCnt;
-				isPoint_ = true;
-				isAttack_ = false;
+				movePos = upCnt;     // 上に飛ばす力を設定（溜めた量）
+				isPoint_ = true;     // 攻撃の弾が存在している状態
+				isAttack_ = false;   // 攻撃待機状態から外れる（次の攻撃準備まで待つ）
 			}
 		}
 	}
+
+	// 弾（攻撃ポイント）が存在している場合の処理
 	if (isPoint_) {
-		attackPos_.y -= movePos;
-		movePos -= GRAVITY;
+		attackPos_.y -= movePos; // 上方向に移動（ジャンプと同じイメージ）
+		movePos -= GRAVITY;      // 重力で徐々に落下するように減速
 	}
+
+	// ステージIDが1か2の場合（通常の地形マップ）
 	if (id_ == 2 || id_ == 1)
 	{
+		// 攻撃のY座標が画面外（ステージ下部）に出たら弾を消す
 		if (attackPos_.y > (stageSize_ * 12))
 		{
-			
 			isPoint_ = false;
-			isAttack_ = true;
+			isAttack_ = true; // 攻撃可能状態に戻す
 		}
 	}
+	// ステージIDが3（別レイヤーマップ等）の場合
 	else if (id_ == 3)
 	{
 		if (attackPos_.y > (stageSize_ * 24))
 		{
-			
 			isPoint_ = false;
 			isAttack_ = true;
 		}
 	}
 
+	// 右向きの処理
 	if (dir_ == AsoUtility::DIR::RIGHT)
 	{
-
+		// キーKが押されている間（連打ではなく保持）
 		if (ins.IsNew(KEY_INPUT_K))
 		{
+			// 攻撃可能なら、向きを変えたことを記録
 			if (isAttack_)
 			{
 				dirChange_ = true;
 			}
+
+			// 腕の角度を下方向に回転（右回転なのでマイナス）
 			armAngle_ -= AsoUtility::Deg2RadF(5.0f);
+
+			// 角度に応じて溜めカウントを設定（1段階ずつ増える）
 			for (int i = 1; i <= 11; ++i)
 			{
 				if (armAngle_ <= AsoUtility::Deg2RadF(-10.0f * i))
@@ -890,29 +884,38 @@ void Player::AttackChange(void)
 				}
 			}
 
+			// 角度が-120度を超えたらリセット
 			if (armAngle_ < AsoUtility::Deg2RadF(-120.0f))
 			{
 				armAngle_ = AsoUtility::Deg2RadF(0.0f);
 				upCnt = 0;
 			}
 		}
-		else if (!ins.IsNew(KEY_INPUT_K))
+		else if (!ins.IsNew(KEY_INPUT_K)) // キーが押されていなければ角度をリセット
 		{
 			armAngle_ = AsoUtility::Deg2RadF(0.0f);
 		}
+
+		// 角度に基づいて攻撃角度ポイントを更新（剣の先端の位置など）
 		attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 30;
 		attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 30;
-
 	}
+	// 左向きの処理
 	else if (dir_ == AsoUtility::DIR::LEFT)
 	{
+		// 攻撃可能なら向きフラグをfalseに（左）
 		if (isAttack_)
 		{
 			dirChange_ = false;
 		}
+
+		// キーKが押されている間
 		if (ins.IsNew(KEY_INPUT_K))
 		{
+			// 腕の角度を左回転（+）
 			armAngle_ += AsoUtility::Deg2RadF(5.0f);
+
+			// 角度に応じて溜めカウントを増やす
 			for (int i = 1; i <= 11; ++i)
 			{
 				if (armAngle_ >= AsoUtility::Deg2RadF(10.0f * i))
@@ -920,23 +923,25 @@ void Player::AttackChange(void)
 					upCnt = i;
 				}
 			}
+
+			// 角度が+120度を超えたらリセット
 			if (armAngle_ > AsoUtility::Deg2RadF(120.0f))
 			{
 				armAngle_ = AsoUtility::Deg2RadF(0.0f);
 				upCnt = 12;
 			}
-
 		}
-		else if (!ins.IsNew(KEY_INPUT_K))
+		else if (!ins.IsNew(KEY_INPUT_K)) // 押してないなら角度を戻す
 		{
-
 			armAngle_ = AsoUtility::Deg2RadF(0.0f);
-
 		}
+
+		// 左向きの場合の角度から攻撃角度ポイントを算出
 		attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 30;
 		attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 30;
 	}
 
+	// 攻撃位置のX座標を向きに応じて移動（右なら＋、左なら?）
 	if (dirChange_)
 	{
 		attackPos_.x += MOVE_POWER;

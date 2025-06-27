@@ -13,311 +13,272 @@ class Player
 {
 public:
 
+	// プレイヤーの移動タイプを定義
 	enum class MOVE_TYPE
 	{
-		NONE,
-		STOP,
-		MOVE,
+		NONE,  // 未定義 or 使用しない状態
+		STOP,  // 静止状態
+		MOVE,  // 移動中
 	};
 
+	// プレイヤーの属性タイプを定義
 	enum class ELEMENT_TYPE
 	{
-		NONE,
-		NORMAL,
-		WATER,
-		PLANT,
-		FIRE,
+		NONE,    // 未定義
+		NORMAL,  // 通常（無属性）
+		WATER,   // 水属性
+		PLANT,   // 植物属性
+		FIRE,    // 火属性
 	};
 
+	// ============================= 定数定義 =============================
 
-	//定数
-	// 当たり判定サイズ
-	static constexpr int COL_SIZE_X = 58;						// 横
-	static constexpr int COL_SIZE_Y = 58;						// 縦
-	static constexpr int HALF_COL_SIZE_X = COL_SIZE_X / 2;	//横半分
-	static constexpr int HALF_COL_SIZE_Y = COL_SIZE_Y / 2;	//縦半分
-	static constexpr int COL_OFFSET = 1;						//補正値
-	// 移動速度
-	static constexpr float MOVE_SPEED = 2.0f;
-	static constexpr float MOVE_POWER = 5.0f;
+	// 当たり判定のサイズ（プレイヤーの体の大きさ）
+	static constexpr int COL_SIZE_X = 58; // 横幅
+	static constexpr int COL_SIZE_Y = 58; // 高さ
+	static constexpr int HALF_COL_SIZE_X = COL_SIZE_X / 2; // 横半分（中心基準計算用）
+	static constexpr int HALF_COL_SIZE_Y = COL_SIZE_Y / 2; // 縦半分（中心基準計算用）
+	static constexpr int COL_OFFSET = 1; // 当たり判定の誤差補正用
 
-	//重力
-	static constexpr float GRAVITY = 0.3f;
+	// 移動に関する定数
+	static constexpr float MOVE_SPEED = 2.0f;       // 基本移動速度
+	static constexpr float MOVE_POWER = 5.0f;       // 移動時の力（加速初期値）
 
-	//重力最大値
-	static constexpr float MAX_GRAVITY = 8.5f;
+	// 重力
+	static constexpr float GRAVITY = 0.3f;          // 毎フレーム加算する重力
+	static constexpr float MAX_GRAVITY = 8.5f;      // 重力の最大値
 
-	//ジャンプ力
-	static constexpr float JUMP_POW = -9.5f;
+	// ジャンプ
+	static constexpr float JUMP_POW = -9.5f;        // ジャンプの初期速度（上方向なのでマイナス）
 
-	//加速度
-	static constexpr float MOVE_ACC_POW = 0.5f;
+	// 加減速
+	static constexpr float MOVE_ACC_POW = 0.5f;     // 加速度
+	static constexpr float MOVE_DEC_POW = 0.05f;    // 減速度
+	static constexpr float MAX_MOVE_SPEED = 2.0f;   // 最大移動速度
 
-	//減速度
-	static constexpr float MOVE_DEC_POW = 0.05f;
+	// HP・MP 最大値
+	static constexpr int MAX_HP = 100;              // 最大HP
+	static constexpr int MAX_MP = 100;              // 最大MP
 
-	//移動速度最大値
-	static constexpr float MAX_MOVE_SPEED = 2.0f;
-
-	//MAX HP
-	static constexpr int MAX_HP = 100;
-	//MAX MP
-	static constexpr int MAX_MP = 100;
+	// ============================= メンバ変数 =============================
 private:
-	//変数
-	int* img_;
-	int* armImg_;
-	int sordImg_;
-	int invCnt_;
-	bool isAlive_;
 
-	int stageSize_;
+	// 画像ハンドル類
+	int* img_;          // 本体スプライト（配列）
+	int* armImg_;       // 腕のスプライト（配列）
+	int sordImg_;       // 剣の画像（単体）※スペルミスの可能性: sword？
 
-	unsigned int cr_;
+	int invCnt_;        // 無敵時間カウント
+	bool isAlive_;      // 生存フラグ
 
-	//属性
-	ELEMENT_TYPE elementType_;//属性タイプ
+	int stageSize_;     // ステージ1マスのサイズ（描画などに使用）
 
-	//アニメーション
-	float armAngle_;
-	float animationTime_;
-	int animationCount_;
-	int animaAem_;
-	MOVE_TYPE moveType_;//移動タイプ
-	
-	Vector2F pos_;//位置
+	unsigned int cr_;   // 色（おそらくARGBまたはRGB）
 
-	//移動量
-	float movePosX_;
-	float movePosY_;
-	float speed_;
-	float maxSpeed_;
-	bool isJump_;//ジャンプ中かどうか
+	// 属性
+	ELEMENT_TYPE elementType_; // プレイヤーの属性
 
-	//ATTACK//==================================================================================================================
-	//攻撃中かどうか
-	bool isAttack_;//攻撃中かどうか
-	bool isPoint_;
-	bool eF_;
-	bool dirChange_;
-	bool isSotd_;
-	int upCnt;
-	Vector2 attackPos_;
+	// アニメーション関連
+	float armAngle_;       // 腕の角度（ラジアン）
+	float animationTime_;  // アニメーション経過時間
+	int animationCount_;   // アニメーションフレーム
+	int animaAem_;         // 腕の切り替え
 
-	float armPower;
-	float movePos;
-	
-	//==========================================================================================================================
+	MOVE_TYPE moveType_;   // 現在の移動状態
 
-	//ヒットポイント・マジックポイント
-	int hp_;
-	int mp_;
+	Vector2F pos_;         // プレイヤーの位置（小数付き2D）
 
-	int regeneCnt_;
-	int mpRegene_;
+	// 移動速度・状態
+	float movePosX_;       // 横移動量
+	float movePosY_;       // 縦移動量
+	float speed_;          // 現在速度
+	float maxSpeed_;       // 最大速度（移動上限）
+	bool isJump_;          // ジャンプ中かどうか
 
-	int radius_;
+	// ================================= 攻撃関連 =================================
+	bool isAttack_;        // 攻撃中かどうか
+	bool isPoint_;         // 攻撃ポイント有効フラグ
+	bool eF_;              // 属性切り替え中フラグ
+	bool dirChange_;       // 向き変更したかどうか
+	bool isSword_;          // 剣を振ってるか
+	int upCnt;             // 腕の上げ具合カウント（角度段階）
 
-	//足元
-	//（デバッグ表示のためメンバー変数化）
-	Vector2 footPosC_;//中心
-	Vector2 footPosL_;//左側
-	Vector2 footPosR_;//右側
+	Vector2 attackPos_;    // 攻撃のターゲット座標
 
-	//頭
-	//（デバッグ表示のためメンバー変数化）
-	Vector2 headPosC_;//中心
-	Vector2 headPosL_;//左側
-	Vector2 headPosR_;//右側
+	float armPower;        // 腕の力
+	float movePos;         // 移動方向の量
 
-	//右側
-	//（デバッグ表示のためメンバー変数化）
-	Vector2 rightPosC_;//中心
-	Vector2 rightPosU_;//上側
-	Vector2 rightPosD_;//下側
+	// ============================= ステータス管理 =============================
+	int hp_;               // HP
+	int mp_;               // MP
+	int regeneCnt_;        // 回復タイミングカウント
+	int mpRegene_;         // MP自動回復量
+	int radius_;           // 半径
 
-	//左側
-	//（デバッグ表示のためメンバー変数化）
-	Vector2 leftPosC_;//中心
-	Vector2 leftPosU_;//上側
-	Vector2 leftPosD_;//下側
+	// ============================= 当たり判定用座標群 =============================
+	// 足元（デバッグ表示用）
+	Vector2 footPosC_;     // 足中央
+	Vector2 footPosL_;     // 足左
+	Vector2 footPosR_;     // 足右
 
-	//当たり判定チェック
-	//（デバッグ表示のためメンバー変数化）
+	// 頭部（デバッグ表示用）
+	Vector2 headPosC_;
+	Vector2 headPosL_;
+	Vector2 headPosR_;
+
+	// 右側（デバッグ表示用）
+	Vector2 rightPosC_;
+	Vector2 rightPosU_;
+	Vector2 rightPosD_;
+
+	// 左側（デバッグ表示用）
+	Vector2 leftPosC_;
+	Vector2 leftPosU_;
+	Vector2 leftPosD_;
+
+	// 当たり判定ヒットフラグ（デバッグ表示用）
 	bool isHitHead_;
 	bool isHitFoot_;
 	bool isHitRightSide_;
 	bool isHitLeftSide_;
 
-	//カメラ
-	Camera* camera_;
-	//ステージ
-	Stage* stage_;
-	//壁
-	Wall* wall_;
+	// ============================= ゲームオブジェクト参照 =============================
+	Camera* camera_;        // カメラ
+	Stage* stage_;          // ステージ
+	Wall* wall_;            // 壁
+	Blast* blast_;          // 爆発演出
+	Water* water_;          // 水エフェクト演出
+	Plants* plants_;        // 植物演出
 
-	Blast* blast_;
+	AsoUtility::DIR dir_;   // 向き（左 or 右）
 
-	Water* water_;
+	Vector2 cameraPos_;     // カメラ位置の保持
 
-	Plants* plants_;
+	// ============================= デバッグ表示・管理 =============================
+	Vector2F attckPoint_;         // 攻撃点
+	Vector2F attckAnglePoint_;    // 攻撃方向から求めた点
 
-	AsoUtility::DIR dir_;
+	int id_;                      // ステージID
 
-	
-	Vector2 cameraPos_;
-
-
-	//デバック表示==============================================================================
-	Vector2F attckPoint_;
-	Vector2F attckAnglePoint_;
-
-	int id_;
-
-
+	// ============================= メンバ関数群 =============================
 public:
-	
-	//プロトタイプ宣言
+
+	// コンストラクタ・デストラクタ
 	Player();
 	~Player();
-	void Init(Camera*camera,Stage*stage,Wall*wall,Blast*blast,Water* water,Plants*plants);
-	void Update();
-	void Draw();
 
-	//関数
-	void Move();
-	void Anime();
-	void Attack();
-	void Hp();
-	void DownHp(int Down);
-	void Mp();
-	void DownMp(int Down);
-	void ReSpawn();
+	// 初期化関数
+	void Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water* water, Plants* plants);
 
+	// 更新・描画
+	void Update(); // 毎フレームの更新
+	void Draw();   // 描画
 
-	//（デバッグ表紙のために計算処理と衝突判定を別にしておく）
+	// 基本動作
+	void Move();           // 移動処理
+	void Anime();          // アニメーション更新
+	void Attack();         // 攻撃処理
+	void Hp();             // HP処理
+	void DownHp(int Down); // HP減少処理
+	void Mp();             // MP処理
+	void DownMp(int Down); // MP減少処理
+	void ReSpawn();        // 復活処理
+
+	// 当たり判定計算（各方向）
 	void CalcFootPos(void);
 	void CalcHeadPos(void);
 	void CalcRightSidePos(void);
 	void CalcLeftSidePos(void);
 
-	//（デバック表示のために計算処理と衝突判定を別にしておく）
+	// 当たり判定判定
 	bool IsHitFootPos(void);
 	bool IsHitHeadPos(void);
 	bool IsHitRightPos(void);
 	bool IsHitLeftPos(void);
 
-
+	// 属性別の左右衝突判定（複数レイヤー）
 	bool IsWaterHitRightPos(void);
 	bool IsWaterHitLeftPos(void);
-
-	
 	bool IsFlareHitRightPos(void);
 	bool IsFlareHitLeftPos(void);
-
-
 	bool IsPlantsHitRightPos(void);
 	bool IsPlantsHitLeftPos(void);
 
 	bool IsWaterHitRightPos2(void);
 	bool IsWaterHitLeftPos2(void);
-
-
 	bool IsFlareHitRightPos2(void);
 	bool IsFlareHitLeftPos2(void);
-
-
 	bool IsPlantsHitRightPos2(void);
 	bool IsPlantsHitLeftPos2(void);
 
 	bool IsWaterHitRightPos3(void);
 	bool IsWaterHitLeftPos3(void);
-
-
 	bool IsFlareHitRightPos3(void);
 	bool IsFlareHitLeftPos3(void);
-
-
 	bool IsPlantsHitRightPos3(void);
 	bool IsPlantsHitLeftPos3(void);
 
-	
-
-	//衝突判定
+	// 衝突反応処理（左右・上下・属性レイヤー別）
 	void CollisionFoot(void);
 	void CollisionHead(void);
 	void CollisionRightSide(void);
 	void CollisionLeftSide(void);
 
-	
 	void CollisionWaterRightSide(void);
 	void CollisionWaterLeftSide(void);
-
-	
 	void CollisionFlareRightSide(void);
 	void CollisionFlareLeftSide(void);
-
-	
 	void CollisionPlantsRightSide(void);
 	void CollisionPlantsLeftSide(void);
 
 	void CollisionWaterRightSide2(void);
 	void CollisionWaterLeftSide2(void);
-
-
 	void CollisionFlareRightSide2(void);
 	void CollisionFlareLeftSide2(void);
-
-
 	void CollisionPlantsRightSide2(void);
 	void CollisionPlantsLeftSide2(void);
 
 	void CollisionWaterRightSide3(void);
 	void CollisionWaterLeftSide3(void);
-
-
 	void CollisionFlareRightSide3(void);
 	void CollisionFlareLeftSide3(void);
-
-
 	void CollisionPlantsRightSide3(void);
 	void CollisionPlantsLeftSide3(void);
-	
 
-	//衝突判定描画
+	// 衝突判定の描画（デバッグ）
 	void DrawHitCollision(void);
 
-	
-	Vector2 World2MapPos(Vector2 worldPos);
+	// 座標変換
+	Vector2 World2MapPos(Vector2 worldPos); // ワールド座標 → マップ座標変換
 
-	//プレイヤーの位置を取得
+	// プレイヤーの位置取得・設定
 	Vector2F GetPlayerPos(void);
 	void SetPlayerPos(Vector2F pos);
 
-	//移動状態管理
-	void MoveChange(void);
+	// 状態管理
+	void MoveChange(void);      // 移動状態更新
+	void ElementChange(void);   // 属性変更処理
+	void AttackChange(void);    // 攻撃ステータス更新処理
 
-	//属性管理
-	void ElementChange(void);
-
-	void AttackChange(void);
-
+	// HP・MP getter/setter
 	int GetHp(void);
 	void SetHp(int hp);
-
 	int GetMp(void);
 	void SetMp(int mp);
 
+	// 色 getter/setter
 	unsigned int GetCr(void);
 	void SetCr(int cr);
 
+	// 生死フラグ
 	bool GetIsAlive();
 	void SetIsAlive(bool is);
 
+	// ステージサイズ
 	int GetStageSize();
 	void SetStageSize(int size);
 
-
+	// 攻撃用位置など
 	Vector2 GetAttackPos();
 	void SetAttackPos(Vector2 attackPos);
 
@@ -333,8 +294,8 @@ public:
 	bool GetIsEF();
 	void SetIsEF(bool is);
 
+	// カメラ位置取得
 	Vector2 GetCamera();
-
 
 };
 

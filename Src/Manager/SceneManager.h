@@ -103,4 +103,9 @@ private:
 	// フェード
 	void Fade(void);
 
+
+	
+	bool manew_;
+	int count_;
+
 };
