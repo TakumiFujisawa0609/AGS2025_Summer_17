@@ -1,10 +1,9 @@
-#include "EnemyAttack.h"
+#include "EnemyAttackF.h"
 #include "../EnemyFire.h"
 #include "../../Player/Player.h"
 #include "../../Camera/Camera.h"
-#include <DxLib.h>
 
-void EnemyAttack::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
+void EnemyAttackF::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
 {
     enemyFire_ = enemyFire;
     player_ = player;
@@ -36,12 +35,12 @@ void EnemyAttack::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
     isCntDown_ = true;
 }
 
-void EnemyAttack::Update()
+void EnemyAttackF::Update()
 {
 
 }
 
-void EnemyAttack::Draw()
+void EnemyAttackF::Draw()
 {
     // 発見中のみ攻撃クールダウン消費
     if (enemyFire_->GetFind())
@@ -108,23 +107,49 @@ void EnemyAttack::Draw()
     // エネミーの攻撃当たり判定描画
     if (isAlive_)
     {
+        //// 当たり判定用座標
         DrawBox(pos_.x - SIZE_X / 2, pos_.y - SIZE_Y / 2, pos_.x + SIZE_X / 2, pos_.y + SIZE_Y / 2, 0x000000, false);
     }
 
 #endif // _DEBUG
 }
 
-bool EnemyAttack::GetAttack()
+Vector2F EnemyAttackF::GetPos()
+{
+    return pos_;
+}
+
+void EnemyAttackF::SetPos(Vector2F pos)
+{
+    pos_ = pos;
+}
+
+int EnemyAttackF::GetSizeX()
+{
+    return SIZE_X;
+}
+
+int EnemyAttackF::GetSizeY()
+{
+    return SIZE_Y;
+}
+
+bool EnemyAttackF::GetAttack()
 {
     return isAttack_;
 }
 
-void EnemyAttack::SetAttack(bool isAttack)
+void EnemyAttackF::SetAttack(bool isAttack)
 {
     isAttack_ = isAttack;
 }
 
-bool EnemyAttack::GetAlive()
+bool EnemyAttackF::GetAlive()
 {
     return isAlive_;
+}
+
+void EnemyAttackF::SetAlive(bool isAlive)
+{
+    isAlive_ = isAlive;
 }

@@ -7,7 +7,11 @@ class Player;
 class StageManager;
 class EnemyManager;
 class EnemyFire;
-class EnemyAttack;
+class EnemyPlant;
+//class EnemyWater;
+class EnemyAttackF;
+class EnemyAttackP;
+//class EnemyAttackW;
 class Stage;
 class Camera;
 class Wall;
@@ -29,7 +33,11 @@ private:
 	// エネミー
 	EnemyManager* enemyManager_;
 	EnemyFire* enemyFire_;
-	EnemyAttack* enemyAttack_;
+	EnemyPlant* enemyPlant_;
+	//EnemyWater* enemyWater_;
+	EnemyAttackF* enemyAttackF_;
+	EnemyAttackP* enemyAttackP_;
+	//EnemyAttackW* enemyAttackW_;
 	// ステージ
 	Stage* stage_;
 	// カメラ
