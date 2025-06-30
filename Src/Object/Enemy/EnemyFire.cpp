@@ -39,7 +39,7 @@ void EnemyFire::InitStage2()
         if (stageId == 2)
         {
             // ‰ŠúÀ•W
-            pos_.x = 2460.0f;
+            pos_.x = 2140.0f;
             pos_.y = 352.0f;
 
             // ˆÚ“®‘¬“x

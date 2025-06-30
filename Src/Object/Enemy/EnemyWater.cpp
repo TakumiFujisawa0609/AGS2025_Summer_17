@@ -40,12 +40,12 @@ void EnemyWater::InitStage2()
         if (stageId == 2)
         {
             // 初期座標
-            pos_.x = 4490.0f;
-            pos_.y = 544.0f;
+            pos_.x = 4426.0f;
+            pos_.y = 640.0f;
 
             // 移動速度
-            moveSpeed_ = 1.0f;
-            moveMax_ = 150;
+            moveSpeed_ = 0.8f;
+            moveMax_ = 210;
 
             // 索敵範囲
             findSize_ = 300.0f;
@@ -174,7 +174,7 @@ void EnemyWater::Update()
 #ifdef _DEBUG
 
     // 再出現(デバッグ用)
-    if (CheckHitKey(KEY_INPUT_N))
+    if (CheckHitKey(KEY_INPUT_M))
     {
         hp_ = 25.0f;
         isAlive_ = true;

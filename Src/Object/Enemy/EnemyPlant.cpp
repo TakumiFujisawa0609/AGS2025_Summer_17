@@ -40,12 +40,12 @@ void EnemyPlant::InitStage2()
         if (stageId == 2)
         {
             // ‰ŠúÀ•W
-            pos_.x = 5240.0f;
+            pos_.x = 5368.0f;
             pos_.y = 672.0f;
 
             // ˆÚ“®‘¬“x
             moveSpeed_ = 1.0f;
-            moveMax_ = 150;
+            moveMax_ = 200;
 
             // õ“G”ÍˆÍ
             findSize_ = 300.0f;
