@@ -18,7 +18,6 @@ public:
 	void Init(void) override;
 	void Update(void) override;
 	void Draw(void) override;
-	void Release(void);
 	
 	
 private:
@@ -30,7 +29,5 @@ private:
 	float frameCount;
 
 	int count_;
-
-	int TitleSoundHandle_; // タイトルBGMのハンドル
 
 };

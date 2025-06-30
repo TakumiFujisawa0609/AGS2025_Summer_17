@@ -28,7 +28,6 @@ void Plants::Init(Camera* camera)
 	camera_ = camera;
 
 	LoadDivGraph("Data/Image/Attack/AttackP.png", PLANTS_ANIM_FRAME, PLANTS_DIV_X, 1, PLANTS_SIZE, PLANTS_SIZE, plantsImgs);
-	plantsSoundHandle = LoadSoundMem("Data/Sound/SE/Sorn.mp3");
 
 	isPlants = false;
 
@@ -66,15 +65,6 @@ void Plants::Draw(void)
 			isPlants = false;
 			plantsImgAnimCount = 0;
 		}
-
-		if (plantsImgAnimCount == 1)
-		{
-			PlaySoundMem(plantsSoundHandle, DX_PLAYTYPE_BACK);
-		}
-		else if (plantsImgAnimCount == 23)
-		{
-			StopSoundMem(plantsSoundHandle);
-		}
 	}
 }
 void Plants::Release(void)
@@ -84,7 +74,6 @@ void Plants::Release(void)
 	{
 		DeleteGraph(plantsImgs[i]);
 	}
-	DeleteSoundMem(plantsSoundHandle);
 }
 bool Plants::GetIsPlants(void)
 {

@@ -2,13 +2,13 @@
 #include "EnemyBase.h"
 #include <DxLib.h>
 class EnemyManager;
-class EnemyFire;
-class EnemyAttackF;
+class EnemyAttackW;
+class EnemyWater;
 class Player;
 class Camera;
 class Stage;
 
-class EnemyFire
+class EnemyWater
 {
 public:
 
@@ -17,13 +17,17 @@ public:
     static constexpr int SIZE_Y = 64;
 
     // アニメーション
-    static constexpr int ANIM_X = 4;
-    static constexpr int ANIM_Y = 1;
+    static constexpr int ANIM_X = 3;
+    static constexpr int ANIM_Y = 3;
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
-    static constexpr int ANIM_INTERVAL = 11;
+    static constexpr int ANIM_INTERVAL = 12;
+    // アニメーションフレーム
+    static constexpr int ATTACK_ANIM = 6;
+    static constexpr int WALK_ANIM_MIN = 3;
+    static constexpr int WALK_ANIM_MAX = 5;
 
     // 初期化
-    void Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* player, Camera* camera, Stage* stage);
+    void Init(EnemyWater* enemyWater, EnemyAttackW* enemyAttackW, Player* player, Camera* camera, Stage* stage);
     void InitStage2();
     void InitStage3();
     // 更新
@@ -61,19 +65,19 @@ public:
     void SetFind(bool isFind);
 
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定の取得・更新
-    bool GetCollisionFire();
-    void SetCollisionFire(bool collisionFire);
+    bool GetCollisionWater();
+    void SetCollisionWater(bool collisionWater);
 
     // アニメーションフレーム数カウント
-    bool GetAnimFrameFire();
-    void SetAnimFrameFire(int animFrame);
+    bool GetAnimFrameWater();
+    void SetAnimFrameWater(int animFrame);
 
 private:
 
     // エネミー
     EnemyManager* enemyManager_;
-    EnemyFire* enemyFire_;
-    EnemyAttackF* enemyAttackF_;
+    EnemyAttackW* enemyAttackW_;
+    EnemyWater* enemyWater_;
     // プレイヤー
     Player* player_;
     // カメラ
@@ -136,6 +140,6 @@ private:
     // プレイヤーの攻撃とエネミーの衝突判定
     bool collisionDamage_;
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
-    bool collisionFire_;
+    bool collisionWater_;
 
 };

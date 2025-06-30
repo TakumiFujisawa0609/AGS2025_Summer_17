@@ -1,11 +1,11 @@
-#include "EnemyAttackF.h"
-#include "../EnemyFire.h"
+#include "EnemyAttackW.h"
+#include "../EnemyWater.h"
 #include "../../Player/Player.h"
 #include "../../Camera/Camera.h"
 
-void EnemyAttackF::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
+void EnemyAttackW::Init(EnemyWater* enemyWater, Player* player, Camera* camera)
 {
-    enemyFire_ = enemyFire;
+    enemyWater_ = enemyWater;
     player_ = player;
     camera_ = camera;
 
@@ -21,8 +21,6 @@ void EnemyAttackF::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
     animFrame_ = 4;
     // アニメーションのカウンタ
     animCnt_ = 0;
-    // アニメーションの進行間隔
-    animInterval_ = 8;
 
     // 攻撃のクールダウン
     attackCnt_ = 50;
@@ -37,26 +35,17 @@ void EnemyAttackF::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
     isCntDown_ = true;
 }
 
-void EnemyAttackF::Update()
+void EnemyAttackW::Update()
 {
 
 }
 
-void EnemyAttackF::Draw()
+void EnemyAttackW::Draw()
 {
     // 発見中のみ攻撃クールダウン消費
-    if (enemyFire_->GetFind())
+    if (enemyWater_->GetFind())
     {
         attackCnt_++;
-    }
-
-    if (animFrame_ == 0)
-    {
-        animInterval_ = 60;
-    }
-    else
-    {
-        animInterval_ = 8;
     }
 
     // アニメーション処理
@@ -64,7 +53,7 @@ void EnemyAttackF::Draw()
     {
         isAlive_ = true;
         animCnt_++;
-        if (animCnt_ >= animInterval_) {
+        if (animCnt_ >= ANIM_INTERVAL) {
             animCnt_ = 0;
             if (isCntDown_)
             {
@@ -81,19 +70,22 @@ void EnemyAttackF::Draw()
                     isAlive_ = false;
                     isAttack_ = false;
                     attackCnt_ = 0;
+                    enemyWater_->SetAnimFrameWater(3);
                 }
             }
 
         }
     }
 
-    int enemySize = enemyFire_->GetSizeX();
-    bool enemyLeft = enemyFire_->GetLeft();
-    Vector2F enemyPos = enemyFire_->GetPos();
+    int enemySize = enemyWater_->GetSizeX();
+    bool enemyLeft = enemyWater_->GetLeft();
+    Vector2F enemyPos = enemyWater_->GetPos();
     // カメラ座標
     Vector2 cameraPos = camera_->GetCameraPos();
 
-    if (isAlive_ && enemyFire_->GetAlive())
+
+
+    if (isAlive_ && enemyWater_->GetAlive())
     {
         if (enemyLeft)
         {
@@ -123,42 +115,42 @@ void EnemyAttackF::Draw()
 #endif // _DEBUG
 }
 
-Vector2F EnemyAttackF::GetPos()
+Vector2F EnemyAttackW::GetPos()
 {
     return pos_;
 }
 
-void EnemyAttackF::SetPos(Vector2F pos)
+void EnemyAttackW::SetPos(Vector2F pos)
 {
     pos_ = pos;
 }
 
-int EnemyAttackF::GetSizeX()
+int EnemyAttackW::GetSizeX()
 {
     return SIZE_X;
 }
 
-int EnemyAttackF::GetSizeY()
+int EnemyAttackW::GetSizeY()
 {
     return SIZE_Y;
 }
 
-bool EnemyAttackF::GetAttack()
+bool EnemyAttackW::GetAttack()
 {
     return isAttack_;
 }
 
-void EnemyAttackF::SetAttack(bool isAttack)
+void EnemyAttackW::SetAttack(bool isAttack)
 {
     isAttack_ = isAttack;
 }
 
-bool EnemyAttackF::GetAlive()
+bool EnemyAttackW::GetAlive()
 {
     return isAlive_;
 }
 
-void EnemyAttackF::SetAlive(bool isAlive)
+void EnemyAttackW::SetAlive(bool isAlive)
 {
     isAlive_ = isAlive;
 }

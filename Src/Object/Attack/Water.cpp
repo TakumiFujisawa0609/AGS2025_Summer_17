@@ -10,8 +10,6 @@ void Water::Init(Camera*camera)
 	camera_ = camera;
 	//パーティクル画像読み込み
 	LoadDivGraph("Data/Image/Attack/EffectCyan.png", MAX_IMG_SIZE, MAX_IMG_SIZE, 1, IMG_SIZE_X, IMG_SIZE_Y, images_, true);
-
-	WaterSoundHandle = LoadSoundMem("Data/Sound/SE/Sprash.mp3");
 	//粒子の初期化
 	InitParticle();
 }
@@ -60,15 +58,6 @@ void Water::CreateEffect(Vector2 pos)
 		//透過値
 		particles_[i].blendRate = 255.0f;
 	}
-	if (particles_.size())
-		{
-		
-			PlaySoundMem(WaterSoundHandle, DX_PLAYTYPE_BACK);
-		}
-		else if (particles_.size())
-		{
-			StopSoundMem(WaterSoundHandle);
-		}
 }
 
 void Water::Update(void)
@@ -118,7 +107,6 @@ void Water::Release(void)
 	{
 		DeleteGraph(images_[i]);
 	}
-	DeleteSoundMem(WaterSoundHandle);
 
 	//可変長配列のクリア
 	particles_.clear();

@@ -2,28 +2,29 @@
 #include "../../../Common/Vector2.h"
 #include "../../../Common/Vector2F.h"
 #include <DxLib.h>
-class EnemyPlant;
+class EnemyWater;
 class Player;
 class Camera;
 
-class EnemyAttackP
+class EnemyAttackW
 {
 public:
 
     // サイズ
     static constexpr int SIZE_X = 96;
-    static constexpr int SIZE_Y = 96;
+    static constexpr int SIZE_Y = 32;
 
     // アニメーション
-    static constexpr int ANIM_X = 10;
-    static constexpr int ANIM_Y = 1;
+    static constexpr int ANIM_X = 1;
+    static constexpr int ANIM_Y = 5;
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
+    static constexpr int ANIM_INTERVAL = 8;
 
     // 攻撃
     static constexpr int ATTACK_INTERVAL = 110;
 
     // 初期化
-    void Init(EnemyPlant* enemyPlant, Player* player, Camera* camera);
+    void Init(EnemyWater* enemyWater, Player* player, Camera* camera);
     // 更新
     void Update();
     // 描画
@@ -45,13 +46,9 @@ public:
     bool GetAlive();
     void SetAlive(bool isAlive);
 
-    // アニメーションフレーム数の取得・更新
-    int GetAnimFrameAttackP();
-    void SetAnimFrameAttackP(int animFrame);
-
 private:
 
-    EnemyPlant* enemyPlant_;
+    EnemyWater* enemyWater_;
     Player* player_;
     Camera* camera_;
 
@@ -72,8 +69,6 @@ private:
     int animFrame_;
     // アニメーションのカウンタ
     int animCnt_;
-    // アニメーションの進行間隔
-    int animInterval_;
 
     // 攻撃用のカウンタ
     int attackCnt_;
@@ -85,9 +80,6 @@ private:
     bool isAlive_;
 
     // 再生折り返し判定
-    bool isCntUp_;
+    bool isCntDown_;
 
-    // プレイヤー座標取得済み判定
-    bool isGetPos_;
 };
-
