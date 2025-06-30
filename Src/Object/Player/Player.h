@@ -294,6 +294,9 @@ public:
 	bool GetIsEF();
 	void SetIsEF(bool is);
 
+	bool GetHitFoot();
+	void SetHitFoot(bool isHitFoot);
+
 	// ƒJƒƒ‰ˆÊ’uæ“¾
 	Vector2 GetCamera();
 

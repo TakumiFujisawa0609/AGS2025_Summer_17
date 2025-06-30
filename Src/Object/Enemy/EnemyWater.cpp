@@ -1,19 +1,22 @@
-#include "EnemyFire.h"
+#include "EnemyWater.h"
 #include "EnemyManager.h"
-#include "EnemyAttack/EnemyAttackF.h"
+#include "EnemyAttack/EnemyAttackW.h"
 #include "../Camera/Camera.h"
 #include "../Player/Player.h"
 #include "../Stage/Stage.h"
 
-void EnemyFire::Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* player, Camera* camera, Stage* stage)
+void EnemyWater::Init(EnemyWater* enemyWater, EnemyAttackW* enemyAttackW, Player* player, Camera* camera, Stage* stage)
 {
-    enemyFire_ = enemyFire;
-    enemyAttackF_ = enemyAttackF;
+    enemyAttackW_ = enemyAttackW;
+    enemyWater_ = enemyWater;
     player_ = player;
     camera_ = camera;
     stage_ = stage;
 
-    enemyAttackF_->Init(enemyFire_, player_, camera_);
+    enemyAttackW_->Init(enemyWater_, player_, camera_);
+
+    // 初期化用変数
+    setInit_ = 2;
 
     // 属性管理用
     fire_ = 0xff0000;
@@ -21,16 +24,14 @@ void EnemyFire::Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* p
     water_ = 0x0000ff;
     normal_ = 0xffffff;
 
-    // 初期座標の設定用値
-    setInit_ = 2;
-
     // 画像の読み込み
     img_ = LoadDivGraph
-    ("Data/Image/Enemy/EnemyF.png", ANIM_MAX, ANIM_X, ANIM_Y, SIZE_X, SIZE_Y, Array_);
+    ("Data/Image/Enemy/EnemyW.png", ANIM_MAX, ANIM_X, ANIM_Y, SIZE_X, SIZE_Y, Array_);
 }
 
-void EnemyFire::InitStage2()
+void EnemyWater::InitStage2()
 {
+    // ステージ2
     if (setInit_ == 2)
     {
         // ステージIDの取得
@@ -39,15 +40,15 @@ void EnemyFire::InitStage2()
         if (stageId == 2)
         {
             // 初期座標
-            pos_.x = 2460.0f;
-            pos_.y = 352.0f;
+            pos_.x = 4490.0f;
+            pos_.y = 544.0f;
 
             // 移動速度
-            moveSpeed_ = 1.3f;
-            moveMax_ = 240;
+            moveSpeed_ = 1.0f;
+            moveMax_ = 150;
 
             // 索敵範囲
-            findSize_ = 200.0f;
+            findSize_ = 300.0f;
 
             // 生存判定
             isAlive_ = true;
@@ -62,10 +63,10 @@ void EnemyFire::InitStage2()
             // プレイヤーの攻撃とエネミーの衝突判定
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
-            collisionFire_ = false;
+            collisionWater_ = false;
 
             // アニメーションフレーム数カウント
-            animFrame_ = 0;
+            animFrame_ = WALK_ANIM_MIN;
             // アニメーションのカウンタ
             animCnt_ = 0;
 
@@ -77,13 +78,15 @@ void EnemyFire::InitStage2()
             // 被ダメージ数
             damage_ = 10.0f;
 
+            // 初期化用変数
             setInit_ = 3;
         }
     }
 }
 
-void EnemyFire::InitStage3()
+void EnemyWater::InitStage3()
 {
+    // ステージ3
     if (setInit_ == 3)
     {
         // ステージIDの取得
@@ -96,7 +99,7 @@ void EnemyFire::InitStage3()
             pos_.y = 300.0f;
 
             // 移動速度
-            moveSpeed_ = 1.8f;
+            moveSpeed_ = 2.0f;
             moveMax_ = 100;
 
             // 索敵範囲
@@ -115,10 +118,10 @@ void EnemyFire::InitStage3()
             // プレイヤーの攻撃とエネミーの衝突判定
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
-            collisionFire_ = false;
+            collisionWater_ = false;
 
             // アニメーションフレーム数カウント
-            animFrame_ = 0;
+            animFrame_ = WALK_ANIM_MIN;
             // アニメーションのカウンタ
             animCnt_ = 0;
 
@@ -130,12 +133,13 @@ void EnemyFire::InitStage3()
             // 被ダメージ数
             damage_ = 10.0f;
 
+            // 初期化用変数
             setInit_ = 0;
         }
     }
 }
 
-void EnemyFire::Update()
+void EnemyWater::Update()
 {
     InitStage2();
     InitStage3();
@@ -144,7 +148,7 @@ void EnemyFire::Update()
     PlayerAttackCollision();
     EnemyAttackCollision();
     Damage();
-    enemyAttackF_->Update();
+    enemyAttackW_->Update();
 
     // プレイヤー座標
     Vector2F playerPos = player_->GetPlayerPos();
@@ -157,33 +161,33 @@ void EnemyFire::Update()
         {
             // 発見中
             isFind_ = true;
-            enemyAttackF_->SetAttack(true);
+            enemyAttackW_->SetAttack(true);
         }
         else
         {
             // 発見中でない
             isFind_ = false;
-            enemyAttackF_->SetAttack(false);
+            enemyAttackW_->SetAttack(false);
         }
     }
 
 #ifdef _DEBUG
 
     // 再出現(デバッグ用)
-    if (CheckHitKey(KEY_INPUT_B))
+    if (CheckHitKey(KEY_INPUT_N))
     {
         hp_ = 25.0f;
         isAlive_ = true;
-        collisionFire_ = false;
+        collisionWater_ = false;
     }
 
 #endif // DEBUG
 }
 
-void EnemyFire::Draw()
+void EnemyWater::Draw()
 {
 
-    enemyAttackF_->Draw();
+    enemyAttackW_->Draw();
 
     // プレイヤー座標
     Vector2F playerPos = player_->GetPlayerPos();
@@ -200,20 +204,20 @@ void EnemyFire::Draw()
 #endif // _DEBUG
 
     // アニメーション処理
-    if (!enemyAttackF_->GetAlive())
+    if (enemyAttackW_->GetAlive())
+    {
+        animFrame_ = ATTACK_ANIM;
+    }
+    else
     {
         animCnt_++;
         if (animCnt_ >= ANIM_INTERVAL) {
             animCnt_ = 0;
             animFrame_++;
-            if (animFrame_ >= ANIM_MAX) {
-                animFrame_ = 0;
+            if (animFrame_ > WALK_ANIM_MAX) {
+                animFrame_ = WALK_ANIM_MIN;
             }
         }
-    }
-    else
-    {
-        animCnt_ = 0;
     }
 
     if (isAlive_)
@@ -227,7 +231,7 @@ void EnemyFire::Draw()
                 // 左向きに描画
                 DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, isLeft_);
 
-                if (!enemyAttackF_->GetAlive())
+                if (!enemyAttackW_->GetAlive())
                 {
                     isLeft_ = true;
                 }
@@ -237,7 +241,7 @@ void EnemyFire::Draw()
                 // 右向きに描画
                 DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, isLeft_);
 
-                if (!enemyAttackF_->GetAlive())
+                if (!enemyAttackW_->GetAlive())
                 {
                     isLeft_ = false;
                 }
@@ -262,7 +266,7 @@ void EnemyFire::Draw()
     }
 }
 
-void EnemyFire::Attack()
+void EnemyWater::Attack()
 {
     if (isAttack_)
     {
@@ -270,9 +274,9 @@ void EnemyFire::Attack()
     }
 }
 
-void EnemyFire::Move()
+void EnemyWater::Move()
 {
-    if (isAlive_ && !enemyAttackF_->GetAlive())
+    if (isAlive_ && !enemyAttackW_->GetAlive())
     {
         // 発見中でないなら動かす
         if (!isFind_)
@@ -299,7 +303,7 @@ void EnemyFire::Move()
     }
 }
 
-void EnemyFire::PlayerAttackCollision()
+void EnemyWater::PlayerAttackCollision()
 {
     // エネミーの衝突用半径
     float enemyRadius = 32.0f;
@@ -313,7 +317,7 @@ void EnemyFire::PlayerAttackCollision()
     // 攻撃属性を取得
     int magicColoer = player_->GetCr();
 
-    // 魔法攻撃
+    // 魔法攻撃使用中
     if (magicColoer != 0xffffff)
     {
         // 魔法とエネミーの衝突判定
@@ -359,7 +363,7 @@ void EnemyFire::PlayerAttackCollision()
     //}
 }
 
-void EnemyFire::EnemyAttackCollision()
+void EnemyWater::EnemyAttackCollision()
 {
     if (isAlive_) {
         // エネミーの衝突用半径
@@ -387,60 +391,47 @@ void EnemyFire::EnemyAttackCollision()
         if (dis < (radius * radius))
         {
             // 衝突した
-            collisionFire_ = true;
+            collisionWater_ = true;
         }
 
         // プレイヤーとエネミーの攻撃の衝突判定
         // エネミーの攻撃座標の取得
-        Vector2F attackPos = enemyAttackF_->GetPos();
+        Vector2F attackPos = enemyAttackW_->GetPos();
         // エネミーの攻撃画像のサイズ取得
-        int attackSizeX = enemyAttackF_->GetSizeX();
-        int attackSizeY = enemyAttackF_->GetSizeY();
+        int attackSizeX = enemyAttackW_->GetSizeX();
+        int attackSizeY = enemyAttackW_->GetSizeY();
         // カメラ座標の取得
         Vector2 cameraPos = camera_->GetCameraPos();
 
-        if (enemyAttackF_->GetAlive()) {
+        //DrawBox(pos_.x - SIZE_X / 2 - cameraPos.x, pos_.y - SIZE_Y / 2 - cameraPos.y,
+        //    pos_.x + SIZE_X / 2 - cameraPos.x, pos_.y + SIZE_Y / 2 - cameraPos.y, 0x000000, false);
+
+        if (enemyAttackW_->GetAlive()) {
             // エネミーの攻撃の当たり判定座標
-            // 左向きのとき
-            if (isLeft_) {
-                // 右
-                leftAttackPos = pos_.x - attackSizeX + SIZE_X / 2;
-                // 左
-                rightAttackPos = pos_.x;
-                // 上
-                topAttackPos = pos_.y;
-                // 下
-                bottomAttackPos = pos_.y + attackSizeY;
-            }
-            // 右向きのとき
-            else
-            {
-                leftAttackPos = pos_.x + SIZE_X;
-                // 左
-                rightAttackPos = pos_.x + SIZE_X / 2 + attackSizeX;
-                // 上
-                topAttackPos = pos_.y;
-                // 下
-                bottomAttackPos = pos_.y + attackSizeY;
-            }
+            leftAttackPos = attackPos.x - attackSizeX / 2 - cameraPos.x;
+            // 左
+            rightAttackPos = attackPos.x + attackSizeX / 2 - cameraPos.x;
+            // 上
+            topAttackPos = attackPos.y - attackSizeY / 2 - cameraPos.y;
+            // 下
+            bottomAttackPos = attackPos.y + attackSizeY / 2 - cameraPos.y;
 
             // プレイヤー画像のサイズ
             float playrSize = 58.0f;
             // 衝突判定
-            if (rightAttackPos > playerPos.x &&
-                leftAttackPos < playerPos.x + playrSize &&
-                topAttackPos < playerPos.y + playrSize &&
-                bottomAttackPos > playerPos.y)
+            if (leftAttackPos < playerPos.x + playrSize - cameraPos.x &&
+                rightAttackPos > playerPos.x - cameraPos.x &&
+                topAttackPos < playerPos.y + playrSize - cameraPos.y &&
+                bottomAttackPos > playerPos.y - cameraPos.y)
             {
                 // 衝突した
-                collisionFire_ = true;
-                isAlive_ = false;
+                collisionWater_ = true;
             }
         }
     }
 }
 
-void EnemyFire::Damage()
+void EnemyWater::Damage()
 {
     // 攻撃属性を取得
     int attackColoer = player_->GetCr();
@@ -461,20 +452,20 @@ void EnemyFire::Damage()
     }
 
     // プレイヤーの攻撃属性が
-    // FireまたはNormalのとき
-    if (attackColoer == fire_ || attackColoer == normal_)
+    // WaterまたはNormalのとき
+    if (attackColoer == water_ || attackColoer == normal_)
     {
         // 等倍
         damage_ = 10.0f;
     }
-    // Waterのとき
-    else if (attackColoer == water_)
+    // Plantのとき
+    else if (attackColoer == plant_)
     {
         // 抜群
         damage_ = 20.0f;
     }
-    // Plantのとき
-    else if (attackColoer == plant_)
+    // Fireのとき
+    else if (attackColoer == fire_)
     {
         // 半減
         damage_ = 5.0f;
@@ -499,67 +490,67 @@ void EnemyFire::Damage()
     }
 }
 
-int EnemyFire::GetSizeX()
+int EnemyWater::GetSizeX()
 {
     return SIZE_X;
 }
 
-Vector2F EnemyFire::GetPos()
+Vector2F EnemyWater::GetPos()
 {
     return pos_;
 }
 
-void EnemyFire::SetPos(Vector2F pos)
+void EnemyWater::SetPos(Vector2F pos)
 {
     pos_ = pos;
 }
 
-bool EnemyFire::GetAlive()
+bool EnemyWater::GetAlive()
 {
     return isAlive_;
 }
 
-void EnemyFire::SetAlive(bool isAlive)
+void EnemyWater::SetAlive(bool isAlive)
 {
     isAlive_ = isAlive;
 }
 
-bool EnemyFire::GetLeft()
+bool EnemyWater::GetLeft()
 {
     return isLeft_;
 }
 
-void EnemyFire::SetLeft(bool isLeft)
+void EnemyWater::SetLeft(bool isLeft)
 {
     isLeft_ = isLeft;
 }
 
-bool EnemyFire::GetFind()
+bool EnemyWater::GetFind()
 {
     return isFind_;
 }
 
-void EnemyFire::SetFind(bool isFind)
+void EnemyWater::SetFind(bool isFind)
 {
     isFind_ = isFind;
 }
 
-bool EnemyFire::GetCollisionFire()
+bool EnemyWater::GetCollisionWater()
 {
-    return collisionFire_;
+    return collisionWater_;
 }
 
-void EnemyFire::SetCollisionFire(bool collisionFire)
+void EnemyWater::SetCollisionWater(bool collisionWater)
 {
-    collisionFire_ = collisionFire;
+    collisionWater_ = collisionWater;
 }
 
-bool EnemyFire::GetAnimFrameFire()
+bool EnemyWater::GetAnimFrameWater()
 {
     return animFrame_;
 }
 
-void EnemyFire::SetAnimFrameFire(int animFrame)
+void EnemyWater::SetAnimFrameWater(int animFrame)
 {
     animFrame_ = animFrame;
 }

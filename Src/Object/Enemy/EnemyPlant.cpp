@@ -15,10 +15,8 @@ void EnemyPlant::Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player
 
     enemyAttackP_->Init(enemyPlant_, player_, camera_);
 
-    // 初期座標の設定用値
+    // 初期化用変数
     setInit_ = 2;
-    // プレイヤー座標取得判定
-    isGetPos_ = false;
 
     // 属性管理用
     fire_ = 0xff0000;
@@ -33,6 +31,7 @@ void EnemyPlant::Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player
 
 void EnemyPlant::InitStage2()
 {
+    // ステージ2
     if (setInit_ == 2)
     {
         // ステージIDの取得
@@ -67,9 +66,11 @@ void EnemyPlant::InitStage2()
             collisionPlant_ = false;
 
             // アニメーションフレーム数カウント
-            animFrame_ = 16;
+            animFrame_ = WALK_ANIM_MIN;
             // アニメーションのカウンタ
             animCnt_ = 0;
+            // アニメーションの進行間隔
+            animInterval_ = 10;
 
             // 移動用のカウンタ
             moveCnt_ = 0;
@@ -79,6 +80,7 @@ void EnemyPlant::InitStage2()
             // 被ダメージ数
             damage_ = 10.0f;
 
+            // 初期化用変数
             setInit_ = 3;
         }
     }
@@ -86,6 +88,7 @@ void EnemyPlant::InitStage2()
 
 void EnemyPlant::InitStage3()
 {
+    // ステージ3
     if (setInit_ == 3)
     {
         // ステージIDの取得
@@ -120,9 +123,11 @@ void EnemyPlant::InitStage3()
             collisionPlant_ = false;
 
             // アニメーションフレーム数カウント
-            animFrame_ = 16;
+            animFrame_ = WALK_ANIM_MIN;
             // アニメーションのカウンタ
             animCnt_ = 0;
+            // アニメーションの進行間隔
+            animInterval_ = 10;
 
             // 移動用のカウンタ
             moveCnt_ = 0;
@@ -132,6 +137,7 @@ void EnemyPlant::InitStage3()
             // 被ダメージ数
             damage_ = 10.0f;
 
+            // 初期化用変数
             setInit_ = 0;
         }
     }
@@ -202,20 +208,45 @@ void EnemyPlant::Draw()
 #endif // _DEBUG
 
     // アニメーション処理
-    if (!isFind_ && !enemyAttackP_->GetAlive())
+    // 攻撃モーション
+    if (enemyAttackP_->GetAlive())
     {
-        animCnt_++;
-        if (animCnt_ >= ANIM_INTERVAL) {
-            animCnt_ = 0;
-            animFrame_++;
-            if (animFrame_ >= ANIM_MAX) {
-                animFrame_ = 16;
+        int attackFrame = enemyAttackP_->GetAnimFrameAttackP();
+        if (attackFrame == 0)
+        {
+            animFrame_ = ATTACK_ANIM_MIN;
+            animInterval_ = 8;
+        }
+        else if (attackFrame >= 1)
+        {
+            animCnt_++;
+            if (animCnt_ >= animInterval_) {
+                animCnt_ = 0;
+                animFrame_++;
+                if (animFrame_ >= ATTACK_ANIM_MAX)
+                {
+                    animFrame_ = IDLE_ANIM_MIN;
+                }
+                else if (animFrame_ > IDLE_ANIM_MAX && animFrame_ < ATTACK_ANIM_MIN)
+                {
+                    animInterval_ = 12;
+                    animFrame_ = IDLE_ANIM_MIN;
+                }
             }
         }
     }
-    else
+    // 歩行モーション
+    else if (!enemyAttackP_->GetAlive())
     {
-        animCnt_ = 0;
+        animInterval_ = 10;
+        animCnt_++;
+        if (animCnt_ >= animInterval_) {
+            animCnt_ = 0;
+            animFrame_++;
+            if (animFrame_ > WALK_ANIM_MAX) {
+                animFrame_ = WALK_ANIM_MIN;
+            }
+        }
     }
 
     if (isAlive_)
@@ -223,6 +254,12 @@ void EnemyPlant::Draw()
         // 発見中
         if (isFind_)
         {
+            // 待機時フレーム
+            if (!enemyAttackP_->GetAlive())
+            {
+                animFrame_ = 18;
+            }
+
             // プレイヤーがエネミーの左にいるか
             if (playerPos.x <= pos_.x)
             {
@@ -243,7 +280,6 @@ void EnemyPlant::Draw()
                 {
                     isLeft_ = false;
                 }
-
             }
         }
         // 発見中でない
@@ -315,7 +351,7 @@ void EnemyPlant::PlayerAttackCollision()
     // 攻撃属性を取得
     int magicColoer = player_->GetCr();
 
-    // 魔法攻撃
+    // 魔法攻撃使用中
     if (magicColoer != 0xffffff)
     {
         // 魔法とエネミーの衝突判定
@@ -390,7 +426,6 @@ void EnemyPlant::EnemyAttackCollision()
         {
             // 衝突した
             collisionPlant_ = true;
-            isAlive_ = false;
         }
 
         // プレイヤーとエネミーの攻撃の衝突判定
@@ -401,36 +436,32 @@ void EnemyPlant::EnemyAttackCollision()
         int attackSizeY = enemyAttackP_->GetSizeY();
         // カメラ座標の取得
         Vector2 cameraPos = camera_->GetCameraPos();
+        // エネミーの攻撃のフレーム数取得
+        int attackFrame = enemyAttackP_->GetAnimFrameAttackP();
 
-        if (enemyAttackP_->GetAlive() && !isGetPos_)
-        {
+        if (enemyAttackP_->GetAlive()) {
             // エネミーの攻撃の当たり判定座標
-            leftAttackPos = playerPos.x - attackSizeX / 2;
+            leftAttackPos = attackPos.x - attackSizeX / 2 - cameraPos.x;
             // 左
-            rightAttackPos = playerPos.x + attackSizeX / 2;
+            rightAttackPos = attackPos.x + attackSizeX / 2 - cameraPos.x;
             // 上
-            topAttackPos = playerPos.y - attackSizeY / 2;
+            topAttackPos = attackPos.y - attackSizeY / 2 - cameraPos.y;
             // 下
-            bottomAttackPos = playerPos.y + attackSizeY / 2;
-            // プレイヤー座標取得済み
-            isGetPos_ = true;
-        }
-        else
-        {
-            isGetPos_ = false;
-        }
+            bottomAttackPos = attackPos.y + attackSizeY / 2 - cameraPos.y;
 
-        // プレイヤー画像のサイズ
-        float playerSize = 64.0f;
-        // 衝突判定
-        if (enemyAttackP_->GetAlive() &&
-            rightAttackPos < playerPos.x &&
-            leftAttackPos > playerPos.x + playerSize &&
-            topAttackPos < playerPos.y + playerSize &&
-            bottomAttackPos > playerPos.y)
-        {
-            // 衝突した
-            isAlive_ = false;
+            // プレイヤー画像のサイズ
+            float playrSize = 58.0f;
+            // 衝突判定
+            if (leftAttackPos < playerPos.x + playrSize - cameraPos.x &&
+                rightAttackPos > playerPos.x - cameraPos.x &&
+                topAttackPos < playerPos.y + playrSize - cameraPos.y &&
+                bottomAttackPos > playerPos.y - cameraPos.y &&
+                attackFrame >= 2)
+            {
+                // 衝突した
+                collisionPlant_ = true;
+                isAlive_ = false;
+            }
         }
     }
 }
@@ -547,4 +578,14 @@ bool EnemyPlant::GetCollisionPlant()
 void EnemyPlant::SetCollisionPlant(bool collisionPlant)
 {
     collisionPlant_ = collisionPlant;
+}
+
+bool EnemyPlant::GetAnimFramePlant()
+{
+    return animFrame_;
+}
+
+void EnemyPlant::SetAnimFramePlant(int animFrame)
+{
+    animFrame_ = animFrame;
 }

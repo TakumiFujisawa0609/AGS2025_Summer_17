@@ -21,6 +21,8 @@ void EnemyAttackP::Init(EnemyPlant* enemyPlant, Player* player, Camera* camera)
     animFrame_ = 0;
     // アニメーションのカウンタ
     animCnt_ = 0;
+    // アニメーションの進行間隔
+    animInterval_ = 12;
 
     // 攻撃のクールダウン
     attackCnt_ = 50;
@@ -34,11 +36,16 @@ void EnemyAttackP::Init(EnemyPlant* enemyPlant, Player* player, Camera* camera)
     // 再生折り返し判定
     isCntUp_ = true;
 
-    // プレイヤー座標取得判定
+    // プレイヤー座標取得済み判定
     isGetPos_ = false;
 }
 
 void EnemyAttackP::Update()
+{
+
+}
+
+void EnemyAttackP::Draw()
 {
     // 発見中のみ攻撃クールダウン消費
     if (enemyPlant_->GetFind())
@@ -46,47 +53,58 @@ void EnemyAttackP::Update()
         attackCnt_++;
     }
 
+    if (isCntUp_ && animFrame_ == 1)
+    {
+        animInterval_ = 45;
+    }
+    else if (animFrame_ > 1)
+    {
+        animInterval_ = 8;
+    }
+
     // アニメーション処理
-    if (attackCnt_ >= ATTACK_INTERVAL && (isAttack_ || isAlive_))
+    if (attackCnt_ >= ATTACK_INTERVAL && (isAttack_ || isAlive_) && (player_->GetHitFoot() || isAlive_))
     {
         isAlive_ = true;
         animCnt_++;
-        if (animCnt_ >= ANIM_INTERVAL) {
+        if (animCnt_ >= animInterval_)
+        {
             animCnt_ = 0;
             if (isCntUp_)
             {
                 animFrame_++;
-                if (animFrame_ >= ANIM_MAX) {
-                    animFrame_ = 8;
+                if (animFrame_ >= 8)
+                {
                     isCntUp_ = false;
                 }
             }
             else
             {
                 animFrame_--;
-                if (animFrame_ <= 0) {
+                if (animFrame_ <= 0)
+                {
                     isCntUp_ = true;
                     isAlive_ = false;
                     isAttack_ = false;
                     attackCnt_ = 0;
+                    enemyPlant_->SetAnimFramePlant(16);
                 }
             }
 
         }
     }
-}
 
-void EnemyAttackP::Draw()
-{
-    // プレイヤー座標の取得
+    // プレイヤー
     Vector2F playerPos = player_->GetPlayerPos();
-    // カメラ座標の取得
+    // カメラ
     Vector2 cameraPos = camera_->GetCameraPos();
-    // プレイヤー画像のサイズ
-    float playerSize = 64.0f;
-    if (isAlive_ )
+    // エネミー
+    Vector2F enemyPos = enemyPlant_->GetPos();
+    int enemySize = enemyPlant_->GetSizeX();
+    bool enemyLeft = enemyPlant_->GetLeft();
+
+    if (isAlive_)
     {
-        // 一度だけプレイヤー座標を取得
         if (!isGetPos_)
         {
             pos_.x = playerPos.x;
@@ -107,7 +125,8 @@ void EnemyAttackP::Draw()
     if (isAlive_)
     {
         //// 当たり判定用座標
-        DrawBox(pos_.x - SIZE_X / 2, pos_.y - SIZE_Y / 2, pos_.x + SIZE_X / 2, pos_.y + SIZE_Y / 2, 0x000000, false);
+        DrawBox(pos_.x - SIZE_X / 2 - cameraPos.x, pos_.y - SIZE_Y / 2 - cameraPos.y,
+            pos_.x + SIZE_X / 2 - cameraPos.x, pos_.y + SIZE_Y / 2 - cameraPos.y, 0x000000, false);
     }
 
 #endif // _DEBUG
@@ -151,4 +170,14 @@ bool EnemyAttackP::GetAlive()
 void EnemyAttackP::SetAlive(bool isAlive)
 {
     isAlive_ = isAlive;
+}
+
+int EnemyAttackP::GetAnimFrameAttackP()
+{
+    return animFrame_;
+}
+
+void EnemyAttackP::SetAnimFrameAttackP(int animFrame)
+{
+    animFrame_ = animFrame;
 }

@@ -20,7 +20,14 @@ public:
     static constexpr int ANIM_X = 8;
     static constexpr int ANIM_Y = 3;
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
-    static constexpr int ANIM_INTERVAL = 13;
+    // アニメーションフレーム
+    static constexpr int IDLE_ANIM_MIN = 0;
+    static constexpr int IDLE_ANIM_MAX = 3;
+    static constexpr int ATTACK_ANIM_MIN = 8;
+    static constexpr int ATTACK_ANIM_MAX = 10;
+    static constexpr int WALK_ANIM_MIN = 16;
+    static constexpr int WALK_ANIM_MAX = 23;
+
 
     // 初期化
     void Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player* player, Camera* camera, Stage* stage);
@@ -64,6 +71,10 @@ public:
     bool GetCollisionPlant();
     void SetCollisionPlant(bool collisionPlant);
 
+    // アニメーションフレーム数カウント
+    bool GetAnimFramePlant();
+    void SetAnimFramePlant(int animFrame);
+
 private:
 
     // エネミー
@@ -104,6 +115,8 @@ private:
     int animFrame_;
     // アニメーションのカウンタ
     int animCnt_;
+    // アニメーションの進行間隔
+    int animInterval_;
 
     // 移動用のカウンタ
     int moveCnt_;
@@ -133,7 +146,5 @@ private:
     bool collisionDamage_;
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
     bool collisionPlant_;
-    // プレイヤー座標取得判定
-    bool isGetPos_;
 
 };
