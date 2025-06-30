@@ -62,7 +62,7 @@ void Water::CreateEffect(Vector2 pos)
 	}
 	if (particles_.size())
 		{
-		ChangeVolumeSoundMem(255, WaterSoundHandle); // âπó Çç≈ëÂÇ…ñﬂÇ∑
+		
 			PlaySoundMem(WaterSoundHandle, DX_PLAYTYPE_BACK);
 		}
 		else if (particles_.size())
