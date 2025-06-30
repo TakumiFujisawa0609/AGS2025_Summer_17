@@ -164,8 +164,6 @@ void SceneManager::Draw(void)
 	// 描画
 	
 		scene_->Draw();
-	
-
 	// Effekseerにより再生中のエフェクトを描画する。
 	DrawEffekseer3D();
 	
@@ -178,7 +176,7 @@ void SceneManager::Draw(void)
 		DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x000000, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		SetFontSize(100);
-		DrawFormatString(400, 200, 0xFFFFFF, "SPACEキーを押してスタート\n\n    ENTERでゲーム終了\n\n　　　ESCで戻る");
+		DrawFormatString(400, 200, 0xFFFFFF, "SPACEキーを押してタイトル\n\n    ENTERでゲーム終了\n\n　　　ESCで戻る");
 		SetFontSize(16);
 	}
 	

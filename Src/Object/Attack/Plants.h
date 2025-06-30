@@ -29,6 +29,8 @@ class Plants
 		// 爆発アニメーション用のカウンタ
 		int plantsImgAnimCount;
 
+		int plantsSoundHandle;
+
 		float count;
 		// 爆発座標
 		Vector2 plantsPos;
