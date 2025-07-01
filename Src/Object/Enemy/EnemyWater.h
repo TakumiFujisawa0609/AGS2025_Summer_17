@@ -40,8 +40,13 @@ public:
     // ˆÚ“®
     void Move();
     // Õ“Ë”»’è
+<<<<<<< HEAD
     void PlayerAttackCollision();
     void EnemyAttackCollision();
+=======
+    void CollisionPlayerAttack();
+    void CollisionEnemyAttack();
+>>>>>>> parent of 4d37165 (ma-ji)
     // ”íƒ_ƒ[ƒW
     void Damage();
 

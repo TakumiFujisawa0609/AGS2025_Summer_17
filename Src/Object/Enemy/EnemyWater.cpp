@@ -40,12 +40,20 @@ void EnemyWater::InitStage2()
         if (stageId == 2)
         {
             // 初期座標
+<<<<<<< HEAD
             pos_.x = 4426.0f;
+=======
+            pos_.x = 4394.0f;
+>>>>>>> parent of 4d37165 (ma-ji)
             pos_.y = 640.0f;
 
             // 移動速度
             moveSpeed_ = 0.8f;
+<<<<<<< HEAD
             moveMax_ = 210;
+=======
+            moveMax_ = 150;
+>>>>>>> parent of 4d37165 (ma-ji)
 
             // 索敵範囲
             findSize_ = 300.0f;
@@ -145,8 +153,13 @@ void EnemyWater::Update()
     InitStage3();
     Move();
     Attack();
+<<<<<<< HEAD
     PlayerAttackCollision();
     EnemyAttackCollision();
+=======
+    CollisionPlayerAttack();
+    CollisionEnemyAttack();
+>>>>>>> parent of 4d37165 (ma-ji)
     Damage();
     enemyAttackW_->Update();
 
@@ -303,7 +316,11 @@ void EnemyWater::Move()
     }
 }
 
+<<<<<<< HEAD
 void EnemyWater::PlayerAttackCollision()
+=======
+void EnemyWater::CollisionPlayerAttack()
+>>>>>>> parent of 4d37165 (ma-ji)
 {
     // エネミーの衝突用半径
     float enemyRadius = 32.0f;
@@ -363,7 +380,11 @@ void EnemyWater::PlayerAttackCollision()
     //}
 }
 
+<<<<<<< HEAD
 void EnemyWater::EnemyAttackCollision()
+=======
+void EnemyWater::CollisionEnemyAttack()
+>>>>>>> parent of 4d37165 (ma-ji)
 {
     if (isAlive_) {
         // エネミーの衝突用半径

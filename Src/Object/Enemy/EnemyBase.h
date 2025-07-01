@@ -22,7 +22,7 @@ private:
     bool isFire_;
     bool isWater_;
     bool isPlant_;
-
+    
     EnemyFire* enemyFire_;
     Player* player_;
     Camera* camera_;

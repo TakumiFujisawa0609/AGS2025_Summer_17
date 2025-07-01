@@ -25,7 +25,7 @@
 
 GameScene::GameScene(void)
 {
-
+	
 }
 
 GameScene::~GameScene(void)
@@ -85,7 +85,7 @@ void GameScene::Init(void)
 	blast_->Init(camera_);
 	water_->Init(camera_);
 	plants_->Init(camera_);
-
+	
 }
 
 void GameScene::Update(void)
@@ -141,7 +141,7 @@ void GameScene::Update(void)
 		pos.x = 100;
 		pos.y = 100;
 
-
+		
 		plants_->SetPlantsPos(pos);
 		plants_->SetIsPlants(true);
 	}*/
@@ -155,7 +155,7 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {
-
+	
 	stageManager_->Draw();
 	playerUi_->Draw();
 	//// ステージの描画
@@ -177,7 +177,7 @@ void GameScene::Draw(void)
 	//water_->Draw();
 	//plants_->Draw();
 
-
+	
 #ifdef _DEBUG
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 
@@ -201,5 +201,5 @@ void GameScene::Release()
 	delete plants_;
 	delete enemyManager_;
 
-
+	
 }

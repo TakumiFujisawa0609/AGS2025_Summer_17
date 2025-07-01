@@ -53,15 +53,6 @@ void EnemyAttackP::Draw()
         attackCnt_++;
     }
 
-    if (isCntUp_ && animFrame_ == 1)
-    {
-        animInterval_ = 60;
-    }
-    else if (animFrame_ > 1)
-    {
-        animInterval_ = 8;
-    }
-
     // アニメーション処理
     if (attackCnt_ >= ATTACK_INTERVAL && (isAttack_ || isAlive_) && (player_->GetHitFoot() || isAlive_))
     {
@@ -105,14 +96,22 @@ void EnemyAttackP::Draw()
 
     if (isAlive_)
     {
+<<<<<<< HEAD
         if (!isGetPos_)
+=======
+        if(!isGetPos_)
+>>>>>>> parent of 4d37165 (ma-ji)
         {
             pos_.x = playerPos.x;
             pos_.y = playerPos.y;
             isGetPos_ = true;
         }
         // 左向きに描画
+<<<<<<< HEAD
         DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, false);
+=======
+        DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, false);   
+>>>>>>> parent of 4d37165 (ma-ji)
     }
     else
     {

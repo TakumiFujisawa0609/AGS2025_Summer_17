@@ -226,7 +226,11 @@ void EnemyPlant::Draw()
                 if (animFrame_ >= ATTACK_ANIM_MAX)
                 {
                     animFrame_ = IDLE_ANIM_MIN;
+<<<<<<< HEAD
                 }
+=======
+                } 
+>>>>>>> parent of 4d37165 (ma-ji)
                 else if (animFrame_ > IDLE_ANIM_MAX && animFrame_ < ATTACK_ANIM_MIN)
                 {
                     animInterval_ = 12;
@@ -236,7 +240,11 @@ void EnemyPlant::Draw()
         }
     }
     // ï‡çsÉÇÅ[ÉVÉáÉì
+<<<<<<< HEAD
     else if (!enemyAttackP_->GetAlive())
+=======
+    else if(!enemyAttackP_->GetAlive())
+>>>>>>> parent of 4d37165 (ma-ji)
     {
         animInterval_ = 10;
         animCnt_++;
@@ -460,7 +468,6 @@ void EnemyPlant::EnemyAttackCollision()
             {
                 // è’ìÀÇµÇΩ
                 collisionPlant_ = true;
-                isAlive_ = false;
             }
         }
     }

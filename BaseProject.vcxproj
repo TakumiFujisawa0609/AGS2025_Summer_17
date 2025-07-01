@@ -141,8 +141,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClInclude Include="Src\Object\Enemy\EnemyAttack\EnemyAttackW.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyWater.h" />
+=======
+    <ClInclude Include="Src\Object\Enemy\EnemyWater.h" />
+    <ClInclude Include="Src\Object\Enemy\EnemyAttack\EnemyAttackW.h" />
+>>>>>>> parent of 4d37165 (ma-ji)
     <ClInclude Include="Src\Object\Enemy\EnemyAttack\EnemyAttackP.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyPlant.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyAttack\EnemyAttackF.h" />
@@ -176,8 +181,13 @@
     <ClInclude Include="Src\Manager\StageManager.h" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClCompile Include="Src\Object\Enemy\EnemyAttack\EnemyAttackW.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyWater.cpp" />
+=======
+    <ClCompile Include="Src\Object\Enemy\EnemyWater.cpp" />
+    <ClCompile Include="Src\Object\Enemy\EnemyAttack\EnemyAttackW.cpp" />
+>>>>>>> parent of 4d37165 (ma-ji)
     <ClCompile Include="Src\Object\Enemy\EnemyAttack\EnemyAttackP.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyPlant.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyAttack\EnemyAttackF.cpp" />
