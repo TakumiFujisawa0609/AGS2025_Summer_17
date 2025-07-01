@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include <math.h>
 #include "../../Application.h"
+#include "../../Scene/GameScene.h"
 #include "../Stage/Stage.h"
 #include "../Camera/Camera.h"
 #include "../../Manager/ResourceManager.h"
@@ -182,11 +183,31 @@ void Player::Draw()
 	
 
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
-	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 5, cr_);
+
+	/*DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 10, 0x000000);
+	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 5, cr_);*/
 	
 	if (isPoint_)
 	{
-		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 5, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 12);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 12,cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 10);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 10, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 8);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 8, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 6);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 6, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 4);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 4, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 2);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 2, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 1, cr_);
 	}
 	if (GetIsEF() == true)
 	{
@@ -787,6 +808,7 @@ void Player::ReSpawn()
 			pos_.x = stageSize_ * 2;
 			pos_.y = stageSize_ * 8;
 			SetHp(GetHp() - 10);
+
 		}
 	}
 	else
@@ -951,6 +973,8 @@ void Player::AttackChange(void)
 		attackPos_.x -= MOVE_POWER;
 	}
 }
+
+
 
 
 //“–‚½‚è”»’è--------------------------------------------------------------------------------------------------------------------------------------------------------------

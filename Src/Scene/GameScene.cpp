@@ -82,10 +82,42 @@ void GameScene::Init(void)
 	water_->Init(camera_);
 	plants_->Init(camera_);
 	
+
+	//スクリーン系
+	tmpScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
+	screenShakeInterevalCount_ = 0;
+	screenShakePos_ = SHAKE_WIDTH;
 }
 
 void GameScene::Update(void)
 {
+
+	//ストップ処理・振動処理
+	if (hitStopCnt_ > 0)
+	{
+		SetDrawScreen(DX_SCREEN_BACK);
+		++screenShakeInterevalCount_;
+		if (SCREEN_SHAKE_INTERVAL_COUNT <= screenShakeInterevalCount_)
+		{
+			screenShakeInterevalCount_ = 0;
+			//右揺れ
+			if (screenShakePos_ == SHAKE_WIDTH)
+			{
+				screenShakePos_ = -SHAKE_WIDTH;
+			}
+			//左揺れ
+			else if (screenShakePos_ == -SHAKE_WIDTH)
+			{
+				screenShakePos_ = SHAKE_WIDTH;
+			}
+
+		}
+		DrawGraph(screenShakePos_, screenShakePos_, tmpScreen_, true);
+		hitStopCnt_--;
+		return;
+	}
+
+
 	// 入力の更新
 	InputManager& ins = InputManager::GetInstance();
 
@@ -151,7 +183,12 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {
-	
+	SetDrawScreen(tmpScreen_);
+
+	stageManager_->Draw();
+	SetDrawScreen(DX_SCREEN_BACK);
+	DrawGraph(screenShakePos_, screenShakePos_, tmpScreen_, true);
+
 	stageManager_->Draw();
 	playerUi_->Draw();
 	SetFontSize(32);
@@ -201,4 +238,14 @@ void GameScene::Release()
 	delete enemyManager_;
 
 	
+}
+
+int GameScene::GetHitStop()
+{
+	return hitStopCnt_;
+}
+
+void GameScene::SetHitStop(int cnt)
+{
+	hitStopCnt_ = cnt;
 }

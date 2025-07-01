@@ -297,5 +297,7 @@ public:
 	// ƒJƒƒ‰ˆÊ’uæ“¾
 	Vector2 GetCamera();
 
+
+
 };
 
