@@ -226,11 +226,7 @@ void EnemyPlant::Draw()
                 if (animFrame_ >= ATTACK_ANIM_MAX)
                 {
                     animFrame_ = IDLE_ANIM_MIN;
-<<<<<<< HEAD
                 } 
-=======
-                }
->>>>>>> ado-higuchi
                 else if (animFrame_ > IDLE_ANIM_MAX && animFrame_ < ATTACK_ANIM_MIN)
                 {
                     animInterval_ = 12;
@@ -240,11 +236,7 @@ void EnemyPlant::Draw()
         }
     }
     // •àsƒ‚[ƒVƒ‡ƒ“
-<<<<<<< HEAD
     else if(!enemyAttackP_->GetAlive())
-=======
-    else if (!enemyAttackP_->GetAlive())
->>>>>>> ado-higuchi
     {
         animInterval_ = 10;
         animCnt_++;

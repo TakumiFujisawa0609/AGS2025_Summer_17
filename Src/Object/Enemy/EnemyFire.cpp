@@ -39,20 +39,12 @@ void EnemyFire::InitStage2()
         if (stageId == 2)
         {
             // ‰ŠúÀ•W
-<<<<<<< HEAD
             pos_.x = 2172.0f;
-=======
-            pos_.x = 2140.0f;
->>>>>>> ado-higuchi
             pos_.y = 352.0f;
 
             // ˆÚ“®‘¬“x
             moveSpeed_ = 1.3f;
-<<<<<<< HEAD
             moveMax_ = 200;
-=======
-            moveMax_ = 240;
->>>>>>> ado-higuchi
 
             // õ“G”ÍˆÍ
             findSize_ = 220.0f;

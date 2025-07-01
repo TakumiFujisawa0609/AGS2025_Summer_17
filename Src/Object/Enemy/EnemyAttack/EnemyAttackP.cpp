@@ -119,22 +119,14 @@ void EnemyAttackP::Draw()
 
     if (isAlive_)
     {
-<<<<<<< HEAD
         if(!isGetPos_)
-=======
-        if (!isGetPos_)
->>>>>>> ado-higuchi
         {
             pos_.x = playerPos.x;
             pos_.y = playerPos.y;
             isGetPos_ = true;
         }
         // ¶Œü‚«‚É•`‰æ
-<<<<<<< HEAD
         DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, false);   
-=======
-        DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, false);
->>>>>>> ado-higuchi
     }
     else
     {
