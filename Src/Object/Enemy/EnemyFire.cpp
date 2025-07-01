@@ -262,14 +262,6 @@ void EnemyFire::Draw()
     }
 }
 
-void EnemyFire::Attack()
-{
-    if (isAttack_)
-    {
-        int a = 0; // ‰¼
-    }
-}
-
 void EnemyFire::Move()
 {
     if (isAlive_ && !enemyAttackF_->GetAlive())
@@ -298,6 +290,15 @@ void EnemyFire::Move()
         }
     }
 }
+
+void EnemyFire::Attack()
+{
+    if (isAttack_)
+    {
+        int a = 0; // ‰¼
+    }
+}
+
 
 void EnemyFire::CollisionPlayerAttack()
 {
