@@ -108,12 +108,21 @@
     <ClInclude Include="Src\Object\Enemy\EnemyAttack\EnemyAttackP.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Src\Object\Enemy\EnemyAttack\EnemyAttackW.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Enemy\EnemyWater.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+=======
+    <ClInclude Include="Src\Object\Enemy\EnemyWater.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Object\Enemy\EnemyAttack\EnemyAttackW.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+>>>>>>> ado-higuchi
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Common\Fader.cpp">
@@ -209,11 +218,20 @@
     <ClCompile Include="Src\Object\Enemy\EnemyAttack\EnemyAttackP.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Src\Object\Enemy\EnemyAttack\EnemyAttackW.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Enemy\EnemyWater.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+=======
+    <ClCompile Include="Src\Object\Enemy\EnemyWater.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Object\Enemy\EnemyAttack\EnemyAttackW.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+>>>>>>> ado-higuchi
   </ItemGroup>
 </Project>

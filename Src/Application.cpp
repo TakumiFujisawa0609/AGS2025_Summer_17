@@ -51,7 +51,7 @@ void Application::Init(void)
 	InitEffekseer();
 
 	// キー制御初期化
-	SetUseDirectInputFlag(false);
+	SetUseDirectInputFlag(true);
 	InputManager::CreateInstance();
 
 	// リソース管理初期化

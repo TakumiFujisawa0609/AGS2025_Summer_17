@@ -6,7 +6,7 @@
 #include "../Stage/Stage.h"
 
 void EnemyFire::Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* player, Camera* camera, Stage* stage)
-{   
+{
     enemyFire_ = enemyFire;
     enemyAttackF_ = enemyAttackF;
     player_ = player;
@@ -39,12 +39,20 @@ void EnemyFire::InitStage2()
         if (stageId == 2)
         {
             // 初期座標
+<<<<<<< HEAD
             pos_.x = 2172.0f;
+=======
+            pos_.x = 2140.0f;
+>>>>>>> ado-higuchi
             pos_.y = 352.0f;
 
             // 移動速度
             moveSpeed_ = 1.3f;
+<<<<<<< HEAD
             moveMax_ = 200;
+=======
+            moveMax_ = 240;
+>>>>>>> ado-higuchi
 
             // 索敵範囲
             findSize_ = 220.0f;
@@ -398,7 +406,7 @@ void EnemyFire::CollisionEnemyAttack()
         int attackSizeY = enemyAttackF_->GetSizeY();
         // カメラ座標の取得
         Vector2 cameraPos = camera_->GetCameraPos();
-        
+
         if (enemyAttackF_->GetAlive()) {
             // エネミーの攻撃の当たり判定座標
             // 左向きのとき

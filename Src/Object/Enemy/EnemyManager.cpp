@@ -25,7 +25,7 @@ void EnemyManager::Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyWater
 	stage_ = stage;
 
 	collisionEnemy_ = false;
-	
+
 	/*enemyBase_ = new EnemyBase();
 	enemyBase_->Init(player_, camera_, stage_);*/
 
@@ -69,7 +69,11 @@ void EnemyManager::CollisionAttack()
 	}
 
 	// falseになったらエネミーの衝突判定もfalseになる
+<<<<<<< HEAD
 	if(!collisionEnemy_)
+=======
+	if (!collisionEnemy_)
+>>>>>>> ado-higuchi
 	{
 		enemyFire_->SetCollisionFire(false);
 		enemyPlant_->SetCollisionPlant(false);

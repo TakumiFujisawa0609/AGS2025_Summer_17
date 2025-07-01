@@ -20,7 +20,10 @@ public:
     static constexpr int ANIM_X = 8;
     static constexpr int ANIM_Y = 3;
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
+<<<<<<< HEAD
 
+=======
+>>>>>>> ado-higuchi
     // アニメーションフレーム
     static constexpr int IDLE_ANIM_MIN = 0;
     static constexpr int IDLE_ANIM_MAX = 3;

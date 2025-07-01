@@ -40,8 +40,13 @@ public:
     // ˆÚ“®
     void Move();
     // Õ“Ë”»’è
+<<<<<<< HEAD
     void CollisionPlayerAttack();
     void CollisionEnemyAttack();
+=======
+    void PlayerAttackCollision();
+    void EnemyAttackCollision();
+>>>>>>> ado-higuchi
     // ”íƒ_ƒ[ƒW
     void Damage();
 

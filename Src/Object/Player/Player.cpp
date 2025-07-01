@@ -27,7 +27,7 @@ Player::~Player()
 void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water* water, Plants* plants)
 {
 
-	
+
 
 	//カメラの取得
 	camera_ = camera; // 引数で渡されたカメラを保持
@@ -105,7 +105,7 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 }
 void Player::Update()
 {
-	
+
 
 	// プレイヤーの再出現処理
 	if (isAlive_ == false) // プレイヤーが死亡状態なら
@@ -141,14 +141,14 @@ void Player::Update()
 void Player::Draw()
 {
 	// 画像の描画
-	Vector2 cpos= camera_->GetCameraPos();
+	Vector2 cpos = camera_->GetCameraPos();
 	if (isAlive_)
 	{
 		// 半透明フラグ
 		bool isTrans = false;
 		if (invCnt_ > 0)
 		{
-			if (invCnt_% 2 == 0)
+			if (invCnt_ % 2 == 0)
 			{
 				isTrans = true;
 			}
@@ -177,26 +177,26 @@ void Player::Draw()
 	//腕の描画
 	//色変更
 	//GraphFilter(armImg_, DX_GRAPH_FILTER_HSB, cr, cr,cr,cr);
-	
- 	
-	
+
+
+
 
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
 	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 5, cr_);
-	
+
 	if (isPoint_)
 	{
 		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 5, cr_);
 	}
 	if (GetIsEF() == true)
 	{
-		radius_+=3;
+		radius_ += 3;
 		//属性変更時のエフェクト
-		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_, GetCr(), false);
-		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_ + 1, GetCr(), false);
-		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_ + 2, GetCr(), false);
-		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_ + 3, GetCr(), false);
-		DrawCircle(pos_.x  - cpos.x, pos_.y  - cpos.y, radius_ + 4, GetCr(), false);
+		DrawCircle(pos_.x - cpos.x, pos_.y - cpos.y, radius_, GetCr(), false);
+		DrawCircle(pos_.x - cpos.x, pos_.y - cpos.y, radius_ + 1, GetCr(), false);
+		DrawCircle(pos_.x - cpos.x, pos_.y - cpos.y, radius_ + 2, GetCr(), false);
+		DrawCircle(pos_.x - cpos.x, pos_.y - cpos.y, radius_ + 3, GetCr(), false);
+		DrawCircle(pos_.x - cpos.x, pos_.y - cpos.y, radius_ + 4, GetCr(), false);
 		if (radius_ >= 60)
 		{
 
@@ -209,7 +209,7 @@ void Player::Draw()
 	//当たり判定の可視化
 	DrawHitCollision();
 	DrawCircle(attckAnglePoint_.x - cpos.x, attckAnglePoint_.y - cpos.y, 32, cr_, false);
-	
+
 
 #endif // DEBUG
 
@@ -288,13 +288,13 @@ void Player::Move()
 
 	//下に移動していたら足元と衝突判定
 	if (prePos.y < pos_.y)CollisionFoot();
-	
+
 	//左への移動処理
 	if (ins.IsNew(KEY_INPUT_A))
 	{
-		
 
-		
+
+
 		//左を向ける
 		dir_ = AsoUtility::DIR::LEFT;
 		//加速量を加算する
@@ -355,8 +355,8 @@ void Player::Move()
 	if (ins.IsNew(KEY_INPUT_D))
 	{
 
-		
-		
+
+
 		//右を向ける
 		dir_ = AsoUtility::DIR::RIGHT;
 
@@ -382,26 +382,26 @@ void Player::Move()
 		ChangeAnimState(ANIM_STATE::IDLE, true);
 	}*/
 	//スピードが出ているときは原則も同時に行う
-	
 
-		if (movePosX_ > 0.0f)
+
+	if (movePosX_ > 0.0f)
+	{
+		movePosX_ -= MOVE_DEC_POW;
+
+		//原則を０以下にはしない
+		if (movePosX_ < 0.0f)
 		{
-			movePosX_ -= MOVE_DEC_POW;
-
-			//原則を０以下にはしない
-			if (movePosX_ < 0.0f)
-			{
-				movePosX_ = 0.0f;
-			}
-			pos_.x += movePosX_;
+			movePosX_ = 0.0f;
 		}
-	
+		pos_.x += movePosX_;
+	}
+
 	//デバッグ表示用に一回計算する
 	//完成品では消してよし
 	CalcRightSidePos();
 	isHitRightSide_ = IsHitRightPos();
 
-	
+
 	//右に移動していたら右と衝突判定
 	if (prePos.x < pos_.x)CollisionRightSide();
 	if (prePos.x < pos_.x)CollisionWaterRightSide();
@@ -417,7 +417,7 @@ void Player::Move()
 		if (prePos.x < pos_.x)CollisionPlantsRightSide3();
 	}
 
-	if(!ins.IsNew(KEY_INPUT_D) && !ins.IsNew(KEY_INPUT_A))
+	if (!ins.IsNew(KEY_INPUT_D) && !ins.IsNew(KEY_INPUT_A))
 	{
 		moveType_ = MOVE_TYPE::STOP;
 	}
@@ -474,7 +474,7 @@ void Player::Anime()
 //攻撃タイプ別処理
 void Player::Attack()
 {
-	
+
 
 	isSword_ = false; // 剣を振っていない状態に初期化
 
@@ -807,7 +807,7 @@ void Player::AttackChange(void)
 {
 
 
-	
+
 
 	// 入力マネージャのインスタンスを取得
 	InputManager& ins = InputManager::GetInstance();
@@ -1138,7 +1138,7 @@ bool Player::IsWaterHitLeftPos(void)
 			|| wall_->IsWaterCollision(leftPosU_)
 			|| wall_->IsWaterCollision(leftPosD_);
 	}
-	
+
 }
 
 //炎
@@ -1361,7 +1361,7 @@ bool Player::IsPlantsHitRightPos3(void)
 	}
 	else
 	{
-		
+
 	}
 }
 
@@ -1375,7 +1375,7 @@ bool Player::IsPlantsHitLeftPos3(void)
 	}
 	else
 	{
-		
+
 	}
 }
 
@@ -1396,7 +1396,7 @@ void Player::CollisionFoot(void)
 		//当たっているマップチップの上側の座標を計算する
 		int mapChipUpSideY = mapPos.y * Stage::CHIP_SIZE_Y;
 		//プレイヤーの足元がマップチップの上側になるように設定する
-		pos_.y = static_cast<float>(mapChipUpSideY) - HALF_COL_SIZE_Y - COL_OFFSET- 3;
+		pos_.y = static_cast<float>(mapChipUpSideY) - HALF_COL_SIZE_Y - COL_OFFSET - 3;
 
 		//ジャンプフラグを切る
 		if (isJump_)
@@ -1518,7 +1518,7 @@ void Player::CollisionWaterLeftSide(void)
 	if (isHitLeftSide_)
 	{
 		DownHp(50);
-		pos_.x = wall_->GetWaterPos().x + wall_->FLARE_SIZE_X+wall_->FLARE_HALF_SIZE_X;
+		pos_.x = wall_->GetWaterPos().x + wall_->FLARE_SIZE_X + wall_->FLARE_HALF_SIZE_X;
 		//左に移動録があるときは移動量をなくす
 		if (movePosX_ < 0.0f)movePosX_ = 0.0f;
 	}
@@ -1869,7 +1869,7 @@ void Player::SetMp(int mp)
 }
 unsigned int Player::GetCr(void)
 {
- 	return cr_;
+	return cr_;
 }
 void Player::SetCr(int cr)
 {
@@ -1990,17 +1990,17 @@ void Player::ElementChange()
 	case ELEMENT_TYPE::FIRE:
 		animaAem_ = 3;
 		cr_ = 0xff0000;
-		
+
 		break;
 	case ELEMENT_TYPE::WATER:
 		animaAem_ = 1;
 		cr_ = 0x0000ff;
-		
+
 		break;
 	case ELEMENT_TYPE::PLANT:
 		animaAem_ = 2;
 		cr_ = 0x00ff00;
-		
+
 		break;
 	case ELEMENT_TYPE::NORMAL:
 		animaAem_ = 0;

@@ -24,8 +24,8 @@ class GameScene : public SceneBase
 {
 
 public:
-	
-	
+
+
 private:
 
 	// ƒvƒŒƒCƒ„[
@@ -60,7 +60,7 @@ private:
 	int backImg_;
 
 
-	
+
 
 public:
 

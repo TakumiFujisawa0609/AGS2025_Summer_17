@@ -40,12 +40,20 @@ void EnemyWater::InitStage2()
         if (stageId == 2)
         {
             // 初期座標
+<<<<<<< HEAD
             pos_.x = 4394.0f;
+=======
+            pos_.x = 4426.0f;
+>>>>>>> ado-higuchi
             pos_.y = 640.0f;
 
             // 移動速度
             moveSpeed_ = 0.8f;
+<<<<<<< HEAD
             moveMax_ = 150;
+=======
+            moveMax_ = 210;
+>>>>>>> ado-higuchi
 
             // 索敵範囲
             findSize_ = 300.0f;
@@ -145,8 +153,13 @@ void EnemyWater::Update()
     InitStage3();
     Move();
     Attack();
+<<<<<<< HEAD
     CollisionPlayerAttack();
     CollisionEnemyAttack();
+=======
+    PlayerAttackCollision();
+    EnemyAttackCollision();
+>>>>>>> ado-higuchi
     Damage();
     enemyAttackW_->Update();
 
@@ -303,7 +316,11 @@ void EnemyWater::Move()
     }
 }
 
+<<<<<<< HEAD
 void EnemyWater::CollisionPlayerAttack()
+=======
+void EnemyWater::PlayerAttackCollision()
+>>>>>>> ado-higuchi
 {
     // エネミーの衝突用半径
     float enemyRadius = 32.0f;
@@ -363,7 +380,11 @@ void EnemyWater::CollisionPlayerAttack()
     //}
 }
 
+<<<<<<< HEAD
 void EnemyWater::CollisionEnemyAttack()
+=======
+void EnemyWater::EnemyAttackCollision()
+>>>>>>> ado-higuchi
 {
     if (isAlive_) {
         // エネミーの衝突用半径
