@@ -300,14 +300,6 @@ void EnemyPlant::Draw()
     }
 }
 
-void EnemyPlant::Attack()
-{
-    if (isAttack_)
-    {
-        int a = 0; // ‰¼
-    }
-}
-
 void EnemyPlant::Move()
 {
     if (isAlive_ && !enemyAttackP_->GetAlive())
@@ -335,6 +327,15 @@ void EnemyPlant::Move()
             }
         }
     }
+}
+
+void EnemyPlant::Attack()
+{
+    if (isAttack_)
+    {
+        int a = 0; // ‰¼
+    }
+
 }
 
 void EnemyPlant::CollisionPlayerAttack()

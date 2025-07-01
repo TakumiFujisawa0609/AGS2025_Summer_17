@@ -22,13 +22,18 @@ class Stage;
 class EnemyManager {
 public:
 
+    // 初期化
     void Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyWater* enemyWater,
         EnemyAttackF* enemyAttackF, EnemyAttackP* enemyAttackP, EnemyAttackW* enemyAttackW,
         Player* player, Camera* camera, Stage* stage);
+    // 更新
     void Update();
+    // 描画
     void Draw();
+    // エネミーの当たり判定
     void CollisionAttack();
 
+    // エネミーの当たり判定管理の取得・更新
     bool GetCollisionEnemy();
     void SetCollisionEnemy(bool collisionEnemy);
 
@@ -45,11 +50,12 @@ private:
     Camera* camera_;
     Stage* stage_;
 
+    // 各種エネミーの当たり判定
     bool fireCollision_;
     bool plantCollision_;
     bool waterCollision_;
 
-
+    // エネミーの当たり判定管理
     bool collisionEnemy_;
 
 };

@@ -30,11 +30,10 @@ public:
     void Update();
     // •`‰æ
     void Draw();
-
-    // UŒ‚
-    void Attack();
     // ˆÚ“®
     void Move();
+    // UŒ‚
+    void Attack();
     // Õ“Ë”»’è
     void CollisionPlayerAttack();
     void CollisionEnemyAttack();

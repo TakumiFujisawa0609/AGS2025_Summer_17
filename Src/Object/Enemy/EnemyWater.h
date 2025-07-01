@@ -25,6 +25,8 @@ public:
     static constexpr int ATTACK_ANIM = 6;
     static constexpr int WALK_ANIM_MIN = 3;
     static constexpr int WALK_ANIM_MAX = 5;
+    // 攻撃
+    static constexpr int ATTACK_INTERVAL = 110;
 
     // 初期化
     void Init(EnemyWater* enemyWater, EnemyAttackW* enemyAttackW, Player* player, Camera* camera, Stage* stage);
@@ -34,11 +36,10 @@ public:
     void Update();
     // 描画
     void Draw();
-
-    // 攻撃
-    void Attack();
     // 移動
     void Move();
+    // 攻撃
+    void Attack();
     // 衝突判定
     void CollisionPlayerAttack();
     void CollisionEnemyAttack();
@@ -90,12 +91,6 @@ private:
     // 初期座標の設定用値
     int setInit_;
 
-    // エネミーの攻撃の当たり判定座標
-    float leftAttackPos;
-    float rightAttackPos;
-    float topAttackPos;
-    float bottomAttackPos;
-
     // 移動速度
     float moveSpeed_;
     int moveMax_;
@@ -112,6 +107,20 @@ private:
     int animFrame_;
     // アニメーションのカウンタ
     int animCnt_;
+    
+    // 攻撃
+    int attackCnt_;
+    float attackPosX_;
+    float attackPosY_;
+    float attackSpeed_;
+    float attackRadius_;
+    int attackAnimCnt_;
+
+    // エネミー座標取得済み判定
+    bool isGetPos_;
+
+    // 攻撃中判定
+    bool isAttackAlive_;
 
     // 移動用のカウンタ
     int moveCnt_;
