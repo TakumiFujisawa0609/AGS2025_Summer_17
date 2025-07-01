@@ -18,7 +18,6 @@ public:
     static constexpr int ANIM_X = 1;
     static constexpr int ANIM_Y = 5;
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
-    static constexpr int ANIM_INTERVAL = 8;
 
     // 攻撃
     static constexpr int ATTACK_INTERVAL = 110;
@@ -69,6 +68,8 @@ private:
     int animFrame_;
     // アニメーションのカウンタ
     int animCnt_;
+    // アニメーションの進行間隔
+    int animInterval_;
 
     // 攻撃用のカウンタ
     int attackCnt_;

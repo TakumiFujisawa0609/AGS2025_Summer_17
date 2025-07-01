@@ -21,6 +21,8 @@ void EnemyAttackF::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
     animFrame_ = 4;
     // アニメーションのカウンタ
     animCnt_ = 0;
+    // アニメーションの進行間隔
+    animInterval_ = 8;
 
     // 攻撃のクールダウン
     attackCnt_ = 50;
@@ -53,7 +55,7 @@ void EnemyAttackF::Draw()
     {
         isAlive_ = true;
         animCnt_++;
-        if (animCnt_ >= ANIM_INTERVAL) {
+        if (animCnt_ >= animInterval_) {
             animCnt_ = 0;
             if (isCntDown_)
             {
@@ -61,6 +63,10 @@ void EnemyAttackF::Draw()
                 if (animFrame_ <= 0) {
                     isCntDown_ = false;
                 }
+            }
+            else if (animFrame_ == 0)
+            {
+                animInterval_ = 45;
             }
             else
             {
