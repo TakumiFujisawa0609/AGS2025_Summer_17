@@ -41,13 +41,13 @@ public:
     // UŒ‚
     void Attack();
     // Õ“Ë”»’è
-<<<<<<< HEAD
+
     void CollisionPlayerAttack();
     void CollisionEnemyAttack();
-=======
+
     void PlayerAttackCollision();
     void EnemyAttackCollision();
->>>>>>> ado-higuchi
+
     // ”íƒ_ƒ[ƒW
     void Damage();
 

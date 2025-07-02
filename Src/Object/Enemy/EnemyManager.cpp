@@ -69,11 +69,11 @@ void EnemyManager::CollisionAttack()
 	}
 
 	// falseになったらエネミーの衝突判定もfalseになる
-<<<<<<< HEAD
+
 	if(!collisionEnemy_)
-=======
+
 	if (!collisionEnemy_)
->>>>>>> ado-higuchi
+
 	{
 		enemyFire_->SetCollisionFire(false);
 		enemyPlant_->SetCollisionPlant(false);
