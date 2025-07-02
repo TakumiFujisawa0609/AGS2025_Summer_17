@@ -32,5 +32,6 @@ private:
 	int count_;
 
 	int TitleSoundHandle_; // タイトルBGMのハンドル
+	int successSound;; // タイトルBGMのハンドル
 
 };

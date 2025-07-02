@@ -25,6 +25,8 @@ img_ = LoadGraph((Application::PATH_IMAGE + "Scene/Title.png").c_str());
 // タイトルBGMの読み込み
 TitleSoundHandle_ = LoadSoundMem("Data/Sound/BGM/TBGM.mp3");
 
+successSound = LoadSoundMem("Data/Sound/SE/success.mp3");
+
 PlaySoundMem(TitleSoundHandle_, DX_PLAYTYPE_LOOP); // タイトルBGMをループ再生
 
 // 点滅させたい周期（例：30フレームで切り替え、約0.5秒）
@@ -48,6 +50,7 @@ void TitleScene::Update(void)
 		if (ins.IsTrgDown(KEY_INPUT_SPACE))
 		{
 			StopSoundMem(TitleSoundHandle_); // タイトルBGMを停止
+			PlaySoundMem(successSound, DX_PLAYTYPE_BACK); // 成功音を再生
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 			count_ = 0;
 			

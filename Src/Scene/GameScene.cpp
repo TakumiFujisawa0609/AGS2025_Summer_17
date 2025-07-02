@@ -63,6 +63,10 @@ void GameScene::Init(void)
 
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 
+	BackSoundHandle_ = LoadSoundMem("Data/Sound/BGM/BackSound.mp3");
+
+	PlaySoundMem(BackSoundHandle_, DX_PLAYTYPE_LOOP); // 背景BGMをループ再生
+
 
 	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
 	stage_->Init(player_, camera_);
@@ -86,6 +90,8 @@ void GameScene::Init(void)
 
 void GameScene::Update(void)
 {
+
+	
 	// 入力の更新
 	InputManager& ins = InputManager::GetInstance();
 
@@ -152,6 +158,7 @@ void GameScene::Update(void)
 void GameScene::Draw(void)
 {
 	
+
 	stageManager_->Draw();
 	playerUi_->Draw();
 	//// ステージの描画
