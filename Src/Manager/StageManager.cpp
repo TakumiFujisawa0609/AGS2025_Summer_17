@@ -264,7 +264,6 @@ void StageManager::DoChangeStage(STAGE_TYPE type)
 	case STAGE_TYPE::STAGE2:
 		player_->SetPlayerPos(pos);
 		stage_->InitStage2();
-
 		break;
 	case STAGE_TYPE::STAGE3:
 		player_->SetPlayerPos(pos);
