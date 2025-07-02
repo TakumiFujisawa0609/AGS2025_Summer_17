@@ -64,7 +64,7 @@ void GameScene::Init(void)
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 
 
-	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
+	player_->Init(camera_, stage_, wall_, blast_, water_, plants_,this);
 	stage_->Init(player_, camera_);
 	camera_->Init(player_);
 	enemyManager_->Init(enemyFire_, enemyPlant_, enemyAttackF_, enemyAttackP_, player_, camera_, stage_);
@@ -183,17 +183,24 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {
-	SetDrawScreen(tmpScreen_);
 
-	stageManager_->Draw();
-	SetDrawScreen(DX_SCREEN_BACK);
-	DrawGraph(screenShakePos_, screenShakePos_, tmpScreen_, true);
 
-	stageManager_->Draw();
-	playerUi_->Draw();
-	SetFontSize(32);
-	DrawFormatString(1650, 0, 0xFFFFFF, "ESCでメニュー");
-	SetFontSize(16);
+	if (hitStopCnt_ > 0)
+	{
+		SetDrawScreen(tmpScreen_);
+
+		stageManager_->Draw();
+		SetDrawScreen(DX_SCREEN_BACK);
+		DrawGraph(screenShakePos_, screenShakePos_, tmpScreen_, true);
+	}
+	else
+	{
+		stageManager_->Draw();
+		playerUi_->Draw();
+		SetFontSize(32);
+		DrawFormatString(1650, 0, 0xFFFFFF, "ESCでメニュー");
+		SetFontSize(16);
+	}
 	//// ステージの描画
 	//stage_->Draw();
 
@@ -213,7 +220,7 @@ void GameScene::Draw(void)
 	//water_->Draw();
 	//plants_->Draw();
 
-	
+
 #ifdef _DEBUG
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 

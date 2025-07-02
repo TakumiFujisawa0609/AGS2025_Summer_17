@@ -1,4 +1,7 @@
+#include <chrono>
 #include <DxLib.h>
+#include <EffekseerForDXLib.h>
+#include "../Common/Fader.h"
 #include "../Application.h"
 #include "../Common/Vector2.h"
 #include "../Common/Vector2F.h"
@@ -36,7 +39,12 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* e
 	plants_ = plants;
 	water_ = water;
 
+	fader_ = std::make_unique<Fader>();
+	fader_->Init();
+
 	stageType = STAGE_TYPE::STAGE1;
+
+	nextStageType = STAGE_TYPE::NONE;
 
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.jpg").c_str());
@@ -45,20 +53,29 @@ void StageManager::Update()
 {
 	// カメラの更新
 	camera_->Update();
-	switch (stageType)
+	fader_->Update();
+	if (isSceneChanging_)
 	{
-	case STAGE_TYPE::STAGE1:
-		Update1();
-		break;
-	case STAGE_TYPE::STAGE2:
-		Update2();
-		break;
-	case STAGE_TYPE::STAGE3:
-		Update3();
-		break;
-
+		Fade();
 	}
+	else
+	{
 
+		
+		switch (stageType)
+		{
+		case STAGE_TYPE::STAGE1:
+			Update1();
+			break;
+		case STAGE_TYPE::STAGE2:
+			Update2();
+			break;
+		case STAGE_TYPE::STAGE3:
+			Update3();
+			break;
+
+		}
+	}
 	if (player_->GetHp() <= 0)
 	{
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
@@ -133,6 +150,9 @@ void StageManager::Update3()
 
 void StageManager::Draw()
 {
+	// Effekseerにより再生中のエフェクトを更新する。
+	UpdateEffekseer3D();
+	
 	switch (stageType)
 	{
 	case STAGE_TYPE::STAGE1:
@@ -146,7 +166,10 @@ void StageManager::Draw()
 		break;
 
 	}
-
+	// Effekseerにより再生中のエフェクトを更新する。
+	UpdateEffekseer3D();
+	// 暗転・明転
+	fader_->Draw();
 }
 void StageManager::Draw1()
 {
@@ -215,6 +238,19 @@ void StageManager::Draw3()
 
 void StageManager::ChangeStage(STAGE_TYPE type)
 {
+
+	// フェード処理が終わってからシーンを変える場合もあるため、
+	// 遷移先シーンをメンバ変数に保持
+	nextStageType = type;
+
+	// フェードアウト(暗転)を開始する
+	fader_->SetFade(Fader::STATE::FADE_OUT);
+	isSceneChanging_ = true;
+
+}
+
+void StageManager::DoChangeStage(STAGE_TYPE type)
+{
 	Vector2F pos;
 	pos.x = 64 * 2;
 	pos.y = 64 * 10;
@@ -237,4 +273,33 @@ void StageManager::ChangeStage(STAGE_TYPE type)
 		break;
 
 	}
+	nextStageType = STAGE_TYPE::NONE;
+}
+void StageManager::Fade(void)
+{
+
+	Fader::STATE fState = fader_->GetState();
+	switch (fState)
+	{
+	case Fader::STATE::FADE_IN:
+		// 明転中
+		if (fader_->IsEnd())
+		{
+			// 明転が終了したら、フェード処理終了
+			fader_->SetFade(Fader::STATE::NONE);
+			isSceneChanging_ = false;
+		}
+		break;
+	case Fader::STATE::FADE_OUT:
+		// 暗転中
+		if (fader_->IsEnd())
+		{
+			// 完全に暗転してからシーン遷移
+			DoChangeStage(nextStageType);
+			// 暗転から明転へ
+			fader_->SetFade(Fader::STATE::FADE_IN);
+		}
+		break;
+	}
+
 }

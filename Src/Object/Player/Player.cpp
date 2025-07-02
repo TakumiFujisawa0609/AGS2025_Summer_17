@@ -25,10 +25,10 @@ Player::~Player()
 {
 
 }
-void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water* water, Plants* plants)
+void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water* water, Plants* plants,GameScene*gameScene)
 {
 
-	
+	gameScene_ = gameScene;
 
 	//ƒJƒƒ‰‚ÌŽæ“¾
 	camera_ = camera; // ˆø”‚Å“n‚³‚ê‚½ƒJƒƒ‰‚ð•ÛŽ
@@ -808,7 +808,7 @@ void Player::ReSpawn()
 			pos_.x = stageSize_ * 2;
 			pos_.y = stageSize_ * 8;
 			SetHp(GetHp() - 10);
-
+			gameScene_->SetHitStop(30);
 		}
 	}
 	else
@@ -819,6 +819,7 @@ void Player::ReSpawn()
 			pos_.x = stageSize_ * 2;
 			pos_.y = stageSize_ * 8;
 			SetHp(GetHp() - 10);
+			gameScene_->SetHitStop(30);
 		}
 
 	}
