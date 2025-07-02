@@ -40,12 +40,20 @@ void EnemyWater::InitStage2()
         if (stageId == 2)
         {
             // 初期座標
+
             pos_.x = 4394.0f;
+
+            pos_.x = 4426.0f;
+
             pos_.y = 640.0f;
 
             // 移動速度
             moveSpeed_ = 0.8f;
+
             moveMax_ = 150;
+
+            moveMax_ = 210;
+
 
             // 索敵範囲
             findSize_ = 300.0f;
@@ -199,8 +207,17 @@ void EnemyWater::Update()
     InitStage2();
     InitStage3();
     Move();
+
+    Attack();
+
+
+
     CollisionPlayerAttack();
     CollisionEnemyAttack();
+
+    PlayerAttackCollision();
+    EnemyAttackCollision();
+
     Damage();
     InvincibleWater();
 
@@ -348,6 +365,7 @@ void EnemyWater::Move()
     }
 }
 
+
 void EnemyWater::Attack()
 {
     Vector2 cameraPos = camera_->GetCameraPos();
@@ -425,7 +443,14 @@ void EnemyWater::Attack()
     }
 }
 
+
 void EnemyWater::CollisionPlayerAttack()
+{
+
+}
+
+void EnemyWater::PlayerAttackCollision()
+
 {
     // エネミーの衝突用半径
     float enemyRadius = 32.0f;
@@ -487,7 +512,13 @@ void EnemyWater::CollisionPlayerAttack()
     }
 }
 
+
 void EnemyWater::CollisionEnemyAttack()
+{
+
+}
+
+void EnemyWater::EnemyAttackCollision()
 {
     if (isAlive_) {
         // エネミーの衝突用半径

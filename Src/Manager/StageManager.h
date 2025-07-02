@@ -1,6 +1,6 @@
 #pragma once
 
-
+class Fader;
 class Player;
 class EnemyManager;
 class EnemyFire;
@@ -43,12 +43,24 @@ private:
 	Plants* plants_;
 	//水
 	Water* water_;
+
 	STAGE_TYPE stageType;
+
+	STAGE_TYPE nextStageType;
+
+	
+	std::unique_ptr<Fader> fader_;
 
 	int back3Img_;
 	//背景
 	int backImg_;
 
+	// シーン遷移中判定
+	bool isSceneChanging_;
+
+
+	// フェード
+	void Fade(void);
 public:
 
 	StageManager();
@@ -63,7 +75,9 @@ public:
 	void Update3();
 	void Draw3();
 	void ChangeStage(STAGE_TYPE id);
+	void DoChangeStage(STAGE_TYPE id);
 
 
+	
 };
 

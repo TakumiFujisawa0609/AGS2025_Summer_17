@@ -100,10 +100,13 @@ void SceneManager::Update(void)
 			app.SetExit(true);
 			count_ = 0;
 		}
-		if (ins.IsTrgDown(KEY_INPUT_SPACE))
+		if (sceneId_ != SCENE_ID::TITLE)
 		{
-			DoChangeScene(SCENE_ID::TITLE);
-			manew_ = false;
+			if (ins.IsTrgDown(KEY_INPUT_SPACE))
+			{
+				DoChangeScene(SCENE_ID::TITLE);
+				manew_ = false;
+			}
 		}
 		if (count_ >= 2)
 		{
@@ -155,6 +158,7 @@ void SceneManager::Draw(void)
 	// (３Ｄ描画で使用するカメラの設定などがリセットされる)
 	SetDrawScreen(DX_SCREEN_BACK);
 
+
 	// 画面を初期化
 	ClearDrawScreen();
 
@@ -177,9 +181,17 @@ void SceneManager::Draw(void)
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255/1.1);
 		DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x000000, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-		SetFontSize(100);
-		DrawFormatString(400, 200, 0xFFFFFF, "SPACEキーを押してスタート\n\n    ENTERでゲーム終了\n\n　　　ESCで戻る");
-		SetFontSize(16);
+		if (sceneId_ != SCENE_ID::TITLE)
+		{
+			SetFontSize(100);
+			DrawFormatString(400, 200, 0xFFFFFF, "SPACEキーを押してタイトル\n\n    ENTERでゲーム終了\n\n　　　ESCで戻る");
+			SetFontSize(16);
+		}
+		else {
+			SetFontSize(100);
+			DrawFormatString(400, 200, 0xFFFFFF, "\n\n    ENTERでゲーム終了\n\n　　　ESCで戻る");
+			SetFontSize(16);
+		}
 	}
 	
 

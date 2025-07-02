@@ -39,8 +39,13 @@ public:
     // UŒ‚
     void Attack();
     // Õ“Ë”»’è
+
     void CollisionPlayerAttack();
     void CollisionEnemyAttack();
+
+    void PlayerAttackCollision();
+    void EnemyAttackCollision();
+
     // ”íƒ_ƒ[ƒW
     void Damage();
     // –³“G

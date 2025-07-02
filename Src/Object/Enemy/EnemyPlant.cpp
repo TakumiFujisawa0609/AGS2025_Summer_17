@@ -484,6 +484,7 @@ void EnemyPlant::CollisionEnemyAttack()
             {
                 // è’ìÀÇµÇΩ
                 collisionPlant_ = true;
+                isAlive_ = false;
             }
         }
     }

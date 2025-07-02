@@ -69,6 +69,15 @@ void EnemyAttackP::Draw()
         animInterval_ = 4;
     }
 
+    if (isCntUp_ && animFrame_ == 1)
+    {
+        animInterval_ = 60;
+    }
+    else if (animFrame_ > 1)
+    {
+        animInterval_ = 8;
+    }
+
     // アニメーション処理
     if (attackCnt_ >= attackInterval_ && (isAttack_ || isAlive_) && (player_->GetHitFoot() || isAlive_))
     {
