@@ -62,18 +62,18 @@ void EnemyManager::CollisionAttack()
 	plantCollision_ = enemyPlant_->GetCollisionPlant();
 	waterCollision_ = enemyWater_->GetCollisionWater();
 
-	// どれかと衝突したらtrue
-	if (fireCollision_ || plantCollision_ || waterCollision_)
-	{
-		collisionEnemy_ = true;
-	}
-
 	// falseになったらエネミーの衝突判定もfalseになる
-	if(!collisionEnemy_)
+	if (!collisionEnemy_)
 	{
 		enemyFire_->SetCollisionFire(false);
 		enemyPlant_->SetCollisionPlant(false);
 		enemyWater_->SetCollisionWater(false);
+	}
+
+	// どれかと衝突したらtrue
+	if (fireCollision_ || plantCollision_ || waterCollision_)
+	{
+		collisionEnemy_ = true;
 	}
 }
 

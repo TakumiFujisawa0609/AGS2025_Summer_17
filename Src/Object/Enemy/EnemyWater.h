@@ -25,8 +25,6 @@ public:
     static constexpr int ATTACK_ANIM = 6;
     static constexpr int WALK_ANIM_MIN = 3;
     static constexpr int WALK_ANIM_MAX = 5;
-    // 攻撃
-    static constexpr int ATTACK_INTERVAL = 110;
 
     // 初期化
     void Init(EnemyWater* enemyWater, EnemyAttackW* enemyAttackW, Player* player, Camera* camera, Stage* stage);
@@ -45,6 +43,8 @@ public:
     void CollisionEnemyAttack();
     // 被ダメージ
     void Damage();
+    // 無敵
+    void InvincibleWater();
 
     // サイズ
     int GetSizeX();
@@ -114,7 +114,14 @@ private:
     float attackPosY_;
     float attackSpeed_;
     float attackRadius_;
+    float attackMax_;
     int attackAnimCnt_;
+    int attackInterval_;
+    float attackSize1_;
+    float attackSize2_;
+    float attackSize3_;
+    float attackSize4_;
+    float attackSize5_;
 
     // エネミー座標取得済み判定
     bool isGetPos_;
@@ -136,6 +143,11 @@ private:
     // 被ダメージ
     float damage_;
 
+    // 無敵時間
+    int invincibleMax_;
+    // 無敵時間のカウント
+    int invincibleCnt_;
+
     // 生存中判定
     bool isAlive_;
     // 攻撃中判定
@@ -150,5 +162,11 @@ private:
     bool collisionDamage_;
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
     bool collisionWater_;
+    // 無敵判定
+    bool isInvincible_;
+    // 無敵時描画判定
+    bool isVisible_;
+    // 剣攻撃
+    bool isSword_;
 
 };

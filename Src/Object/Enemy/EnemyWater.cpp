@@ -64,6 +64,10 @@ void EnemyWater::InitStage2()
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
             collisionWater_ = false;
+            // 無敵判定
+            isInvincible_ = false;
+            // 無敵時描画判定
+            isVisible_ = true;
 
             // アニメーションフレーム数カウント
             animFrame_ = WALK_ANIM_MIN;
@@ -75,6 +79,15 @@ void EnemyWater::InitStage2()
             attackPosX_ = 0.0f;
             attackPosY_ = 0.0f;
             attackSpeed_ = 4.0f;
+            attackMax_ = 150.0f;
+            attackInterval_ = 110;
+
+            attackSize1_ = 10.0f;
+            attackSize2_ = 15.0f;
+            attackSize3_ = 20.0f;
+            attackSize4_ = 26.0f;
+            attackSize5_ = 32.0f;
+
             // エネミー座標取得済み判定
             isGetPos_ = false;
             // 攻撃中判定
@@ -87,6 +100,11 @@ void EnemyWater::InitStage2()
             hp_ = 25.0f;
             // 被ダメージ数
             damage_ = 10.0f;
+
+            // 無敵時間
+            invincibleMax_ = 45;
+            // 無敵時間のカウント
+            invincibleCnt_ = 0;
 
             // 初期化用変数
             setInit_ = 3;
@@ -104,16 +122,15 @@ void EnemyWater::InitStage3()
 
         if (stageId == 3)
         {
-            // 仮
-            pos_.x = 300.0f;
-            pos_.y = 300.0f;
+            pos_.x = 2976.0f;
+            pos_.y = 1260.8f;
 
             // 移動速度
-            moveSpeed_ = 2.0f;
-            moveMax_ = 100;
+            moveSpeed_ = 0;
+            moveMax_ = 0;
 
             // 索敵範囲
-            findSize_ = 300.0f;
+            findSize_ = 1000.0f;
 
             // 生存判定
             isAlive_ = true;
@@ -129,6 +146,10 @@ void EnemyWater::InitStage3()
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
             collisionWater_ = false;
+            // 無敵判定
+            isInvincible_ = false;
+            // 無敵時描画判定
+            isVisible_ = true;
 
             // アニメーションフレーム数カウント
             animFrame_ = WALK_ANIM_MIN;
@@ -142,7 +163,16 @@ void EnemyWater::InitStage3()
             attackCnt_ = 0;
             attackPosX_ = 0.0f;
             attackPosY_ = 0.0f;
-            attackSpeed_ = 1.0;
+            attackSpeed_ = 10.0;
+            attackMax_ = 90.0f;
+            attackInterval_ = 80;
+
+            attackSize1_ = 10.0f;
+            attackSize2_ = 20.0f;
+            attackSize3_ = 32.0f;
+            attackSize4_ = 45.0f;
+            attackSize5_ = 64.0f;
+
             // エネミー座標取得済み判定
             isGetPos_ = false;
             // 攻撃中判定
@@ -152,6 +182,11 @@ void EnemyWater::InitStage3()
             hp_ = 45.0f;
             // 被ダメージ数
             damage_ = 10.0f;
+
+            // 無敵時間
+            invincibleMax_ = 80;
+            // 無敵時間のカウント
+            invincibleCnt_ = 0;
 
             // 初期化用変数
             setInit_ = 0;
@@ -167,6 +202,7 @@ void EnemyWater::Update()
     CollisionPlayerAttack();
     CollisionEnemyAttack();
     Damage();
+    InvincibleWater();
 
     // プレイヤー座標
     Vector2F playerPos = player_->GetPlayerPos();
@@ -194,7 +230,7 @@ void EnemyWater::Update()
     // 再出現(デバッグ用)
     if (CheckHitKey(KEY_INPUT_M))
     {
-        hp_ = 25.0f;
+        hp_ = 45.0f;
         isAlive_ = true;
         collisionWater_ = false;
     }
@@ -237,7 +273,7 @@ void EnemyWater::Draw()
         }
     }
 
-    if (isAlive_)
+    if (isAlive_ && isVisible_)
     {
         // 発見中
         if (isFind_)
@@ -316,12 +352,12 @@ void EnemyWater::Attack()
 {
     Vector2 cameraPos = camera_->GetCameraPos();
     // 発見中のみ攻撃クールダウン消費
-    if (isFind_)
+    if (isFind_ && isAlive_)
     {
         attackCnt_++;
     }
     // アニメーション処理
-    if (attackCnt_ >= ATTACK_INTERVAL)
+    if (attackCnt_ >= attackInterval_)
     {
         isAttackAlive_ = true;
         if (isAttackAlive_)
@@ -345,23 +381,23 @@ void EnemyWater::Attack()
             attackAnimCnt_++;
             if (attackAnimCnt_ == 4)
             {
-                attackRadius_ = 10;
+                attackRadius_ = attackSize1_;
             }
             else if (attackAnimCnt_ == 8)
             {
-                attackRadius_ = 15;
+                attackRadius_ = attackSize2_;
             }
             else if (attackAnimCnt_ == 12)
             {
-                attackRadius_ = 20;
+                attackRadius_ = attackSize3_;
             }
             else if (attackAnimCnt_ == 16)
             {
-                attackRadius_ = 26;
+                attackRadius_ = attackSize4_;
             }
             else if (attackAnimCnt_ == 20)
             {
-                attackRadius_ = 32;
+                attackRadius_ = attackSize5_;
             }
             else if (attackAnimCnt_ >= 26)
             {
@@ -375,7 +411,7 @@ void EnemyWater::Attack()
                 }
             }
 
-            if (attackAnimCnt_ == 150)
+            if (attackAnimCnt_ == attackMax_)
             {
                 isAttackAlive_ = false;
                 isGetPos_ = false;
@@ -425,28 +461,30 @@ void EnemyWater::CollisionPlayerAttack()
             collisionDamage_ = true;
         }
     }
-    //// 剣攻撃
-    //else if (magicColoer == 0xffffff)
-    //{
-    //    //player_->GetSotd();
-    //    // 剣の座標を取得
-    //    Vector2F swordPos = player_->GetAttckAnglePoint();
-    //    // 球体同士の衝突判定
-    //    bool ret = false;
-    //    // お互いの半径の合計
-    //    float radius = enemyRadius + swordRadius;
-    //    // ２つの座標間の距離をピタゴラスの定理で算出
-    //    VECTOR distance = VECTOR();
-    //    distance.x = pos_.x - swordPos.x;
-    //    distance.y = pos_.y - swordPos.y;
-    //    float dis = distance.x * distance.x + distance.y * distance.y;
-    //    // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
-    //    if (dis < (radius * radius))
-    //    {
-    //        // 攻撃ヒット済
-    //        collisionDamage_ = true;
-    //    }
-    //}
+    // 剣攻撃
+    else if (magicColoer == normal_ && CheckHitKey(KEY_INPUT_K))
+    {
+        isSword_ = true;
+        // カメラ座標の取得
+        Vector2 cameraPos = camera_->GetCameraPos();
+        // 剣の座標を取得
+        Vector2F swordPos = player_->GetAttckAnglePoint();
+        // 球体同士の衝突判定
+        bool ret = false;
+        // お互いの半径の合計
+        float radius = enemyRadius + swordRadius;
+        // ２つの座標間の距離をピタゴラスの定理で算出
+        VECTOR distance = VECTOR();
+        distance.x = pos_.x - swordPos.x;
+        distance.y = pos_.y - swordPos.y;
+        float dis = distance.x * distance.x + distance.y * distance.y;
+        // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
+        if (dis < (radius * radius))
+        {
+            // 攻撃ヒット済
+            collisionDamage_ = true;
+        }
+    }
 }
 
 void EnemyWater::CollisionEnemyAttack()
@@ -497,7 +535,6 @@ void EnemyWater::CollisionEnemyAttack()
             {
                 // 攻撃ヒット済
                 collisionDamage_ = true;
-                isAlive_ = false;
             }
         }
     }
@@ -511,15 +548,9 @@ void EnemyWater::Damage()
     bool isAttack = player_->GetAttack();
 
     // 攻撃中でない
-    if (isAttack) {
-        wasHit_ = false;
-        collisionDamage_ = false;
-        return;
-    }
-
-    // 攻撃ヒット済みなので何もしない
-    if (wasHit_)
+    if (isAttack && !isSword_)
     {
+        collisionDamage_ = false;
         return;
     }
 
@@ -546,12 +577,17 @@ void EnemyWater::Damage()
     // 衝突したかつエネミー生存中
     if (collisionDamage_ && isAlive_)
     {
-        // ダメージを与える
-        hp_ -= damage_;
+        // 無敵状態でなければダメージを与える
+        if (!isInvincible_)
+        {
+            hp_ -= damage_;
+        }
         // 攻撃エフェクト削除
         player_->SetPoint(false);
         // 再攻撃可能
         player_->SetAttack(true);
+        // 剣判定復活
+        isSword_ = false;
     }
 
     // HPが0になったら撃破
@@ -559,6 +595,30 @@ void EnemyWater::Damage()
     {
         hp_ = 0.0f;
         isAlive_ = false;
+    }
+}
+
+void EnemyWater::InvincibleWater()
+{
+    invincibleMax_ = 60;
+    if (collisionDamage_ || isInvincible_)
+    {
+        isInvincible_ = true;
+        invincibleCnt_++;
+        if (invincibleCnt_ >= invincibleMax_)
+        {
+            isInvincible_ = false;
+            invincibleCnt_ = 0;
+        }
+
+        if (invincibleCnt_ % 5 >= 3 && invincibleCnt_ > 4)
+        {
+            isVisible_ = false;
+        }
+        else
+        {
+            isVisible_ = true;
+        }
     }
 }
 

@@ -39,7 +39,12 @@ public:
     void CollisionEnemyAttack();
     // 被ダメージ
     void Damage();
+    // 無敵
+    void InvincibleFire();
 
+
+
+    // ゲッター・セッター
     // サイズ
     int GetSizeX();
 
@@ -122,6 +127,11 @@ private:
     // 被ダメージ
     float damage_;
 
+    // 無敵時間
+    int invincibleMax_;
+    // 無敵時間のカウント
+    int invincibleCnt_;
+
     // 生存中判定
     bool isAlive_;
     // 攻撃中判定
@@ -136,5 +146,10 @@ private:
     bool collisionDamage_;
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
     bool collisionFire_;
-
+    // 無敵判定
+    bool isInvincible_;
+    // 無敵時描画判定
+    bool isVisible_;
+    // 剣攻撃
+    bool isSword_;
 };

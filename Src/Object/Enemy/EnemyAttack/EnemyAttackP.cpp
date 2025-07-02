@@ -27,6 +27,9 @@ void EnemyAttackP::Init(EnemyPlant* enemyPlant, Player* player, Camera* camera)
     // 攻撃のクールダウン
     attackCnt_ = 50;
 
+    // 攻撃
+    attackInterval_ = 110;
+
     // 攻撃中判定
     isAttack_ = false;
 
@@ -48,7 +51,7 @@ void EnemyAttackP::Update()
 void EnemyAttackP::Draw()
 {
     // 発見中のみ攻撃クールダウン消費
-    if (enemyPlant_->GetFind())
+    if (enemyPlant_->GetFind() && enemyPlant_->GetAlive())
     {
         attackCnt_++;
     }
@@ -67,7 +70,7 @@ void EnemyAttackP::Draw()
     }
 
     // アニメーション処理
-    if (attackCnt_ >= ATTACK_INTERVAL && (isAttack_ || isAlive_) && (player_->GetHitFoot() || isAlive_))
+    if (attackCnt_ >= attackInterval_ && (isAttack_ || isAlive_) && (player_->GetHitFoot() || isAlive_))
     {
         isAlive_ = true;
         animCnt_++;
@@ -185,4 +188,14 @@ int EnemyAttackP::GetAnimFrameAttackP()
 void EnemyAttackP::SetAnimFrameAttackP(int animFrame)
 {
     animFrame_ = animFrame;
+}
+
+int EnemyAttackP::GetAttackInterval()
+{
+    return attackInterval_;
+}
+
+void EnemyAttackP::SetAttackInterval(int attackInterval)
+{
+    attackInterval_ = attackInterval;
 }
