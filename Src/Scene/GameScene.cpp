@@ -99,7 +99,7 @@ void GameScene::Init(void)
 
 void GameScene::Update(void)
 {
-<<<<<<< HEAD
+
 
 	//ストップ処理・振動処理
 	if (hitStopCnt_ > 0)
@@ -127,9 +127,8 @@ void GameScene::Update(void)
 	}
 
 
-=======
+
 	
->>>>>>> ado_sound
 	// 入力の更新
 	InputManager& ins = InputManager::GetInstance();
 
@@ -196,7 +195,7 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {
-<<<<<<< HEAD
+
 
 	if (hitStopCnt_ > 0)
 	{
@@ -214,14 +213,14 @@ void GameScene::Draw(void)
 		DrawFormatString(1650, 0, 0xFFFFFF, "ESCでメニュー");
 		SetFontSize(16);
 	}
-=======
+
 	
 
 	stageManager_->Draw();
 	playerUi_->Draw();
 
 	
->>>>>>> ado_sound
+
 	//// ステージの描画
 	//stage_->Draw();
 
