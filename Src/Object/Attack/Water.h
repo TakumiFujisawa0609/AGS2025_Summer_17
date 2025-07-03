@@ -64,6 +64,8 @@ private:
 	//‰æ‘œ
 	int images_[MAX_IMG_SIZE];
 
+	int WaterSoundHandle;
+
 	//—±q
 	std::vector<WaterEffectInfo> particles_;
 	//—±q‚Ì‰Šú‰»
