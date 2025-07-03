@@ -59,7 +59,6 @@ private:
 	//”wŒi
 	int backImg_;
 
-	int BackSoundHandle_; // ”wŒiBGM‚Ìƒnƒ“ƒhƒ‹
 
 
 	

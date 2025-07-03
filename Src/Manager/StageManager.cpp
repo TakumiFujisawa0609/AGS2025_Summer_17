@@ -40,6 +40,8 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* e
 
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.jpg").c_str());
+
+	BackSoundHandle_ = LoadSoundMem("Data/Sound/BGM/BackSound.mp3");
 }
 void StageManager::Update()
 {
@@ -61,12 +63,15 @@ void StageManager::Update()
 
 	if (player_->GetHp() <= 0)
 	{
+		StopSoundMem(BackSoundHandle_);
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
 	}
 
 }
 void StageManager::Update1()
 {
+
+	
 	// 入力の更新
 	InputManager& ins = InputManager::GetInstance();
 	// ステージの更新
@@ -85,9 +90,12 @@ void StageManager::Update1()
 	{
 		ChangeStage(STAGE_TYPE::STAGE2);
 	}
+	
 }
 void StageManager::Update2()
 {
+
+	
 	// 入力の更新
 	InputManager& ins = InputManager::GetInstance();
 	// ステージの更新
@@ -150,6 +158,9 @@ void StageManager::Draw()
 }
 void StageManager::Draw1()
 {
+	if (CheckSoundMem(BackSoundHandle_) == 0) {
+		PlaySoundMem(BackSoundHandle_, DX_PLAYTYPE_LOOP);
+	}
 
 	DrawGraph(0, 0, backImg_, true);
 	//壁の描画
@@ -170,6 +181,7 @@ void StageManager::Draw1()
 }
 void StageManager::Draw2()
 {
+	
 	DrawGraph(0, 0, backImg_, true);
 
 	////壁の描画
@@ -193,6 +205,7 @@ void StageManager::Draw2()
 }
 void StageManager::Draw3()
 {
+	StopSoundMem(BackSoundHandle_);
 	DrawGraph( 0, 0,back3Img_, true);
 	//壁の描画
 	wall_->Draw2();
