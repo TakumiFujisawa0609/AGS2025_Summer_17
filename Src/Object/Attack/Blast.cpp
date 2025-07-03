@@ -28,6 +28,10 @@ void Blast::Init(Camera*camera)
 	camera_ = camera;
 
 	LoadDivGraph("Data/Image/Attack/Blast.png", BLAST_ANIM_FRAME, BLAST_DIV_X, BLAST_DIV_Y, BLAST_SIZE, BLAST_SIZE, blastImgs);
+
+	blastSoundHandle = LoadSoundMem("Data/Sound/SE/ShotBomb.mp3");
+
+
 	
 	isBlast = false;
 	
@@ -62,6 +66,14 @@ void Blast::Draw(void)
 			isBlast = false;
 			blastImgAnimCount = 0;
 		}
+		if (blastImgAnimCount == 1)
+		{
+			PlaySoundMem(blastSoundHandle, DX_PLAYTYPE_BACK);
+		}
+		else if (blastImgAnimCount == 23)
+		{
+			StopSoundMem(blastSoundHandle);
+		}
 	}
 }
 void Blast::Release(void)
@@ -71,6 +83,8 @@ void Blast::Release(void)
 	{
 		DeleteGraph(blastImgs[i]);
 	}
+
+	DeleteSoundMem(blastSoundHandle);
 }
 bool Blast::GetIsBlast(void)
 {
