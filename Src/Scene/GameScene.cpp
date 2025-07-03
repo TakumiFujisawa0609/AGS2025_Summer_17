@@ -216,8 +216,6 @@ void GameScene::Draw(void)
 
 	
 
-	stageManager_->Draw();
-	playerUi_->Draw();
 
 	
 

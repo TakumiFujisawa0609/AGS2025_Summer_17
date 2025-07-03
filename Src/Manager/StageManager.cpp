@@ -50,6 +50,7 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* e
 	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.jpg").c_str());
 
 	BackSoundHandle_ = LoadSoundMem("Data/Sound/BGM/BackSound.mp3");
+	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/rock.png").c_str());
 }
 void StageManager::Update()
 {
