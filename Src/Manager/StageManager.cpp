@@ -47,7 +47,7 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* e
 	nextStageType = STAGE_TYPE::NONE;
 
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
-	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.jpg").c_str());
+	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/rock.png").c_str());
 }
 void StageManager::Update()
 {
