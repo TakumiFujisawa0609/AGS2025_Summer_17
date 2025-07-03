@@ -30,6 +30,7 @@ private:
 	int  blinkCycle; // “_–ÅŽüŠú
 
 	float frameCount;
+	int successSound;; 
 
 };
 

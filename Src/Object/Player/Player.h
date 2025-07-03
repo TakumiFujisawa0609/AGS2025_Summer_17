@@ -3,6 +3,7 @@
 #include "../../Common/Vector2F.h"
 #include "../../Utility/AsoUtility.h"
 class Stage;
+class GameScene;
 class Camera;
 class Wall;
 class Blast;
@@ -67,7 +68,6 @@ private:
 	int* img_;          // 本体スプライト（配列）
 	int* armImg_;       // 腕のスプライト（配列）
 	int sordImg_;       // 剣の画像（単体）※スペルミスの可能性: sword？
-	int swingSoundHandle_; // 剣を振る音のハンドル
 
 	int invCnt_;        // 無敵時間カウント
 	bool isAlive_;      // 生存フラグ
@@ -150,6 +150,8 @@ private:
 	Blast* blast_;          // 爆発演出
 	Water* water_;          // 水エフェクト演出
 	Plants* plants_;        // 植物演出
+	GameScene* gameScene_;
+
 
 	AsoUtility::DIR dir_;   // 向き（左 or 右）
 
@@ -169,7 +171,7 @@ public:
 	~Player();
 
 	// 初期化関数
-	void Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water* water, Plants* plants);
+	void Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water* water, Plants* plants, GameScene* gameScene);
 
 	// 更新・描画
 	void Update(); // 毎フレームの更新
@@ -300,6 +302,8 @@ public:
 
 	// カメラ位置取得
 	Vector2 GetCamera();
+
+
 
 };
 

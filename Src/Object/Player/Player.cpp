@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include <math.h>
 #include "../../Application.h"
+#include "../../Scene/GameScene.h"
 #include "../Stage/Stage.h"
 #include "../Camera/Camera.h"
 #include "../../Manager/ResourceManager.h"
@@ -24,10 +25,10 @@ Player::~Player()
 {
 
 }
-void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water* water, Plants* plants)
+void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water* water, Plants* plants,GameScene*gameScene)
 {
 
-	
+	gameScene_ = gameScene;
 
 	//カメラの取得
 	camera_ = camera; // 引数で渡されたカメラを保持
@@ -52,8 +53,6 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 	armImg_ = res.Load(ResourceManager::SRC::PLAYERARM).handleIds_; // プレイヤーの腕画像の読み込み
 
 	sordImg_ = LoadGraph("Data/Image/Player/Sord.png"); // 剣の画像を読み込み（単体）
-
-	swingSoundHandle_ = LoadSoundMem("Data/Sound/SE/Swing.mp3");
 
 	stageSize_ = stage_->CHIP_SIZE_X; // ステージの1マスの幅を取得（横チップサイズ）
 
@@ -185,10 +184,32 @@ void Player::Draw()
 
 	/*DrawGraph((pos_.x-HALF_COL_SIZE_X)-cpos.x, (pos_.y-HALF_COL_SIZE_Y), img_[animationCount_], TRUE,dir_ = AsoUtility::DIR::LEFT);*/
 	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 5, cr_);
+
+
+	/*DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 10, 0x000000);
+	DrawCircle(attckPoint_.x - cpos.x, attckPoint_.y - cpos.y, 5, cr_);*/
 	
 	if (isPoint_)
 	{
-		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 5, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 12);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 12,cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 10);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 10, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 8);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 8, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 6);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 6, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 4);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 4, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255 / 2);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 2, cr_);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		DrawCircle(attackPos_.x - cpos.x, attackPos_.y - cpos.y, 1, cr_);
 	}
 	if (GetIsEF() == true)
 	{
@@ -713,14 +734,11 @@ void Player::Attack()
 				if (armAngle_ <= AsoUtility::Deg2RadF(0.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(180.0f); // 剣振りの開始角度
-					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
 				}
 				armAngle_ += AsoUtility::Deg2RadF(7.0f); // 回転速度で腕を動かす
 				if (armAngle_ >= AsoUtility::Deg2RadF(315.0f)) // 1周したらリセット
 				{
 					armAngle_ = AsoUtility::Deg2RadF(180.0f);
-					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
-					
 				}
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100; // 攻撃方向のX座標
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100; // 攻撃方向のY座標
@@ -728,7 +746,6 @@ void Player::Attack()
 			else if (!ins.IsNew(KEY_INPUT_K)) // キーが離されたら初期化
 			{
 				armAngle_ = AsoUtility::Deg2RadF(0.0f);
-				StopSoundMem(swingSoundHandle_);
 			}
 		}
 		else if (dir_ == AsoUtility::DIR::LEFT) // 左向き
@@ -739,13 +756,11 @@ void Player::Attack()
 				if (armAngle_ >= AsoUtility::Deg2RadF(0.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
-					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
 				}
 				armAngle_ -= AsoUtility::Deg2RadF(7.0f); // 左方向に回転
 				if (armAngle_ <= AsoUtility::Deg2RadF(-315.0f)) // -360度を超えたらリセット
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
-					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
 				}
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
@@ -753,7 +768,6 @@ void Player::Attack()
 			else if (!ins.IsNew(KEY_INPUT_K))
 			{
 				armAngle_ = AsoUtility::Deg2RadF(0.0f);
-				StopSoundMem(swingSoundHandle_);
 			}
 		}
 	}
@@ -796,6 +810,7 @@ void Player::ReSpawn()
 			pos_.x = stageSize_ * 2;
 			pos_.y = stageSize_ * 8;
 			SetHp(GetHp() - 10);
+			gameScene_->SetHitStop(30);
 		}
 	}
 	else
@@ -806,6 +821,7 @@ void Player::ReSpawn()
 			pos_.x = stageSize_ * 2;
 			pos_.y = stageSize_ * 8;
 			SetHp(GetHp() - 10);
+			gameScene_->SetHitStop(30);
 		}
 
 	}
@@ -960,6 +976,8 @@ void Player::AttackChange(void)
 		attackPos_.x -= MOVE_POWER;
 	}
 }
+
+
 
 
 //当たり判定--------------------------------------------------------------------------------------------------------------------------------------------------------------

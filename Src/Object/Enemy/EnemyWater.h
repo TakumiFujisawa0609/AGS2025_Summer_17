@@ -34,21 +34,22 @@ public:
     void Update();
     // 描画
     void Draw();
-
-    // 攻撃
-    void Attack();
     // 移動
     void Move();
+    // 攻撃
+    void Attack();
     // 衝突判定
-<<<<<<< HEAD
-    void PlayerAttackCollision();
-    void EnemyAttackCollision();
-=======
+
     void CollisionPlayerAttack();
     void CollisionEnemyAttack();
->>>>>>> parent of 4d37165 (ma-ji)
+
+    void PlayerAttackCollision();
+    void EnemyAttackCollision();
+
     // 被ダメージ
     void Damage();
+    // 無敵
+    void InvincibleWater();
 
     // サイズ
     int GetSizeX();
@@ -95,12 +96,6 @@ private:
     // 初期座標の設定用値
     int setInit_;
 
-    // エネミーの攻撃の当たり判定座標
-    float leftAttackPos;
-    float rightAttackPos;
-    float topAttackPos;
-    float bottomAttackPos;
-
     // 移動速度
     float moveSpeed_;
     int moveMax_;
@@ -118,6 +113,27 @@ private:
     // アニメーションのカウンタ
     int animCnt_;
 
+    // 攻撃
+    int attackCnt_;
+    float attackPosX_;
+    float attackPosY_;
+    float attackSpeed_;
+    float attackRadius_;
+    float attackMax_;
+    int attackAnimCnt_;
+    int attackInterval_;
+    float attackSize1_;
+    float attackSize2_;
+    float attackSize3_;
+    float attackSize4_;
+    float attackSize5_;
+
+    // エネミー座標取得済み判定
+    bool isGetPos_;
+
+    // 攻撃中判定
+    bool isAttackAlive_;
+
     // 移動用のカウンタ
     int moveCnt_;
 
@@ -131,6 +147,11 @@ private:
     float hp_;
     // 被ダメージ
     float damage_;
+
+    // 無敵時間
+    int invincibleMax_;
+    // 無敵時間のカウント
+    int invincibleCnt_;
 
     // 生存中判定
     bool isAlive_;
@@ -146,5 +167,11 @@ private:
     bool collisionDamage_;
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
     bool collisionWater_;
+    // 無敵判定
+    bool isInvincible_;
+    // 無敵時描画判定
+    bool isVisible_;
+    // 剣攻撃
+    bool isSword_;
 
 };

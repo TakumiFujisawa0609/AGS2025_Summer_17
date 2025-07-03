@@ -20,10 +20,7 @@ public:
     static constexpr int ANIM_X = 8;
     static constexpr int ANIM_Y = 3;
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
-<<<<<<< HEAD
-=======
 
->>>>>>> parent of 4d37165 (ma-ji)
     // アニメーションフレーム
     static constexpr int IDLE_ANIM_MIN = 0;
     static constexpr int IDLE_ANIM_MAX = 3;
@@ -41,16 +38,17 @@ public:
     void Update();
     // 描画
     void Draw();
-
-    // 攻撃
-    void Attack();
     // 移動
     void Move();
+    // 攻撃
+    void Attack();
     // 衝突判定
-    void PlayerAttackCollision();
-    void EnemyAttackCollision();
+    void CollisionPlayerAttack();
+    void CollisionEnemyAttack();
     // 被ダメージ
     void Damage();
+    // 無敵
+    void InvinciblePlant();
 
     // サイズ
     int GetSizeX();
@@ -136,6 +134,11 @@ private:
     // 被ダメージ
     float damage_;
 
+    // 無敵時間
+    int invincibleMax_;
+    // 無敵時間のカウント
+    int invincibleCnt_;
+
     // 生存中判定
     bool isAlive_;
     // 攻撃中判定
@@ -150,5 +153,11 @@ private:
     bool collisionDamage_;
     // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
     bool collisionPlant_;
+    // 無敵判定
+    bool isInvincible_;
+    // 無敵時描画判定
+    bool isVisible_;
+    // 剣攻撃
+    bool isSword_;
 
 };

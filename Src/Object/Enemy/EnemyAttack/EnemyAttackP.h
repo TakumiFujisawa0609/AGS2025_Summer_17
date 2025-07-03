@@ -19,9 +19,6 @@ public:
     static constexpr int ANIM_Y = 1;
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
 
-    // 攻撃
-    static constexpr int ATTACK_INTERVAL = 110;
-
     // 初期化
     void Init(EnemyPlant* enemyPlant, Player* player, Camera* camera);
     // 更新
@@ -48,6 +45,10 @@ public:
     // アニメーションフレーム数の取得・更新
     int GetAnimFrameAttackP();
     void SetAnimFrameAttackP(int animFrame);
+
+    // 攻撃間隔の取得・更新
+    int GetAttackInterval();
+    void SetAttackInterval(int attackInterval);
 
 private:
 
@@ -78,6 +79,9 @@ private:
     // 攻撃用のカウンタ
     int attackCnt_;
 
+    // 攻撃
+    int attackInterval_;
+
     // 攻撃中判定
     bool isAttack_;
 
@@ -89,5 +93,6 @@ private:
 
     // プレイヤー座標取得済み判定
     bool isGetPos_;
+
 };
 

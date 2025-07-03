@@ -1,3 +1,4 @@
+#include<DxLib.h>
 #include "../Manager/ResourceManager.h"
 #include "SceneBase.h"
 
@@ -11,6 +12,7 @@ SceneBase::~SceneBase()
 
 void SceneBase::Init(void)
 {
+	
 }
 
 void SceneBase::Update(void)

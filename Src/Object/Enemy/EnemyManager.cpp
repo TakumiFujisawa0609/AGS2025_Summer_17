@@ -25,7 +25,7 @@ void EnemyManager::Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyWater
 	stage_ = stage;
 
 	collisionEnemy_ = false;
-	
+
 	/*enemyBase_ = new EnemyBase();
 	enemyBase_->Init(player_, camera_, stage_);*/
 
@@ -62,22 +62,18 @@ void EnemyManager::CollisionAttack()
 	plantCollision_ = enemyPlant_->GetCollisionPlant();
 	waterCollision_ = enemyWater_->GetCollisionWater();
 
-	// どれかと衝突したらtrue
-	if (fireCollision_ || plantCollision_ || waterCollision_)
-	{
-		collisionEnemy_ = true;
-	}
-
 	// falseになったらエネミーの衝突判定もfalseになる
-<<<<<<< HEAD
 	if (!collisionEnemy_)
-=======
-	if(!collisionEnemy_)
->>>>>>> parent of 4d37165 (ma-ji)
 	{
 		enemyFire_->SetCollisionFire(false);
 		enemyPlant_->SetCollisionPlant(false);
 		enemyWater_->SetCollisionWater(false);
+	}
+
+	// どれかと衝突したらtrue
+	if (fireCollision_ || plantCollision_ || waterCollision_)
+	{
+		collisionEnemy_ = true;
 	}
 }
 

@@ -27,6 +27,9 @@ void EnemyAttackP::Init(EnemyPlant* enemyPlant, Player* player, Camera* camera)
     // 攻撃のクールダウン
     attackCnt_ = 50;
 
+    // 攻撃
+    attackInterval_ = 110;
+
     // 攻撃中判定
     isAttack_ = false;
 
@@ -48,13 +51,35 @@ void EnemyAttackP::Update()
 void EnemyAttackP::Draw()
 {
     // 発見中のみ攻撃クールダウン消費
-    if (enemyPlant_->GetFind())
+    if (enemyPlant_->GetFind() && enemyPlant_->GetAlive())
     {
         attackCnt_++;
     }
 
+    if (isCntUp_ && animFrame_ == 1)
+    {
+        animInterval_ = 45;
+    }
+    else if (animFrame_ > 1 && isCntUp_)
+    {
+        animInterval_ = 5;
+    }
+    else if (!isCntUp_ && animFrame_ != 8)
+    {
+        animInterval_ = 4;
+    }
+
+    if (isCntUp_ && animFrame_ == 1)
+    {
+        animInterval_ = 60;
+    }
+    else if (animFrame_ > 1)
+    {
+        animInterval_ = 8;
+    }
+
     // アニメーション処理
-    if (attackCnt_ >= ATTACK_INTERVAL && (isAttack_ || isAlive_) && (player_->GetHitFoot() || isAlive_))
+    if (attackCnt_ >= attackInterval_ && (isAttack_ || isAlive_) && (player_->GetHitFoot() || isAlive_))
     {
         isAlive_ = true;
         animCnt_++;
@@ -67,6 +92,7 @@ void EnemyAttackP::Draw()
                 if (animFrame_ >= 8)
                 {
                     isCntUp_ = false;
+                    animInterval_ = 60;
                 }
             }
             else
@@ -96,22 +122,14 @@ void EnemyAttackP::Draw()
 
     if (isAlive_)
     {
-<<<<<<< HEAD
         if (!isGetPos_)
-=======
-        if(!isGetPos_)
->>>>>>> parent of 4d37165 (ma-ji)
         {
             pos_.x = playerPos.x;
             pos_.y = playerPos.y;
             isGetPos_ = true;
         }
         // 左向きに描画
-<<<<<<< HEAD
         DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, false);
-=======
-        DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, false);   
->>>>>>> parent of 4d37165 (ma-ji)
     }
     else
     {
@@ -179,4 +197,14 @@ int EnemyAttackP::GetAnimFrameAttackP()
 void EnemyAttackP::SetAnimFrameAttackP(int animFrame)
 {
     animFrame_ = animFrame;
+}
+
+int EnemyAttackP::GetAttackInterval()
+{
+    return attackInterval_;
+}
+
+void EnemyAttackP::SetAttackInterval(int attackInterval)
+{
+    attackInterval_ = attackInterval;
 }

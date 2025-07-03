@@ -64,6 +64,10 @@ void EnemyPlant::InitStage2()
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
             collisionPlant_ = false;
+            // 無敵判定
+            isInvincible_ = false;
+            // 無敵時描画判定
+            isVisible_ = true;
 
             // アニメーションフレーム数カウント
             animFrame_ = WALK_ANIM_MIN;
@@ -79,6 +83,11 @@ void EnemyPlant::InitStage2()
             hp_ = 25.0f;
             // 被ダメージ数
             damage_ = 10.0f;
+
+            // 無敵時間
+            invincibleMax_ = 45;
+            // 無敵時間のカウント
+            invincibleCnt_ = 0;
 
             // 初期化用変数
             setInit_ = 3;
@@ -96,16 +105,15 @@ void EnemyPlant::InitStage3()
 
         if (stageId == 3)
         {
-            // 仮
-            pos_.x = 300.0f;
-            pos_.y = 300.0f;
+            pos_.x = 5824.0f;
+            pos_.y = 1120.0f;
 
             // 移動速度
-            moveSpeed_ = 2.0f;
-            moveMax_ = 100;
+            moveSpeed_ = 1.5f;
+            moveMax_ = 90;
 
             // 索敵範囲
-            findSize_ = 120.0f;
+            findSize_ = 600.0f;
 
             // 生存判定
             isAlive_ = true;
@@ -121,6 +129,10 @@ void EnemyPlant::InitStage3()
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
             collisionPlant_ = false;
+            // 無敵判定
+            isInvincible_ = false;
+            // 無敵時描画判定
+            isVisible_ = true;
 
             // アニメーションフレーム数カウント
             animFrame_ = WALK_ANIM_MIN;
@@ -137,6 +149,14 @@ void EnemyPlant::InitStage3()
             // 被ダメージ数
             damage_ = 10.0f;
 
+            // 攻撃間隔
+            enemyAttackP_->SetAttackInterval(50);
+
+            // 無敵時間
+            invincibleMax_ = 100;
+            // 無敵時間のカウント
+            invincibleCnt_ = 0;
+
             // 初期化用変数
             setInit_ = 0;
         }
@@ -149,9 +169,10 @@ void EnemyPlant::Update()
     InitStage3();
     Move();
     Attack();
-    PlayerAttackCollision();
-    EnemyAttackCollision();
+    CollisionPlayerAttack();
+    CollisionEnemyAttack();
     Damage();
+    InvinciblePlant();
     enemyAttackP_->Update();
 
     // プレイヤー座標
@@ -180,7 +201,7 @@ void EnemyPlant::Update()
     // 再出現(デバッグ用)
     if (CheckHitKey(KEY_INPUT_N))
     {
-        hp_ = 25.0f;
+        hp_ = 45.0f;
         isAlive_ = true;
         collisionPlant_ = false;
     }
@@ -226,11 +247,7 @@ void EnemyPlant::Draw()
                 if (animFrame_ >= ATTACK_ANIM_MAX)
                 {
                     animFrame_ = IDLE_ANIM_MIN;
-<<<<<<< HEAD
                 }
-=======
-                } 
->>>>>>> parent of 4d37165 (ma-ji)
                 else if (animFrame_ > IDLE_ANIM_MAX && animFrame_ < ATTACK_ANIM_MIN)
                 {
                     animInterval_ = 12;
@@ -240,11 +257,7 @@ void EnemyPlant::Draw()
         }
     }
     // 歩行モーション
-<<<<<<< HEAD
     else if (!enemyAttackP_->GetAlive())
-=======
-    else if(!enemyAttackP_->GetAlive())
->>>>>>> parent of 4d37165 (ma-ji)
     {
         animInterval_ = 10;
         animCnt_++;
@@ -257,7 +270,7 @@ void EnemyPlant::Draw()
         }
     }
 
-    if (isAlive_)
+    if (isAlive_ && isVisible_)
     {
         // 発見中
         if (isFind_)
@@ -308,14 +321,6 @@ void EnemyPlant::Draw()
     }
 }
 
-void EnemyPlant::Attack()
-{
-    if (isAttack_)
-    {
-        int a = 0; // 仮
-    }
-}
-
 void EnemyPlant::Move()
 {
     if (isAlive_ && !enemyAttackP_->GetAlive())
@@ -345,7 +350,16 @@ void EnemyPlant::Move()
     }
 }
 
-void EnemyPlant::PlayerAttackCollision()
+void EnemyPlant::Attack()
+{
+    if (isAttack_)
+    {
+        int a = 0; // 仮
+    }
+
+}
+
+void EnemyPlant::CollisionPlayerAttack()
 {
     // エネミーの衝突用半径
     float enemyRadius = 32.0f;
@@ -381,31 +395,33 @@ void EnemyPlant::PlayerAttackCollision()
             collisionDamage_ = true;
         }
     }
-    //// 剣攻撃
-    //else if (magicColoer == 0xffffff)
-    //{
-    //    //player_->GetSotd();
-    //    // 剣の座標を取得
-    //    Vector2F swordPos = player_->GetAttckAnglePoint();
-    //    // 球体同士の衝突判定
-    //    bool ret = false;
-    //    // お互いの半径の合計
-    //    float radius = enemyRadius + swordRadius;
-    //    // ２つの座標間の距離をピタゴラスの定理で算出
-    //    VECTOR distance = VECTOR();
-    //    distance.x = pos_.x - swordPos.x;
-    //    distance.y = pos_.y - swordPos.y;
-    //    float dis = distance.x * distance.x + distance.y * distance.y;
-    //    // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
-    //    if (dis < (radius * radius))
-    //    {
-    //        // 攻撃ヒット済
-    //        collisionDamage_ = true;
-    //    }
-    //}
+    // 剣攻撃
+    else if (magicColoer == normal_ && CheckHitKey(KEY_INPUT_K))
+    {
+        isSword_ = true;
+        // カメラ座標の取得
+        Vector2 cameraPos = camera_->GetCameraPos();
+        // 剣の座標を取得
+        Vector2F swordPos = player_->GetAttckAnglePoint();
+        // 球体同士の衝突判定
+        bool ret = false;
+        // お互いの半径の合計
+        float radius = enemyRadius + swordRadius;
+        // ２つの座標間の距離をピタゴラスの定理で算出
+        VECTOR distance = VECTOR();
+        distance.x = pos_.x - swordPos.x;
+        distance.y = pos_.y - swordPos.y;
+        float dis = distance.x * distance.x + distance.y * distance.y;
+        // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
+        if (dis < (radius * radius))
+        {
+            // 攻撃ヒット済
+            collisionDamage_ = true;
+        }
+    }
 }
 
-void EnemyPlant::EnemyAttackCollision()
+void EnemyPlant::CollisionEnemyAttack()
 {
     if (isAlive_) {
         // エネミーの衝突用半径
@@ -460,14 +476,15 @@ void EnemyPlant::EnemyAttackCollision()
             // プレイヤー画像のサイズ
             float playrSize = 58.0f;
             // 衝突判定
-            if (leftAttackPos < playerPos.x + playrSize - cameraPos.x &&
-                rightAttackPos > playerPos.x - cameraPos.x &&
-                topAttackPos < playerPos.y + playrSize - cameraPos.y &&
-                bottomAttackPos > playerPos.y - cameraPos.y &&
+            if (leftAttackPos + 32.0f < playerPos.x + playrSize - cameraPos.x &&
+                rightAttackPos + 32.0f > playerPos.x - cameraPos.x &&
+                topAttackPos + 32.0f < playerPos.y + playrSize - cameraPos.y &&
+                bottomAttackPos + 32.0f > playerPos.y - cameraPos.y &&
                 attackFrame >= 2)
             {
                 // 衝突した
                 collisionPlant_ = true;
+                isAlive_ = false;
             }
         }
     }
@@ -481,15 +498,9 @@ void EnemyPlant::Damage()
     bool isAttack = player_->GetAttack();
 
     // 攻撃中でない
-    if (isAttack) {
-        wasHit_ = false;
-        collisionDamage_ = false;
-        return;
-    }
-
-    // 攻撃ヒット済みなので何もしない
-    if (wasHit_)
+    if (isAttack && !isSword_)
     {
+        collisionDamage_ = false;
         return;
     }
 
@@ -516,12 +527,17 @@ void EnemyPlant::Damage()
     // 衝突したかつエネミー生存中
     if (collisionDamage_ && isAlive_)
     {
-        // ダメージを与える
-        hp_ -= damage_;
+        // 無敵状態でなければダメージを与える
+        if (!isInvincible_)
+        {
+            hp_ -= damage_;
+        }
         // 攻撃エフェクト削除
         player_->SetPoint(false);
         // 再攻撃可能
         player_->SetAttack(true);
+        // 剣判定復活
+        isSword_ = false;
     }
 
     // HPが0になったら撃破
@@ -529,6 +545,30 @@ void EnemyPlant::Damage()
     {
         hp_ = 0.0f;
         isAlive_ = false;
+    }
+}
+
+void EnemyPlant::InvinciblePlant()
+{
+    invincibleMax_ = 60;
+    if (collisionDamage_ || isInvincible_)
+    {
+        isInvincible_ = true;
+        invincibleCnt_++;
+        if (invincibleCnt_ >= invincibleMax_)
+        {
+            isInvincible_ = false;
+            invincibleCnt_ = 0;
+        }
+
+        if (invincibleCnt_ % 5 >= 3 && invincibleCnt_ > 4)
+        {
+            isVisible_ = false;
+        }
+        else
+        {
+            isVisible_ = true;
+        }
     }
 }
 
