@@ -24,6 +24,7 @@ private:
 	int  blinkCycle; // 点滅周期
 
 	float frameCount;
+	int successSound;; // タイトルBGMのハンドル
 
 };
 

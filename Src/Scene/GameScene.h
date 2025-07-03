@@ -67,6 +67,7 @@ private:
 	int backImg_;
 
 
+<<<<<<< HEAD
 	//一時的な描画領域
 	int tmpScreen_;
 	//画面揺れの感覚
@@ -76,6 +77,10 @@ private:
 
 	//ヒットストップ
 	int hitStopCnt_;
+=======
+
+	
+>>>>>>> ado_sound
 
 public:
 

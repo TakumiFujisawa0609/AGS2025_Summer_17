@@ -55,12 +55,18 @@ private:
 	//”wŒi
 	int backImg_;
 
+<<<<<<< HEAD
 	// ƒV[ƒ“‘JˆÚ’†”»’è
 	bool isSceneChanging_;
 
 
 	// ƒtƒF[ƒh
 	void Fade(void);
+=======
+	int BackSoundHandle_; // ”wŒiBGM‚Ìƒnƒ“ƒhƒ‹
+
+
+>>>>>>> ado_sound
 public:
 
 	StageManager();

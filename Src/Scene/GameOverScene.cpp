@@ -19,6 +19,8 @@ void GameOverScene::Init(void)
 {//画像読み込み
 	img_ = LoadGraph((Application::PATH_IMAGE + "Scene/false.png").c_str());
 
+	successSound = LoadSoundMem("Data/Sound/SE/success.mp3");
+
 	// 点滅させたい周期（例：30フレームで切り替え、約0.5秒）
 	blinkCycle = 90;
 
@@ -32,6 +34,7 @@ void GameOverScene::Update(void)
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
+		PlaySoundMem(successSound, DX_PLAYTYPE_BACK); // 成功音を再生
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
 }

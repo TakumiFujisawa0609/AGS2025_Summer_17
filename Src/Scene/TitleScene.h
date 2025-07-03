@@ -30,4 +30,10 @@ private:
 
 	int count_;
 
+<<<<<<< HEAD
+=======
+	int TitleSoundHandle_; // タイトルBGMのハンドル
+	int successSound;; // タイトルBGMのハンドル
+
+>>>>>>> ado_sound
 };
