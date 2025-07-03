@@ -54,6 +54,8 @@ void Player::Init(Camera* camera, Stage* stage, Wall* wall, Blast* blast, Water*
 
 	sordImg_ = LoadGraph("Data/Image/Player/Sord.png"); // 剣の画像を読み込み（単体）
 
+	swingSoundHandle_ = LoadSoundMem("Data/Sound/SE/Swing.mp3");
+
 	stageSize_ = stage_->CHIP_SIZE_X; // ステージの1マスの幅を取得（横チップサイズ）
 
 	// 初期位置設定
@@ -315,8 +317,6 @@ void Player::Move()
 	//左への移動処理
 	if (ins.IsNew(KEY_INPUT_A))
 	{
-
-
 
 		//左を向ける
 		dir_ = AsoUtility::DIR::LEFT;
@@ -734,11 +734,13 @@ void Player::Attack()
 				if (armAngle_ <= AsoUtility::Deg2RadF(0.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(180.0f); // 剣振りの開始角度
+					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
 				}
 				armAngle_ += AsoUtility::Deg2RadF(7.0f); // 回転速度で腕を動かす
 				if (armAngle_ >= AsoUtility::Deg2RadF(315.0f)) // 1周したらリセット
 				{
 					armAngle_ = AsoUtility::Deg2RadF(180.0f);
+					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
 				}
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100; // 攻撃方向のX座標
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100; // 攻撃方向のY座標
@@ -746,6 +748,7 @@ void Player::Attack()
 			else if (!ins.IsNew(KEY_INPUT_K)) // キーが離されたら初期化
 			{
 				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+				StopSoundMem(swingSoundHandle_);
 			}
 		}
 		else if (dir_ == AsoUtility::DIR::LEFT) // 左向き
@@ -756,11 +759,13 @@ void Player::Attack()
 				if (armAngle_ >= AsoUtility::Deg2RadF(0.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
+					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
 				}
 				armAngle_ -= AsoUtility::Deg2RadF(7.0f); // 左方向に回転
 				if (armAngle_ <= AsoUtility::Deg2RadF(-315.0f)) // -360度を超えたらリセット
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
+					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
 				}
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;
 				attckAnglePoint_.y = pos_.y + cosf(armAngle_) * 100;
@@ -768,6 +773,7 @@ void Player::Attack()
 			else if (!ins.IsNew(KEY_INPUT_K))
 			{
 				armAngle_ = AsoUtility::Deg2RadF(0.0f);
+				StopSoundMem(swingSoundHandle_);
 			}
 		}
 	}

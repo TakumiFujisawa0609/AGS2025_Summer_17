@@ -48,8 +48,15 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* e
 
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.jpg").c_str());
+		
+	BackSoundHandle3_ = LoadSoundMem("Data/Sound/BGM/BackSound3.mp3");
 
 	BackSoundHandle_ = LoadSoundMem("Data/Sound/BGM/BackSound.mp3");
+	
+	
+	if (BackSoundHandle3_ == -1) {
+		printfDx("BackSound3.mp3のロードに失敗しました\n");
+	}
 	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/rock.png").c_str());
 }
 void StageManager::Update()
@@ -129,6 +136,7 @@ void StageManager::Update2()
 	plants_->Update();
 	if (player_->GetPlayerPos().x > 64 * 86)
 	{
+		
 		ChangeStage(STAGE_TYPE::STAGE3);
 	}
 	
@@ -173,7 +181,6 @@ void StageManager::Draw()
 	case STAGE_TYPE::STAGE3:
 		Draw3();
 		break;
-
 	}
 	// Effekseerにより再生中のエフェクトを更新する。
 	UpdateEffekseer3D();
@@ -217,9 +224,6 @@ void StageManager::Draw2()
 	// ステージの描画
 	stage_->DrawStage2();
 
-	
-	
-
 	// エネミーの描画
 	enemyManager_->Draw();
 
@@ -230,15 +234,15 @@ void StageManager::Draw2()
 void StageManager::Draw3()
 {
 	StopSoundMem(BackSoundHandle_);
+	if (CheckSoundMem(BackSoundHandle3_) == 0) {
+		PlaySoundMem(BackSoundHandle3_, DX_PLAYTYPE_LOOP);
+	}
 	DrawGraph( 0, 0,back3Img_, true);
 	//壁の描画
 	wall_->Draw2();
 	
-
 	// プレイヤーの描画
 	player_->Draw();
-
-	
 
 	// ステージの描画
 	stage_->DrawStage3();
@@ -282,6 +286,7 @@ void StageManager::DoChangeStage(STAGE_TYPE type)
 	case STAGE_TYPE::STAGE3:
 		player_->SetPlayerPos(pos);
 		stage_->InitStage3();
+
 		wall_->Init2();
 		break;
 

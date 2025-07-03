@@ -68,6 +68,7 @@ private:
 	int* img_;          // 本体スプライト（配列）
 	int* armImg_;       // 腕のスプライト（配列）
 	int sordImg_;       // 剣の画像（単体）※スペルミスの可能性: sword？
+	int swingSoundHandle_; // 剣を振る音のハンドル
 
 	int invCnt_;        // 無敵時間カウント
 	bool isAlive_;      // 生存フラグ

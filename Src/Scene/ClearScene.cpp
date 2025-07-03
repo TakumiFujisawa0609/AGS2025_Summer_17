@@ -35,6 +35,10 @@ void ClearScene::Update(void)
 
 void ClearScene::Draw(void)
 {
+
+	// 入力マネージャのインスタンスを取得
+	InputManager& ins = InputManager::GetInstance();
+	Application& app = Application::GetInstance();
 	frameCount++;
 	// 画像描画
 	DrawGraph(0, 0, Img_, TRUE);
@@ -47,6 +51,11 @@ void ClearScene::Draw(void)
 
 	}
 	SetFontSize(16);
+	if (ins.IsTrgDown(KEY_INPUT_RETURN))
+	{
+		app.SetExit(true);
+		frameCount = 0;
+	}
 #ifdef _DEBUG
 	//当たり判定の可視化
 	DrawFormatString(0, 0, 0x000000, "ClearScene");

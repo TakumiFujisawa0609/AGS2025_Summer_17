@@ -65,7 +65,7 @@ private:
 
 	int BackSoundHandle_; // 背景BGMのハンドル
 
-
+	int BackSoundHandle3_; // 3ステ背景BGMのハンドル
 
 public:
 
