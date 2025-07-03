@@ -39,15 +39,15 @@ void EnemyFire::InitStage2()
         if (stageId == 2)
         {
             // 初期座標
-            pos_.x = 2460.0f;
+            pos_.x = 2172.0f;
             pos_.y = 352.0f;
 
             // 移動速度
-            moveSpeed_ = 1.5f;
-            moveMax_ = 240;
+            moveSpeed_ = 1.3f;
+            moveMax_ = 200;
 
             // 索敵範囲
-            findSize_ = 200.0f;
+            findSize_ = 220.0f;
 
             // 生存判定
             isAlive_ = true;
@@ -63,6 +63,10 @@ void EnemyFire::InitStage2()
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
             collisionFire_ = false;
+            // 無敵判定
+            isInvincible_ = false;
+            // 無敵時描画判定
+            isVisible_ = true;
 
             // アニメーションフレーム数カウント
             animFrame_ = 0;
@@ -76,6 +80,11 @@ void EnemyFire::InitStage2()
             hp_ = 25.0f;
             // 被ダメージ数
             damage_ = 10.0f;
+
+            // 無敵時間
+            invincibleMax_ = 45;
+            // 無敵時間のカウント
+            invincibleCnt_ = 0;
 
             setInit_ = 3;
         }
@@ -91,13 +100,12 @@ void EnemyFire::InitStage3()
 
         if (stageId == 3)
         {
-            // 仮
-            pos_.x = 300.0f;
-            pos_.y = 300.0f;
+            pos_.x = 5952.0f;
+            pos_.y = 736.0f;
 
             // 移動速度
-            moveSpeed_ = 2.0f;
-            moveMax_ = 100;
+            moveSpeed_ = 1.5f;
+            moveMax_ = 0;
 
             // 索敵範囲
             findSize_ = 120.0f;
@@ -116,6 +124,10 @@ void EnemyFire::InitStage3()
             collisionDamage_ = false;
             // エネミー(エネミーの攻撃)とプレイヤーの衝突判定
             collisionFire_ = false;
+            // 無敵判定
+            isInvincible_ = false;
+            // 無敵時描画判定
+            isVisible_ = true;
 
             // アニメーションフレーム数カウント
             animFrame_ = 0;
@@ -130,6 +142,14 @@ void EnemyFire::InitStage3()
             // 被ダメージ数
             damage_ = 10.0f;
 
+            // 攻撃間隔
+            enemyAttackF_->SetAttackIntervalF(30);
+
+            // 無敵時間
+            invincibleMax_ = 60;
+            // 無敵時間のカウント
+            invincibleCnt_ = 0;
+
             setInit_ = 0;
         }
     }
@@ -141,9 +161,10 @@ void EnemyFire::Update()
     InitStage3();
     Move();
     Attack();
-    PlayerAttackCollision();
-    EnemyAttackCollision();
+    CollisionPlayerAttack();
+    CollisionEnemyAttack();
     Damage();
+    InvincibleFire();
     enemyAttackF_->Update();
 
     // プレイヤー座標
@@ -172,7 +193,7 @@ void EnemyFire::Update()
     // 再出現(デバッグ用)
     if (CheckHitKey(KEY_INPUT_B))
     {
-        hp_ = 25.0f;
+        hp_ = 45.0f;
         isAlive_ = true;
         collisionFire_ = false;
     }
@@ -182,7 +203,6 @@ void EnemyFire::Update()
 
 void EnemyFire::Draw()
 {
-
     enemyAttackF_->Draw();
 
     // プレイヤー座標
@@ -216,7 +236,7 @@ void EnemyFire::Draw()
         animCnt_ = 0;
     }
 
-    if (isAlive_)
+    if (isAlive_ && isVisible_)
     {
         // 発見中
         if (isFind_)
@@ -262,14 +282,6 @@ void EnemyFire::Draw()
     }
 }
 
-void EnemyFire::Attack()
-{
-    if (isAttack_)
-    {
-        int a = 0; // 仮
-    }
-}
-
 void EnemyFire::Move()
 {
     if (isAlive_ && !enemyAttackF_->GetAlive())
@@ -299,7 +311,15 @@ void EnemyFire::Move()
     }
 }
 
-void EnemyFire::PlayerAttackCollision()
+void EnemyFire::Attack()
+{
+    if (isAttack_)
+    {
+        int a = 0; // 仮
+    }
+}
+
+void EnemyFire::CollisionPlayerAttack()
 {
     // エネミーの衝突用半径
     float enemyRadius = 32.0f;
@@ -314,7 +334,7 @@ void EnemyFire::PlayerAttackCollision()
     int magicColoer = player_->GetCr();
 
     // 魔法攻撃
-    if (magicColoer != 0xffffff)
+    if (magicColoer != normal_)
     {
         // 魔法とエネミーの衝突判定
         // 魔法の座標を取得
@@ -335,33 +355,36 @@ void EnemyFire::PlayerAttackCollision()
             collisionDamage_ = true;
         }
     }
-    //// 剣攻撃
-    //else if (magicColoer == 0xffffff)
-    //{
-    //    //player_->GetSotd();
-    //    // 剣の座標を取得
-    //    Vector2F swordPos = player_->GetAttckAnglePoint();
-    //    // 球体同士の衝突判定
-    //    bool ret = false;
-    //    // お互いの半径の合計
-    //    float radius = enemyRadius + swordRadius;
-    //    // ２つの座標間の距離をピタゴラスの定理で算出
-    //    VECTOR distance = VECTOR();
-    //    distance.x = pos_.x - swordPos.x;
-    //    distance.y = pos_.y - swordPos.y;
-    //    float dis = distance.x * distance.x + distance.y * distance.y;
-    //    // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
-    //    if (dis < (radius * radius))
-    //    {
-    //        // 攻撃ヒット済
-    //        collisionDamage_ = true;
-    //    }
-    //}
+    // 剣攻撃
+    else if (magicColoer == normal_ && CheckHitKey(KEY_INPUT_K))
+    {
+        isSword_ = true;
+        // カメラ座標の取得
+        Vector2 cameraPos = camera_->GetCameraPos();
+        // 剣の座標を取得
+        Vector2F swordPos = player_->GetAttckAnglePoint();
+        // 球体同士の衝突判定
+        bool ret = false;
+        // お互いの半径の合計
+        float radius = enemyRadius + swordRadius;
+        // ２つの座標間の距離をピタゴラスの定理で算出
+        VECTOR distance = VECTOR();
+        distance.x = pos_.x - swordPos.x;
+        distance.y = pos_.y - swordPos.y;
+        float dis = distance.x * distance.x + distance.y * distance.y;
+        // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
+        if (dis < (radius * radius))
+        {
+            // 攻撃ヒット済
+            collisionDamage_ = true;
+        }
+    }
 }
 
-void EnemyFire::EnemyAttackCollision()
+void EnemyFire::CollisionEnemyAttack()
 {
-    if (isAlive_) {
+    if (isAlive_)
+    {
         // エネミーの衝突用半径
         float enemyRadius = 32.0f;
         // 魔法の衝突用半径
@@ -399,10 +422,12 @@ void EnemyFire::EnemyAttackCollision()
         // カメラ座標の取得
         Vector2 cameraPos = camera_->GetCameraPos();
         
-        if (enemyAttackF_->GetAlive()) {
+        if (enemyAttackF_->GetAlive())
+        {
             // エネミーの攻撃の当たり判定座標
             // 左向きのとき
-            if (isLeft_) {
+            if (isLeft_)
+            {
                 // 右
                 leftAttackPos = pos_.x - attackSizeX + SIZE_X / 2;
                 // 左
@@ -425,7 +450,7 @@ void EnemyFire::EnemyAttackCollision()
             }
 
             // プレイヤー画像のサイズ
-            float playrSize = 64.0f;
+            float playrSize = 58.0f;
             // 衝突判定
             if (rightAttackPos > playerPos.x &&
                 leftAttackPos < playerPos.x + playrSize &&
@@ -447,15 +472,9 @@ void EnemyFire::Damage()
     bool isAttack = player_->GetAttack();
 
     // 攻撃中でない
-    if (isAttack) {
-        wasHit_ = false;
-        collisionDamage_ = false;
-        return;
-    }
-
-    // 攻撃ヒット済みなので何もしない
-    if (wasHit_)
+    if (isAttack && !isSword_)
     {
+        collisionDamage_ = false;
         return;
     }
 
@@ -482,12 +501,17 @@ void EnemyFire::Damage()
     // 衝突したかつエネミー生存中
     if (collisionDamage_ && isAlive_)
     {
-        // ダメージを与える
-        hp_ -= damage_;
+        // 無敵状態でなければダメージを与える
+        if (!isInvincible_)
+        {
+            hp_ -= damage_;
+        }
         // 攻撃エフェクト削除
         player_->SetPoint(false);
         // 再攻撃可能
         player_->SetAttack(true);
+        // 剣判定復活
+        isSword_ = false;
     }
 
     // HPが0になったら撃破
@@ -495,6 +519,30 @@ void EnemyFire::Damage()
     {
         hp_ = 0.0f;
         isAlive_ = false;
+    }
+}
+
+void EnemyFire::InvincibleFire()
+{
+    invincibleMax_ = 60;
+    if (collisionDamage_ || isInvincible_)
+    {
+        isInvincible_ = true;
+        invincibleCnt_++;
+        if (invincibleCnt_ >= invincibleMax_)
+        {
+            isInvincible_ = false;
+            invincibleCnt_ = 0;
+        }
+        
+        if (invincibleCnt_ % 5 >= 3 && invincibleCnt_ > 4)
+        {
+            isVisible_ = false;
+        }
+        else
+        {
+            isVisible_ = true;
+        }
     }
 }
 
@@ -551,4 +599,14 @@ bool EnemyFire::GetCollisionFire()
 void EnemyFire::SetCollisionFire(bool collisionFire)
 {
     collisionFire_ = collisionFire;
+}
+
+bool EnemyFire::GetAnimFrameFire()
+{
+    return animFrame_;
+}
+
+void EnemyFire::SetAnimFrameFire(int animFrame)
+{
+    animFrame_ = animFrame;
 }

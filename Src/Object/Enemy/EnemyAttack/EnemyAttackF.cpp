@@ -21,9 +21,13 @@ void EnemyAttackF::Init(EnemyFire* enemyFire, Player* player, Camera* camera)
     animFrame_ = 4;
     // アニメーションのカウンタ
     animCnt_ = 0;
+    // アニメーションの進行間隔
+    animInterval_ = 8;
 
     // 攻撃のクールダウン
     attackCnt_ = 50;
+    // 攻撃間隔
+    attackInterval_ = 110;
 
     // 攻撃中判定
     isAttack_ = false;
@@ -43,17 +47,26 @@ void EnemyAttackF::Update()
 void EnemyAttackF::Draw()
 {
     // 発見中のみ攻撃クールダウン消費
-    if (enemyFire_->GetFind())
+    if (enemyFire_->GetFind() && enemyFire_->GetAlive())
     {
         attackCnt_++;
     }
 
+    if (animFrame_ == 0)
+    {
+        animInterval_ = 60;
+    }
+    else
+    {
+        animInterval_ = 8;
+    }
+
     // アニメーション処理
-    if (attackCnt_ >= ATTACK_INTERVAL && (isAttack_ || isAlive_))
+    if (attackCnt_ >= attackInterval_ && (isAttack_ || isAlive_))
     {
         isAlive_ = true;
         animCnt_++;
-        if (animCnt_ >= ANIM_INTERVAL) {
+        if (animCnt_ >= animInterval_) {
             animCnt_ = 0;
             if (isCntDown_)
             {
@@ -61,6 +74,10 @@ void EnemyAttackF::Draw()
                 if (animFrame_ <= 0) {
                     isCntDown_ = false;
                 }
+            }
+            else if (animFrame_ == 0)
+            {
+                animInterval_ = 45;
             }
             else
             {
@@ -81,8 +98,6 @@ void EnemyAttackF::Draw()
     Vector2F enemyPos = enemyFire_->GetPos();
     // カメラ座標
     Vector2 cameraPos = camera_->GetCameraPos();
-
-
 
     if (isAlive_ && enemyFire_->GetAlive())
     {
@@ -152,4 +167,14 @@ bool EnemyAttackF::GetAlive()
 void EnemyAttackF::SetAlive(bool isAlive)
 {
     isAlive_ = isAlive;
+}
+
+int EnemyAttackF::GetAttackIntervalF()
+{
+    return attackInterval_;
+}
+
+void EnemyAttackF::SetAttackIntervalF(int attackInterval)
+{
+    attackInterval_ = attackInterval;
 }

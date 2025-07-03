@@ -28,8 +28,6 @@ private:
 
 	// 爆発判定(trueが爆発)
 	bool isBlast;
-
-	int blastSoundHandle;
 	// 爆発アニメーション用のカウンタ
 	int blastImgAnimCount;
 	// 爆発座標

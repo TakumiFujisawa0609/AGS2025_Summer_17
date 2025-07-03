@@ -15,13 +15,9 @@ public:
     static constexpr int SIZE_Y = 96;
 
     // アニメーション
-    static constexpr int ANIM_X = 1;
-    static constexpr int ANIM_Y = 9;
+    static constexpr int ANIM_X = 10;
+    static constexpr int ANIM_Y = 1;
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
-    static constexpr int ANIM_INTERVAL = 8;
-
-    // 攻撃
-    static constexpr int ATTACK_INTERVAL = 110;
 
     // 初期化
     void Init(EnemyPlant* enemyPlant, Player* player, Camera* camera);
@@ -46,6 +42,14 @@ public:
     bool GetAlive();
     void SetAlive(bool isAlive);
 
+    // アニメーションフレーム数の取得・更新
+    int GetAnimFrameAttackP();
+    void SetAnimFrameAttackP(int animFrame);
+
+    // 攻撃間隔の取得・更新
+    int GetAttackInterval();
+    void SetAttackInterval(int attackInterval);
+
 private:
 
     EnemyPlant* enemyPlant_;
@@ -69,9 +73,14 @@ private:
     int animFrame_;
     // アニメーションのカウンタ
     int animCnt_;
+    // アニメーションの進行間隔
+    int animInterval_;
 
     // 攻撃用のカウンタ
     int attackCnt_;
+
+    // 攻撃
+    int attackInterval_;
 
     // 攻撃中判定
     bool isAttack_;
@@ -81,6 +90,9 @@ private:
 
     // 再生折り返し判定
     bool isCntUp_;
+
+    // プレイヤー座標取得済み判定
+    bool isGetPos_;
 
 };
 

@@ -21,9 +21,14 @@ void EnemyAttackP::Init(EnemyPlant* enemyPlant, Player* player, Camera* camera)
     animFrame_ = 0;
     // アニメーションのカウンタ
     animCnt_ = 0;
+    // アニメーションの進行間隔
+    animInterval_ = 12;
 
     // 攻撃のクールダウン
     attackCnt_ = 50;
+
+    // 攻撃
+    attackInterval_ = 110;
 
     // 攻撃中判定
     isAttack_ = false;
@@ -33,6 +38,9 @@ void EnemyAttackP::Init(EnemyPlant* enemyPlant, Player* player, Camera* camera)
 
     // 再生折り返し判定
     isCntUp_ = true;
+
+    // プレイヤー座標取得済み判定
+    isGetPos_ = false;
 }
 
 void EnemyAttackP::Update()
@@ -43,63 +51,89 @@ void EnemyAttackP::Update()
 void EnemyAttackP::Draw()
 {
     // 発見中のみ攻撃クールダウン消費
-    if (enemyPlant_->GetFind())
+    if (enemyPlant_->GetFind() && enemyPlant_->GetAlive())
     {
         attackCnt_++;
     }
+    
+    if (isCntUp_ && animFrame_ == 1)
+    {
+        animInterval_ = 45;
+    }
+    else if (animFrame_ > 1 && isCntUp_)
+    {
+        animInterval_ = 5;
+    }
+    else if (!isCntUp_ && animFrame_ != 8)
+    {
+        animInterval_ = 4;
+    }
+
+    if (isCntUp_ && animFrame_ == 1)
+    {
+        animInterval_ = 60;
+    }
+    else if (animFrame_ > 1)
+    {
+        animInterval_ = 8;
+    }
 
     // アニメーション処理
-    if (attackCnt_ >= ATTACK_INTERVAL && (isAttack_ || isAlive_))
+    if (attackCnt_ >= attackInterval_ && (isAttack_ || isAlive_) && (player_->GetHitFoot() || isAlive_))
     {
         isAlive_ = true;
         animCnt_++;
-        if (animCnt_ <= ANIM_INTERVAL) {
+        if (animCnt_ >= animInterval_)
+        {
             animCnt_ = 0;
             if (isCntUp_)
             {
                 animFrame_++;
-                if (animFrame_ <= ANIM_MAX) {
+                if (animFrame_ >= 8)
+                {
                     isCntUp_ = false;
+                    animInterval_ = 60;
                 }
             }
             else
             {
-                animFrame_++;
-                if (animFrame_ >= ANIM_MAX) {
+                animFrame_--;
+                if (animFrame_ <= 0)
+                {
                     isCntUp_ = true;
                     isAlive_ = false;
                     isAttack_ = false;
                     attackCnt_ = 0;
+                    enemyPlant_->SetAnimFramePlant(16);
                 }
             }
 
         }
     }
 
+    // プレイヤー
+    Vector2F playerPos = player_->GetPlayerPos();
+    // カメラ
+    Vector2 cameraPos = camera_->GetCameraPos();
+    // エネミー
+    Vector2F enemyPos = enemyPlant_->GetPos();
     int enemySize = enemyPlant_->GetSizeX();
     bool enemyLeft = enemyPlant_->GetLeft();
-    Vector2F enemyPos = enemyPlant_->GetPos();
-    // カメラ座標
-    Vector2 cameraPos = camera_->GetCameraPos();
 
-
-
-    if (isAlive_ && enemyPlant_->GetAlive())
+    if (isAlive_)
     {
-        if (enemyLeft)
+        if(!isGetPos_)
         {
-            pos_.x = enemyPos.x - SIZE_X + enemySize / 2 - cameraPos.x;
-            pos_.y = enemyPos.y - cameraPos.y;
-            // 左向きに描画
-            DrawRotaGraphF(pos_.x, pos_.y, 1.0f, 0.0f, Array_[animFrame_], true, false);
+            pos_.x = playerPos.x;
+            pos_.y = playerPos.y;
+            isGetPos_ = true;
         }
-        else
-        {
-            pos_.x = enemyPos.x + enemySize - cameraPos.x;
-            pos_.y = enemyPos.y - cameraPos.y;
-            // 右向きに描画
-            DrawRotaGraphF(pos_.x, pos_.y, 1.0f, 0.0f, Array_[animFrame_], true, true);
-        }
+        // 左向きに描画
+        DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, false);   
+    }
+    else
+    {
+        isGetPos_ = false;
     }
 
 #ifdef _DEBUG
@@ -108,7 +142,8 @@ void EnemyAttackP::Draw()
     if (isAlive_)
     {
         //// 当たり判定用座標
-        DrawBox(pos_.x - SIZE_X / 2, pos_.y - SIZE_Y / 2, pos_.x + SIZE_X / 2, pos_.y + SIZE_Y / 2, 0x000000, false);
+        DrawBox(pos_.x - SIZE_X / 2 - cameraPos.x, pos_.y - SIZE_Y / 2 - cameraPos.y,
+            pos_.x + SIZE_X / 2 - cameraPos.x, pos_.y + SIZE_Y / 2 - cameraPos.y, 0x000000, false);
     }
 
 #endif // _DEBUG
@@ -152,4 +187,24 @@ bool EnemyAttackP::GetAlive()
 void EnemyAttackP::SetAlive(bool isAlive)
 {
     isAlive_ = isAlive;
+}
+
+int EnemyAttackP::GetAnimFrameAttackP()
+{
+    return animFrame_;
+}
+
+void EnemyAttackP::SetAnimFrameAttackP(int animFrame)
+{
+    animFrame_ = animFrame;
+}
+
+int EnemyAttackP::GetAttackInterval()
+{
+    return attackInterval_;
+}
+
+void EnemyAttackP::SetAttackInterval(int attackInterval)
+{
+    attackInterval_ = attackInterval;
 }

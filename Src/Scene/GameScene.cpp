@@ -10,8 +10,10 @@
 #include "../Object/Enemy/EnemyManager.h"
 #include "../Object/Enemy/EnemyFire.h"
 #include "../Object/Enemy/EnemyPlant.h"
+#include "../Object/Enemy/EnemyWater.h"
 #include "../Object/Enemy/EnemyAttack/EnemyAttackF.h"
 #include "../Object/Enemy/EnemyAttack/EnemyAttackP.h"
+#include "../Object/Enemy/EnemyAttack/EnemyAttackW.h"
 #include "../Object/Stage/Stage.h"
 #include "../Object/Camera/Camera.h"
 #include "../Object/Wall/Wall.h"
@@ -23,7 +25,7 @@
 
 GameScene::GameScene(void)
 {
-	
+
 }
 
 GameScene::~GameScene(void)
@@ -38,8 +40,10 @@ void GameScene::Init(void)
 	enemyManager_ = new EnemyManager();
 	enemyFire_ = new EnemyFire();
 	enemyPlant_ = new EnemyPlant();
+	enemyWater_ = new EnemyWater();
 	enemyAttackF_ = new EnemyAttackF();
 	enemyAttackP_ = new EnemyAttackP();
+	enemyAttackW_ = new EnemyAttackW();
 	// ステージ
 	stage_ = new Stage();
 	// ステージ
@@ -63,15 +67,15 @@ void GameScene::Init(void)
 
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 
-	BackSoundHandle_ = LoadSoundMem("Data/Sound/BGM/BackSound.mp3");
+	
 
-	PlaySoundMem(BackSoundHandle_, DX_PLAYTYPE_LOOP); // 背景BGMをループ再生
+	
 
 
-	player_->Init(camera_, stage_, wall_, blast_, water_, plants_);
+	player_->Init(camera_, stage_, wall_, blast_, water_, plants_,this);
 	stage_->Init(player_, camera_);
 	camera_->Init(player_);
-	enemyManager_->Init(enemyFire_, enemyPlant_, enemyAttackF_, enemyAttackP_, player_, camera_, stage_);
+	enemyManager_->Init(enemyFire_, enemyPlant_, enemyWater_, enemyAttackF_, enemyAttackP_, enemyAttackW_, player_, camera_, stage_);
 
 	//enemy_->Init();
 	wall_->Init(camera_);
@@ -86,16 +90,50 @@ void GameScene::Init(void)
 	water_->Init(camera_);
 	plants_->Init(camera_);
 	
+
+	//スクリーン系
+	tmpScreen_ = MakeScreen(Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, true);
+	screenShakeInterevalCount_ = 0;
+	screenShakePos_ = SHAKE_WIDTH;
 }
 
 void GameScene::Update(void)
 {
+
+
+	//ストップ処理・振動処理
+	if (hitStopCnt_ > 0)
+	{
+		SetDrawScreen(DX_SCREEN_BACK);
+		++screenShakeInterevalCount_;
+		if (SCREEN_SHAKE_INTERVAL_COUNT <= screenShakeInterevalCount_)
+		{
+			screenShakeInterevalCount_ = 0;
+			//右揺れ
+			if (screenShakePos_ == SHAKE_WIDTH)
+			{
+				screenShakePos_ = -SHAKE_WIDTH;
+			}
+			//左揺れ
+			else if (screenShakePos_ == -SHAKE_WIDTH)
+			{
+				screenShakePos_ = SHAKE_WIDTH;
+			}
+
+		}
+		DrawGraph(screenShakePos_, screenShakePos_, tmpScreen_, true);
+		hitStopCnt_--;
+		return;
+	}
+
+
 
 	
 	// 入力の更新
 	InputManager& ins = InputManager::GetInstance();
 
 	stageManager_->Update();
+	
 
 	playerUi_->Update();
 
@@ -143,7 +181,7 @@ void GameScene::Update(void)
 		pos.x = 100;
 		pos.y = 100;
 
-		
+
 		plants_->SetPlantsPos(pos);
 		plants_->SetIsPlants(true);
 	}*/
@@ -157,10 +195,32 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {
+
+
+	if (hitStopCnt_ > 0)
+	{
+		SetDrawScreen(tmpScreen_);
+
+		stageManager_->Draw();
+		SetDrawScreen(DX_SCREEN_BACK);
+		DrawGraph(screenShakePos_, screenShakePos_, tmpScreen_, true);
+	}
+	else
+	{
+		stageManager_->Draw();
+		playerUi_->Draw();
+		SetFontSize(32);
+		DrawFormatString(1650, 0, 0xFFFFFF, "ESCでメニュー");
+		SetFontSize(16);
+	}
+
 	
 
 	stageManager_->Draw();
 	playerUi_->Draw();
+
+	
+
 	//// ステージの描画
 	//stage_->Draw();
 
@@ -180,7 +240,7 @@ void GameScene::Draw(void)
 	//water_->Draw();
 	//plants_->Draw();
 
-	
+
 #ifdef _DEBUG
 	DrawFormatString(0, 0, 0x000000, "GameScene");
 
@@ -204,5 +264,15 @@ void GameScene::Release()
 	delete plants_;
 	delete enemyManager_;
 
-	
+
+}
+
+int GameScene::GetHitStop()
+{
+	return hitStopCnt_;
+}
+
+void GameScene::SetHitStop(int cnt)
+{
+	hitStopCnt_ = cnt;
 }

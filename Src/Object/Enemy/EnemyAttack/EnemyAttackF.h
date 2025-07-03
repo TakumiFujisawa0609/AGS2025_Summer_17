@@ -18,10 +18,6 @@ public:
     static constexpr int ANIM_X = 1;
     static constexpr int ANIM_Y = 5;
     static constexpr int ANIM_MAX = ANIM_X * ANIM_Y;
-    static constexpr int ANIM_INTERVAL = 8;
-
-    // 攻撃
-    static constexpr int ATTACK_INTERVAL = 110;
 
     // 初期化
     void Init(EnemyFire* enemyFire, Player* player, Camera* camera);
@@ -46,6 +42,11 @@ public:
     bool GetAlive();
     void SetAlive(bool isAlive);
 
+    // 攻撃間隔の取得・更新
+    int GetAttackIntervalF();
+    void SetAttackIntervalF(int attackInterval);
+
+
 private:
 
     EnemyFire* enemyFire_;
@@ -69,9 +70,13 @@ private:
     int animFrame_;
     // アニメーションのカウンタ
     int animCnt_;
+    // アニメーションの進行間隔
+    int animInterval_;
 
     // 攻撃用のカウンタ
     int attackCnt_;
+    // 攻撃間隔
+    int attackInterval_;
 
     // 攻撃中判定
     bool isAttack_;
