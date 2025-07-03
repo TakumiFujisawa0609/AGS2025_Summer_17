@@ -47,15 +47,11 @@ void ClearScene::Draw(void)
 		, clearImg_, TRUE);
 	SetFontSize(50);
 	if ((static_cast<int>(frameCount) % static_cast<int>(blinkCycle)) < static_cast<int>(blinkCycle) / 2) {
-		DrawFormatString(725, 700, 0xFFFFFF, "SPACEキーでタイトルに戻る\nENTERキーで終了");
+		DrawFormatString(725, 700, 0xFFFFFF, "SPACEキーでタイトルに戻る");
 
 	}
 	SetFontSize(16);
-	if (ins.IsTrgDown(KEY_INPUT_RETURN))
-	{
-		app.SetExit(true);
-		frameCount = 0;
-	}
+	
 #ifdef _DEBUG
 	//当たり判定の可視化
 	DrawFormatString(0, 0, 0x000000, "ClearScene");

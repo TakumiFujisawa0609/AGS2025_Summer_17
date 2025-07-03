@@ -196,9 +196,7 @@ void GameScene::Update(void)
 void GameScene::Draw(void)
 {
 	
-	stageManager_->Draw();
-	playerUi_->Draw();
-
+	
 
 	if (hitStopCnt_ > 0)
 	{

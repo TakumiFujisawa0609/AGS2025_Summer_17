@@ -49,14 +49,14 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* e
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.jpg").c_str());
 		
-	BackSoundHandle3_ = LoadSoundMem("Data/Sound/BGM/BackSound3.mp3");
+	//BackSoundHandle3_ = LoadSoundMem("Data/Sound/BGM//BackSound3.mp3");
 
 	BackSoundHandle_ = LoadSoundMem("Data/Sound/BGM/BackSound.mp3");
 	
 	
-	if (BackSoundHandle3_ == -1) {
-		printfDx("BackSound3.mp3‚Ìƒ[ƒh‚ÉŽ¸”s‚µ‚Ü‚µ‚½\n");
-	}
+	//if (BackSoundHandle3_ == -1) {
+	//	printfDx("BackSound3.mp3‚Ìƒ[ƒh‚ÉŽ¸”s‚µ‚Ü‚µ‚½\n");
+	//}
 	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/rock.png").c_str());
 }
 void StageManager::Update()
@@ -89,6 +89,7 @@ void StageManager::Update()
 	if (player_->GetHp() <= 0)
 	{
 		StopSoundMem(BackSoundHandle_);
+		DeleteSoundMem(BackSoundHandle_);
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
 	}
 

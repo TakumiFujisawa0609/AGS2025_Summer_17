@@ -104,6 +104,7 @@ void SceneManager::Update(void)
 		{
 			if (ins.IsTrgDown(KEY_INPUT_SPACE))
 			{
+				InitSoundMem();
 				DoChangeScene(SCENE_ID::TITLE);
 				manew_ = false;
 			}
