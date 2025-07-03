@@ -1,9 +1,0 @@
-diff a/Src/Object/Enemy/EnemyAttack/EnemyAttackP.cpp b/Src/Object/Enemy/EnemyAttack/EnemyAttackP.cpp	(rejected hunks)
-@@ -96,6 +96,7 @@
-  
-      if (isAlive_)
-      {
-++<<<<<<< HEAD
- +        if (!isGetPos_)
- +=======
-          if(!isGetPos_)
