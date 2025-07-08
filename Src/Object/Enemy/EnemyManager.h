@@ -16,6 +16,9 @@ class EnemyAttackW;
 class Camera;
 class Player;
 class Stage;
+class Blast;
+class Plants;
+class Water;
 
 
 
@@ -25,7 +28,7 @@ public:
     // 初期化
     void Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyWater* enemyWater,
         EnemyAttackF* enemyAttackF, EnemyAttackP* enemyAttackP, EnemyAttackW* enemyAttackW,
-        Player* player, Camera* camera, Stage* stage);
+        Player* player, Camera* camera, Stage* stage, Blast* blast, Plants* plants, Water* water);
     // 更新
     void Update();
     // 描画
@@ -49,6 +52,9 @@ private:
     Player* player_;
     Camera* camera_;
     Stage* stage_;
+    Blast* blast_;
+    Plants* plants_;
+    Water* water_;
 
     // 各種エネミーの当たり判定
     bool fireCollision_;

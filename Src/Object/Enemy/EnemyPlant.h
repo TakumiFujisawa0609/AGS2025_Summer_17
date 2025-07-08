@@ -7,6 +7,9 @@ class EnemyPlant;
 class Player;
 class Camera;
 class Stage;
+class Blast;
+class Plants;
+class Water;
 
 class EnemyPlant
 {
@@ -31,7 +34,7 @@ public:
 
 
     // 初期化
-    void Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player* player, Camera* camera, Stage* stage);
+    void Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player* player, Camera* camera, Stage* stage, Blast* blast, Plants* plant, Water* water);
     void InitStage2();
     void InitStage3();
     // 更新
@@ -89,6 +92,10 @@ private:
     Camera* camera_;
     // ステージ
     Stage* stage_;
+    // エフェクト
+    Blast* blast_;
+    Plants* plants_;
+    Water* water_;
 
     // 座標
     Vector2F pos_;
@@ -124,10 +131,10 @@ private:
     int moveCnt_;
 
     // 属性管理用
-    int fire_;
-    int plant_;
-    int water_;
-    int normal_;
+    int fireCr_;
+    int plantCr_;
+    int waterCr_;
+    int normalCr_;
 
     // HP
     float hp_;

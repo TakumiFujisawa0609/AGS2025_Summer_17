@@ -75,7 +75,7 @@ void GameScene::Init(void)
 	player_->Init(camera_, stage_, wall_, blast_, water_, plants_,this);
 	stage_->Init(player_, camera_);
 	camera_->Init(player_);
-	enemyManager_->Init(enemyFire_, enemyPlant_, enemyWater_, enemyAttackF_, enemyAttackP_, enemyAttackW_, player_, camera_, stage_);
+	enemyManager_->Init(enemyFire_, enemyPlant_, enemyWater_, enemyAttackF_, enemyAttackP_, enemyAttackW_, player_, camera_, stage_, blast_, plants_, water_);
 
 	//enemy_->Init();
 	wall_->Init(camera_);

@@ -60,6 +60,21 @@ private:
     float topPos_;
     float bottomPos_;
 
+    // 攻撃
+    int attackCnt_;
+    float attackPosX_;
+    float attackPosY_;
+    float attackSpeed_;
+    float attackRadius_;
+    float attackMax_;
+    int attackAnimCnt_;
+    int attackInterval_;
+    float attackSize1_;
+    float attackSize2_;
+    float attackSize3_;
+    float attackSize4_;
+    float attackSize5_;
+
     // 画像のハンドルID
     int img_;
 
@@ -70,9 +85,6 @@ private:
     // アニメーションのカウンタ
     int animCnt_;
 
-    // 攻撃用のカウンタ
-    int attackCnt_;
-
     // 攻撃中判定
     bool isAttack_;
 
@@ -81,5 +93,8 @@ private:
 
     // 再生折り返し判定
     bool isCntDown_;
+
+    // 取得済判定
+    bool isGetPos_;
 
 };

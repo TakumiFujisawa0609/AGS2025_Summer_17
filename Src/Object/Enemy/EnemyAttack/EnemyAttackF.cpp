@@ -75,10 +75,6 @@ void EnemyAttackF::Draw()
                     isCntDown_ = false;
                 }
             }
-            else if (animFrame_ == 0)
-            {
-                animInterval_ = 45;
-            }
             else
             {
                 animFrame_++;
@@ -89,7 +85,6 @@ void EnemyAttackF::Draw()
                     attackCnt_ = 0;
                 }
             }
-
         }
     }
 

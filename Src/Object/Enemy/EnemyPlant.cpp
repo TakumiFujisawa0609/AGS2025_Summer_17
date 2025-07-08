@@ -4,14 +4,20 @@
 #include "../Camera/Camera.h"
 #include "../Player/Player.h"
 #include "../Stage/Stage.h"
+#include "../Attack/Blast.h"
+#include "../Attack/Plants.h"
+#include "../Attack/Water.h"
 
-void EnemyPlant::Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player* player, Camera* camera, Stage* stage)
+void EnemyPlant::Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player* player, Camera* camera, Stage* stage, Blast* blast, Plants* plants, Water* water)
 {
     enemyAttackP_ = enemyAttackP;
     enemyPlant_ = enemyPlant;
     player_ = player;
     camera_ = camera;
     stage_ = stage;
+    blast_ = blast;
+    plants_ = plants;
+    water_ = water;
 
     enemyAttackP_->Init(enemyPlant_, player_, camera_);
 
@@ -19,10 +25,10 @@ void EnemyPlant::Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player
     setInit_ = 2;
 
     // 属性管理用
-    fire_ = 0xff0000;
-    plant_ = 0x00ff00;
-    water_ = 0x0000ff;
-    normal_ = 0xffffff;
+    fireCr_ = 0xff0000;
+    plantCr_ = 0x00ff00;
+    waterCr_ = 0x0000ff;
+    normalCr_ = 0xffffff;
 
     // 画像の読み込み
     img_ = LoadDivGraph
@@ -374,7 +380,7 @@ void EnemyPlant::CollisionPlayerAttack()
     int magicColoer = player_->GetCr();
 
     // 魔法攻撃使用中
-    if (magicColoer != 0xffffff)
+    if (magicColoer != normalCr_)
     {
         // 魔法とエネミーの衝突判定
         // 魔法の座標を取得
@@ -393,10 +399,26 @@ void EnemyPlant::CollisionPlayerAttack()
         {
             // 攻撃ヒット済
             collisionDamage_ = true;
+            // 攻撃ヒット時エフェクト
+            if (magicColoer == fireCr_)
+            {
+                blast_->SetBlastPos(magicPos);
+                blast_->SetIsBlast(true);
+
+            }
+            else if (magicColoer == plantCr_)
+            {
+                plants_->SetPlantsPos(magicPos);
+                plants_->SetIsPlants(true);
+            }
+            else if (magicColoer == waterCr_)
+            {
+                water_->CreateEffect(magicPos);
+            }
         }
     }
     // 剣攻撃
-    else if (magicColoer == normal_ && CheckHitKey(KEY_INPUT_K))
+    else if (magicColoer == normalCr_ && CheckHitKey(KEY_INPUT_K))
     {
         isSword_ = true;
         // カメラ座標の取得
@@ -484,7 +506,6 @@ void EnemyPlant::CollisionEnemyAttack()
             {
                 // 衝突した
                 collisionPlant_ = true;
-                isAlive_ = false;
             }
         }
     }
@@ -506,19 +527,19 @@ void EnemyPlant::Damage()
 
     // プレイヤーの攻撃属性が
     // PlantまたはNormalのとき
-    if (attackColoer == plant_ || attackColoer == normal_)
+    if (attackColoer == plantCr_)
     {
         // 等倍
         damage_ = 10.0f;
     }
     // Fireのとき
-    else if (attackColoer == fire_)
+    else if (attackColoer == fireCr_)
     {
         // 抜群
         damage_ = 20.0f;
     }
     // Waterのとき
-    else if (attackColoer == water_)
+    else if (attackColoer == waterCr_ || attackColoer == normalCr_)
     {
         // 半減
         damage_ = 5.0f;

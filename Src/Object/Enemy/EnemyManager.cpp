@@ -9,10 +9,13 @@
 #include "../Camera/Camera.h"
 #include "../Player/Player.h"
 #include "../Stage/Stage.h"
+#include "../Attack/Blast.h"
+#include "../Attack/Plants.h"
+#include "../Attack/Water.h"
 
 void EnemyManager::Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyWater* enemyWater,
 	EnemyAttackF* enemyAttackF, EnemyAttackP* enemyAttackP, EnemyAttackW* enemyAttackW,
-	Player* player, Camera* camera, Stage* stage)
+	Player* player, Camera* camera, Stage* stage, Blast* blast, Plants* plants, Water* water)
 {
 	enemyFire_ = enemyFire;
 	enemyPlant_ = enemyPlant;
@@ -23,6 +26,9 @@ void EnemyManager::Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyWater
 	player_ = player;
 	camera_ = camera;
 	stage_ = stage;
+	blast_ = blast;
+	plants_ = plants;
+	water_ = water;
 
 	collisionEnemy_ = false;
 
@@ -30,11 +36,11 @@ void EnemyManager::Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyWater
 	enemyBase_->Init(player_, camera_, stage_);*/
 
 	enemyFire_ = new EnemyFire();
-	enemyFire_->Init(enemyFire_, enemyAttackF_, player_, camera_, stage_);
+	enemyFire_->Init(enemyFire_, enemyAttackF_, player_, camera_, stage_, blast_, plants_, water_);
 	enemyPlant_ = new EnemyPlant();
-	enemyPlant_->Init(enemyPlant_, enemyAttackP_, player_, camera_, stage_);
+	enemyPlant_->Init(enemyPlant_, enemyAttackP_, player_, camera_, stage_, blast_, plants_, water_);
 	enemyWater_ = new EnemyWater();
-	enemyWater_->Init(enemyWater_, enemyAttackW_, player_, camera_, stage_);
+	enemyWater_->Init(enemyWater_, enemyAttackW_, player_, camera_, stage_, blast_, plants_, water_);
 }
 
 void EnemyManager::Update()
@@ -73,7 +79,7 @@ void EnemyManager::CollisionAttack()
 	// ‚Ç‚ê‚©‚ÆÕ“Ë‚µ‚½‚çtrue
 	if (fireCollision_ || plantCollision_ || waterCollision_)
 	{
-		collisionEnemy_ = true;
+		player_->DownHp(20);
 	}
 }
 

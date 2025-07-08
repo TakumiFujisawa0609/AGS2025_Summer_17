@@ -4,22 +4,28 @@
 #include "../Camera/Camera.h"
 #include "../Player/Player.h"
 #include "../Stage/Stage.h"
+#include "../Attack/Blast.h"
+#include "../Attack/Plants.h"
+#include "../Attack/Water.h"
 
-void EnemyFire::Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* player, Camera* camera, Stage* stage)
+void EnemyFire::Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* player, Camera* camera, Stage* stage, Blast* blast, Plants* plants, Water* water)
 {
     enemyFire_ = enemyFire;
     enemyAttackF_ = enemyAttackF;
     player_ = player;
     camera_ = camera;
     stage_ = stage;
+    blast_ = blast;
+    plants_ = plants;
+    water_ = water;
 
     enemyAttackF_->Init(enemyFire_, player_, camera_);
 
     // 属性管理用
-    fire_ = 0xff0000;
-    plant_ = 0x00ff00;
-    water_ = 0x0000ff;
-    normal_ = 0xffffff;
+    fireCr_ = 0xff0000;
+    plantCr_ = 0x00ff00;
+    waterCr_ = 0x0000ff;
+    normalCr_ = 0xffffff;
 
     // 初期座標の設定用値
     setInit_ = 2;
@@ -161,11 +167,6 @@ void EnemyFire::Update()
     InitStage3();
     Move();
     Attack();
-    CollisionPlayerAttack();
-    CollisionEnemyAttack();
-    Damage();
-    InvincibleFire();
-    enemyAttackF_->Update();
 
     // プレイヤー座標
     Vector2F playerPos = player_->GetPlayerPos();
@@ -313,10 +314,11 @@ void EnemyFire::Move()
 
 void EnemyFire::Attack()
 {
-    if (isAttack_)
-    {
-        int a = 0; // 仮
-    }
+    CollisionPlayerAttack();
+    CollisionEnemyAttack();
+    Damage();
+    InvincibleFire();
+    enemyAttackF_->Update();
 }
 
 void EnemyFire::CollisionPlayerAttack()
@@ -332,51 +334,68 @@ void EnemyFire::CollisionPlayerAttack()
 
     // 攻撃属性を取得
     int magicColoer = player_->GetCr();
+    if (isAlive_) {
+        // 魔法攻撃
+        if (magicColoer != normalCr_)
+        {
+            // 魔法とエネミーの衝突判定
+            // 魔法の座標を取得
+            Vector2 magicPos = player_->GetAttackPos();
+            // 球体同士の衝突判定
+            bool ret = false;
+            // お互いの半径の合計
+            float radius = enemyRadius + magicRadius;
+            // ２つの座標間の距離をピタゴラスの定理で算出
+            VECTOR distance = VECTOR();
+            distance.x = pos_.x - magicPos.x;
+            distance.y = pos_.y - magicPos.y;
+            float dis = distance.x * distance.x + distance.y * distance.y;
+            // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
+            if (dis < (radius * radius))
+            {
+                // 攻撃ヒット済
+                collisionDamage_ = true;
+                // 攻撃ヒット時エフェクト
 
-    // 魔法攻撃
-    if (magicColoer != normal_)
-    {
-        // 魔法とエネミーの衝突判定
-        // 魔法の座標を取得
-        Vector2 magicPos = player_->GetAttackPos();
-        // 球体同士の衝突判定
-        bool ret = false;
-        // お互いの半径の合計
-        float radius = enemyRadius + magicRadius;
-        // ２つの座標間の距離をピタゴラスの定理で算出
-        VECTOR distance = VECTOR();
-        distance.x = pos_.x - magicPos.x;
-        distance.y = pos_.y - magicPos.y;
-        float dis = distance.x * distance.x + distance.y * distance.y;
-        // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
-        if (dis < (radius * radius))
-        {
-            // 攻撃ヒット済
-            collisionDamage_ = true;
+                if (magicColoer == fireCr_)
+                {
+                    blast_->SetBlastPos(magicPos);
+                    blast_->SetIsBlast(true);
+                }
+                else if (magicColoer == plantCr_)
+                {
+                    plants_->SetPlantsPos(magicPos);
+                    plants_->SetIsPlants(true);
+                }
+                else if (magicColoer == waterCr_)
+                {
+                    water_->CreateEffect(magicPos);
+                }
+            }
         }
-    }
-    // 剣攻撃
-    else if (magicColoer == normal_ && CheckHitKey(KEY_INPUT_K))
-    {
-        isSword_ = true;
-        // カメラ座標の取得
-        Vector2 cameraPos = camera_->GetCameraPos();
-        // 剣の座標を取得
-        Vector2F swordPos = player_->GetAttckAnglePoint();
-        // 球体同士の衝突判定
-        bool ret = false;
-        // お互いの半径の合計
-        float radius = enemyRadius + swordRadius;
-        // ２つの座標間の距離をピタゴラスの定理で算出
-        VECTOR distance = VECTOR();
-        distance.x = pos_.x - swordPos.x;
-        distance.y = pos_.y - swordPos.y;
-        float dis = distance.x * distance.x + distance.y * distance.y;
-        // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
-        if (dis < (radius * radius))
+        // 剣攻撃
+        else if (magicColoer == normalCr_ && CheckHitKey(KEY_INPUT_K))
         {
-            // 攻撃ヒット済
-            collisionDamage_ = true;
+            isSword_ = true;
+            // カメラ座標の取得
+            Vector2 cameraPos = camera_->GetCameraPos();
+            // 剣の座標を取得
+            Vector2F swordPos = player_->GetAttckAnglePoint();
+            // 球体同士の衝突判定
+            bool ret = false;
+            // お互いの半径の合計
+            float radius = enemyRadius + swordRadius;
+            // ２つの座標間の距離をピタゴラスの定理で算出
+            VECTOR distance = VECTOR();
+            distance.x = pos_.x - swordPos.x;
+            distance.y = pos_.y - swordPos.y;
+            float dis = distance.x * distance.x + distance.y * distance.y;
+            // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
+            if (dis < (radius * radius))
+            {
+                // 攻撃ヒット済
+                collisionDamage_ = true;
+            }
         }
     }
 }
@@ -480,26 +499,26 @@ void EnemyFire::Damage()
 
     // プレイヤーの攻撃属性が
     // FireまたはNormalのとき
-    if (attackColoer == fire_ || attackColoer == normal_)
+    if (attackColoer == fireCr_)
     {
         // 等倍
         damage_ = 10.0f;
     }
     // Waterのとき
-    else if (attackColoer == water_)
+    else if (attackColoer == waterCr_)
     {
         // 抜群
         damage_ = 20.0f;
     }
     // Plantのとき
-    else if (attackColoer == plant_)
+    else if (attackColoer == plantCr_ || attackColoer == normalCr_)
     {
         // 半減
         damage_ = 5.0f;
     }
 
-    // 衝突したかつエネミー生存中
-    if (collisionDamage_ && isAlive_)
+    // 衝突した
+    if (collisionDamage_)
     {
         // 無敵状態でなければダメージを与える
         if (!isInvincible_)
