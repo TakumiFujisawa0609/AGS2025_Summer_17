@@ -355,22 +355,6 @@ void EnemyFire::CollisionPlayerAttack()
             {
                 // UŒ‚ƒqƒbƒgÏ
                 collisionDamage_ = true;
-                // UŒ‚ƒqƒbƒgŽžƒGƒtƒFƒNƒg
-
-                if (magicColoer == fireCr_)
-                {
-                    blast_->SetBlastPos(magicPos);
-                    blast_->SetIsBlast(true);
-                }
-                else if (magicColoer == plantCr_)
-                {
-                    plants_->SetPlantsPos(magicPos);
-                    plants_->SetIsPlants(true);
-                }
-                else if (magicColoer == waterCr_)
-                {
-                    water_->CreateEffect(magicPos);
-                }
             }
         }
         // Œ•UŒ‚
@@ -486,9 +470,11 @@ void EnemyFire::CollisionEnemyAttack()
 void EnemyFire::Damage()
 {
     // UŒ‚‘®«‚ðŽæ“¾
-    int attackColoer = player_->GetCr();
+    int magicColoer = player_->GetCr();
     // UŒ‚’†‚©‚Ç‚¤‚©‚ðŽæ“¾
     bool isAttack = player_->GetAttack();
+    // –‚–@‚ÌÀ•W‚ðŽæ“¾
+    Vector2 magicPos = player_->GetAttackPos();
 
     // UŒ‚’†‚Å‚È‚¢
     if (isAttack && !isSword_)
@@ -499,19 +485,19 @@ void EnemyFire::Damage()
 
     // ƒvƒŒƒCƒ„[‚ÌUŒ‚‘®«‚ª
     // Fire‚Ü‚½‚ÍNormal‚Ì‚Æ‚«
-    if (attackColoer == fireCr_)
+    if (magicColoer == fireCr_)
     {
         // “™”{
         damage_ = 10.0f;
     }
     // Water‚Ì‚Æ‚«
-    else if (attackColoer == waterCr_)
+    else if (magicColoer == waterCr_)
     {
         // ”²ŒQ
         damage_ = 20.0f;
     }
     // Plant‚Ì‚Æ‚«
-    else if (attackColoer == plantCr_ || attackColoer == normalCr_)
+    else if (magicColoer == plantCr_ || magicColoer == normalCr_)
     {
         // ”¼Œ¸
         damage_ = 5.0f;
@@ -524,6 +510,21 @@ void EnemyFire::Damage()
         if (!isInvincible_)
         {
             hp_ -= damage_;
+            // UŒ‚ƒqƒbƒgŽžƒGƒtƒFƒNƒg
+            if (magicColoer == fireCr_)
+            {
+                blast_->SetBlastPos(magicPos);
+                blast_->SetIsBlast(true);
+            }
+            else if (magicColoer == plantCr_)
+            {
+                plants_->SetPlantsPos(magicPos);
+                plants_->SetIsPlants(true);
+            }
+            else if (magicColoer == waterCr_)
+            {
+                water_->CreateEffect(magicPos);
+            }
         }
         // UŒ‚ƒGƒtƒFƒNƒgíœ
         player_->SetPoint(false);
