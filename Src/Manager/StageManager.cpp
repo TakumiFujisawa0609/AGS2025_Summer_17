@@ -46,6 +46,8 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* e
 
 	nextStageType = STAGE_TYPE::NONE;
 
+	Img_ = LoadDivGraph("Data/Image/Stage/Doa.png", 3, 3, 1, 64 * 4, 64 * 2, doaImg_);
+
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.jpg").c_str());
 		
@@ -58,6 +60,10 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* e
 	//	printfDx("BackSound3.mp3のロードに失敗しました\n");
 	//}
 	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/rock.png").c_str());
+
+	isChange_ = false;
+	changeCnt_ = 0;
+	animCnt_ = 0;
 }
 void StageManager::Update()
 {
@@ -103,8 +109,7 @@ void StageManager::Update1()
 	// ステージの更新
 	stage_->UpdateStage1();
 
-	// プレイヤーの更新
-	player_->Update();
+	
 	
 	// 壁の更新
 	wall_->Update1();
@@ -112,9 +117,22 @@ void StageManager::Update1()
 	water_->Update();
 	plants_->Update();
 	// シーン遷移
-	if (player_->GetPlayerPos().x>64 * 78)
+	if (player_->GetPlayerPos().x > 64 * 78)
 	{
-		ChangeStage(STAGE_TYPE::STAGE2);
+		isChange_ = true;
+		if (isChange_ == true)
+		{
+			changeCnt_++;
+			if (changeCnt_ >= 60)
+			{
+				ChangeStage(STAGE_TYPE::STAGE2);
+			}
+		}
+
+	}
+	else
+	{
+		player_->Update();
 	}
 	
 }
@@ -127,18 +145,30 @@ void StageManager::Update2()
 	// ステージの更新
 	stage_->UpdateStage2();
 
-	// プレイヤーの更新
-	player_->Update();
+	
 
 	// エネミーの更新
 	enemyManager_->Update();
 	blast_->Update();
 	water_->Update();
 	plants_->Update();
-	if (player_->GetPlayerPos().x > 64 * 86)
+	
+	if (player_->GetPlayerPos().x > 64 * 90)
 	{
-		
-		ChangeStage(STAGE_TYPE::STAGE3);
+		isChange_ = true;
+		if (isChange_ == true)
+		{
+			changeCnt_++;
+			if (changeCnt_ >= 60)
+			{
+				ChangeStage(STAGE_TYPE::STAGE3);
+			}
+		}
+
+	}
+	else
+	{
+		player_->Update();
 	}
 	
 }
@@ -150,7 +180,7 @@ void StageManager::Update3()
 	stage_->UpdateStage3();
 
 	// プレイヤーの更新
-	player_->Update();
+	
 
 	// エネミーの更新
 	enemyManager_->Update();
@@ -161,8 +191,22 @@ void StageManager::Update3()
 	plants_->Update();
 	if (player_->GetPlayerPos().x > 64 * 97&& player_->GetPlayerPos().y<64*12)
 	{
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
+		isChange_ = true;
+		if (isChange_ == true)
+		{
+			changeCnt_++;
+			if (changeCnt_ >= 60)
+			{
+				SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
+			}
+		}
+		
 	}
+	else
+	{
+		player_->Update();
+	}
+	
 	
 }
 
@@ -183,6 +227,7 @@ void StageManager::Draw()
 		Draw3();
 		break;
 	}
+	
 	// Effekseerにより再生中のエフェクトを更新する。
 	UpdateEffekseer3D();
 	// 暗転・明転
@@ -198,15 +243,21 @@ void StageManager::Draw1()
 	//壁の描画
 	wall_->Draw1();
 	
-
-	// プレイヤーの描画
-	player_->Draw();
+	
+	
 
 	// ステージの描画
 	stage_->DrawStage1();
-
-	
-
+	if (isChange_ == false)
+	{
+		DrawGraph(64 * 76 - camera_->GetCameraPos().x, 64 * 9 - camera_->GetCameraPos().y, doaImg_[0], true);
+	}
+	// プレイヤーの描画
+	player_->Draw();
+	if (isChange_ == true)
+	{
+		DrawGraph(64 * 76 - camera_->GetCameraPos().x, 64 * 9 - camera_->GetCameraPos().y, doaImg_[2], true);
+	}
 	blast_->Draw();
 	water_->Draw();
 	plants_->Draw();
@@ -219,11 +270,22 @@ void StageManager::Draw2()
 	////壁の描画
 	//wall_->Draw();
 	
-	// プレイヤーの描画
-	player_->Draw();
+	
 
 	// ステージの描画
 	stage_->DrawStage2();
+
+	
+	if (isChange_ == false)
+	{
+		DrawGraph(64 * 88 - camera_->GetCameraPos().x, 64 * 9 - camera_->GetCameraPos().y, doaImg_[0], true);
+	}
+	// プレイヤーの描画
+	player_->Draw();
+	if (isChange_ == true)
+	{
+		DrawGraph(64 * 88 - camera_->GetCameraPos().x, 64 * 9 - camera_->GetCameraPos().y, doaImg_[2], true);
+	}
 
 	// エネミーの描画
 	enemyManager_->Draw();
@@ -242,11 +304,23 @@ void StageManager::Draw3()
 	//壁の描画
 	wall_->Draw2();
 	
-	// プレイヤーの描画
-	player_->Draw();
+	
 
 	// ステージの描画
 	stage_->DrawStage3();
+
+	
+	if (isChange_ == false)
+	{
+		DrawGraph(64 * 95 - camera_->GetCameraPos().x, 64 * 10 - camera_->GetCameraPos().y, doaImg_[0], true);
+	}
+	// プレイヤーの描画
+	player_->Draw();
+	if (isChange_ == true)
+	{
+		DrawGraph(64 * 95 - camera_->GetCameraPos().x, 64 * 10 - camera_->GetCameraPos().y, doaImg_[2], true);
+	}
+
 	// エネミーの描画
 	enemyManager_->Draw();
 
@@ -277,14 +351,17 @@ void StageManager::DoChangeStage(STAGE_TYPE type)
 	switch (stageType)
 	{
 	case STAGE_TYPE::STAGE1:
+		isChange_ = false;
 		stage_->InitStage1();
 		wall_->Init1();
 		break;
 	case STAGE_TYPE::STAGE2:
+		isChange_ = false;
 		player_->SetPlayerPos(pos);
 		stage_->InitStage2();
 		break;
 	case STAGE_TYPE::STAGE3:
+		isChange_ = false;
 		player_->SetPlayerPos(pos);
 		stage_->InitStage3();
 
