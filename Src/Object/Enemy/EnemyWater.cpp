@@ -44,20 +44,12 @@ void EnemyWater::InitStage2()
         if (stageId == 2)
         {
             // èâä˙ç¿ïW
-
-            pos_.x = 4394.0f;
-
             pos_.x = 4426.0f;
-
-            pos_.y = 640.0f;
+            pos_.y = 660.0f;
 
             // à⁄ìÆë¨ìx
             moveSpeed_ = 0.8f;
-
             moveMax_ = 150;
-
-            moveMax_ = 210;
-
 
             // çıìGîÕàÕ
             findSize_ = 300.0f;
@@ -93,6 +85,7 @@ void EnemyWater::InitStage2()
             attackSpeed_ = 4.0f;
             attackMax_ = 150.0f;
             attackInterval_ = 110;
+            attackAnimCnt_ = 0;
 
             attackSize1_ = 10.0f;
             attackSize2_ = 15.0f;
@@ -177,7 +170,8 @@ void EnemyWater::InitStage3()
             attackPosY_ = 0.0f;
             attackSpeed_ = 10.0;
             attackMax_ = 90.0f;
-            attackInterval_ = 80;
+            attackInterval_ = 95;
+            attackAnimCnt_ = 0;
 
             attackSize1_ = 10.0f;
             attackSize2_ = 20.0f;
@@ -211,7 +205,6 @@ void EnemyWater::Update()
     InitStage2();
     InitStage3();
     Move();
-    Attack();
     CollisionPlayerAttack();
     CollisionEnemyAttack();
     Damage();
@@ -391,7 +384,6 @@ void EnemyWater::Attack()
                 }
                 isGetPos_ = true;
             }
-
             attackAnimCnt_++;
             if (attackAnimCnt_ == 4)
             {
@@ -409,7 +401,7 @@ void EnemyWater::Attack()
             {
                 attackRadius_ = attackSize4_;
             }
-            else if (attackAnimCnt_ == 20)
+            else if (attackAnimCnt_ == 21)
             {
                 attackRadius_ = attackSize5_;
             }
@@ -425,8 +417,6 @@ void EnemyWater::Attack()
                 }
             }
 
-            DrawCircle(attackPosX_ - cameraPos.x, attackPosY_ - cameraPos.y, attackRadius_, 0x0072ff, true);
-
             if (attackAnimCnt_ == attackMax_)
             {
                 isAttackAlive_ = false;
@@ -436,7 +426,7 @@ void EnemyWater::Attack()
                 attackRadius_ = 5;
             }
 
-
+            DrawCircle(attackPosX_ - cameraPos.x, attackPosY_ - cameraPos.y, attackRadius_, 0x0072ff, true);
         }
     }
 }
