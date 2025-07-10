@@ -62,7 +62,7 @@ void EnemyAttackP::Draw()
     }
     else if (animFrame_ > 1 && isCntUp_)
     {
-        animInterval_ = 100;
+        animInterval_ = 4;
     }
     else if (!isCntUp_ && animFrame_ != 8)
     {
