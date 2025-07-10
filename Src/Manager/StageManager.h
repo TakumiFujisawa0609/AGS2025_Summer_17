@@ -55,6 +55,15 @@ private:
 	//”wŒi
 	int backImg_;
 
+	int Img_;
+
+	int doaImg_[3];
+
+	bool isChange_;
+
+	int changeCnt_;
+
+	int animCnt_;
 
 	// ƒV[ƒ“‘JˆÚ’†”»’è
 	bool isSceneChanging_;

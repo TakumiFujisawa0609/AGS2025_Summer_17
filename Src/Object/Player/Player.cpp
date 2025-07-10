@@ -250,7 +250,7 @@ void Player::Move()
 	//ˆÚ“®ˆ—
 	InputManager& ins = InputManager::GetInstance();
 
-	if (ins.IsNew(KEY_INPUT_LSHIFT))
+	if (ins.IsNew(KEY_INPUT_LSHIFT)|| ins.IsNew(KEY_INPUT_RSHIFT))
 	{
 		speed_ = MOVE_ACC_POW * 3;
 		maxSpeed_ = MAX_MOVE_SPEED * 3;
