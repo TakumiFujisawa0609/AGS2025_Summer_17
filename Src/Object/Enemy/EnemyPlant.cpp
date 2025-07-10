@@ -111,8 +111,8 @@ void EnemyPlant::InitStage3()
 
         if (stageId == 3)
         {
-            pos_.x = 5824.0f;
-            pos_.y = 1120.0f;
+            pos_.x = 5760.0f;
+            pos_.y = 992.0f;
 
             // 移動速度
             moveSpeed_ = 1.5f;
@@ -471,12 +471,42 @@ void EnemyPlant::CollisionEnemyAttack()
         int attackFrame = enemyAttackP_->GetAnimFrameAttackP();
 
         if (enemyAttackP_->GetAlive()) {
+            // 上部当たり判定調整
+            if (attackFrame == 2)
+            {
+                topControl_ = 72.0f;
+            }
+            else if (attackFrame == 3)
+            {
+                topControl_ = 60.0f;
+            }
+            else if (attackFrame == 4)
+            {
+                topControl_ = 48.0f;
+            }
+            else if (attackFrame == 5)
+            {
+                topControl_ = 36.0f;
+            }
+            else if (attackFrame == 6)
+            {
+                topControl_ = 24.0f;
+            }
+            else if (attackFrame == 7)
+            {
+                topControl_ = 12.0f;
+            }
+            else if (attackFrame == 8)
+            {
+                topControl_ = 0.0f;
+            }
+            
             // エネミーの攻撃の当たり判定座標
             leftAttackPos = attackPos.x - attackSizeX / 2 - cameraPos.x;
             // 左
             rightAttackPos = attackPos.x + attackSizeX / 2 - cameraPos.x;
             // 上
-            topAttackPos = attackPos.y - attackSizeY / 2 - cameraPos.y;
+            topAttackPos = attackPos.y - attackSizeY / 2 - cameraPos.y + topControl_;
             // 下
             bottomAttackPos = attackPos.y + attackSizeY / 2 - cameraPos.y;
 
