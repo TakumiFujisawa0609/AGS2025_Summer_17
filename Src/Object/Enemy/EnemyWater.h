@@ -131,6 +131,8 @@ private:
     float attackSize4_;
     float attackSize5_;
 
+    bool attackLeft_;
+
     // エネミー座標取得済み判定
     bool isGetPos_;
 

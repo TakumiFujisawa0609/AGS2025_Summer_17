@@ -436,16 +436,36 @@ void EnemyFire::CollisionEnemyAttack()
         int attackSizeY = enemyAttackF_->GetSizeY();
         // カメラ座標の取得
         Vector2 cameraPos = camera_->GetCameraPos();
+        // エネミーの攻撃のフレーム数取得
+        int attackFrame = enemyAttackF_->GetAnimFrameAttackF();
 
         if (enemyAttackF_->GetAlive())
         {
+            // 当たり判定調整
+            if (attackFrame == 4)
+            {
+                leftControl_ = 32.0f;
+            }
+            else if (attackFrame == 3)
+            {
+                leftControl_ = 21.0f;
+            }
+            else if (attackFrame == 2)
+            {
+                leftControl_ = 12.0f;
+            }
+            else
+            {
+                leftControl_ = 0.0f;
+            }
+
             // エネミーの攻撃の当たり判定座標
             // 左向きのとき
             if (isLeft_)
             {
-                // 右
-                leftAttackPos = pos_.x - attackSizeX + SIZE_X / 2;
                 // 左
+                leftAttackPos = pos_.x - attackSizeX + 12.0f + leftControl_;
+                // 右
                 rightAttackPos = pos_.x;
                 // 上
                 topAttackPos = pos_.y;
@@ -455,9 +475,10 @@ void EnemyFire::CollisionEnemyAttack()
             // 右向きのとき
             else
             {
-                leftAttackPos = pos_.x + SIZE_X;
                 // 左
-                rightAttackPos = pos_.x + SIZE_X / 2 + attackSizeX;
+                leftAttackPos = pos_.x + SIZE_X;
+                // 右
+                rightAttackPos = pos_.x + SIZE_X / 2 + attackSizeX + 12.0f - leftControl_;
                 // 上
                 topAttackPos = pos_.y;
                 // 下
@@ -473,7 +494,8 @@ void EnemyFire::CollisionEnemyAttack()
                 bottomAttackPos > playerPos.y)
             {
                 // 衝突した
-                collisionFire_ = true;
+                //collisionFire_ = true;
+                isAlive_ = false;
             }
         }
     }
@@ -547,6 +569,11 @@ void EnemyFire::Damage()
     // HPが0になったら撃破
     if (hp_ <= 0.0f)
     {
+        if (isAlive_)
+        {
+            // MP回復
+            player_->DownMp(-30);
+        }
         hp_ = 0.0f;
         isAlive_ = false;
     }

@@ -599,6 +599,11 @@ void EnemyPlant::Damage()
     // HP‚ª0‚É‚È‚Á‚½‚çŒ‚”j
     if (hp_ <= 0.0f)
     {
+        if (isAlive_)
+        {
+            // MP‰ñ•œ
+            player_->DownMp(-30);
+        }
         hp_ = 0.0f;
         isAlive_ = false;
     }

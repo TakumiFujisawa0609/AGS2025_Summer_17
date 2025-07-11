@@ -263,9 +263,12 @@ void EnemyWater::Draw()
 #endif // _DEBUG
 
     // アニメーション処理
-    if (isAttackAlive_)
+    if (attackAnimCnt_ <= 30)
     {
-        animFrame_ = ATTACK_ANIM;
+        if (isAttackAlive_)
+        {
+            animFrame_ = ATTACK_ANIM;
+        }
     }
     else
     {
@@ -327,7 +330,7 @@ void EnemyWater::Draw()
 
 void EnemyWater::Move()
 {
-    if (isAlive_ && !isAttackAlive_)
+    if (isAlive_ && attackAnimCnt_ >= 30)
     {
         // 発見中でないなら動かす
         if (!isFind_)
@@ -376,11 +379,13 @@ void EnemyWater::Attack()
                 {
                     attackPosX_ = pos_.x - SIZE_X;
                     attackPosY_ = pos_.y;
+					attackLeft_ = true;
                 }
                 else
                 {
                     attackPosX_ = pos_.x + SIZE_X;
                     attackPosY_ = pos_.y;
+					attackLeft_ = false;
                 }
                 isGetPos_ = true;
             }
@@ -621,6 +626,11 @@ void EnemyWater::Damage()
     // HPが0になったら撃破
     if (hp_ <= 0.0f)
     {
+        if (isAlive_)
+        {
+            // MP回復
+            player_->DownMp(-30);
+        }
         hp_ = 0.0f;
         isAlive_ = false;
     }

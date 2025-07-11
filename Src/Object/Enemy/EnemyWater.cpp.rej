@@ -1,0 +1,10 @@
+diff a/Src/Object/Enemy/EnemyWater.cpp b/Src/Object/Enemy/EnemyWater.cpp	(rejected hunks)
+@@ -330,7 +330,7 @@
+ 
+ void EnemyWater::Move()
+ {
+-    if (isAlive_ && !isAttackAlive_)
++    if (isAlive_ && attackAnimCnt_ >= 30)
+     {
+         // �������łȂ��Ȃ瓮����
+         if (!isFind_)

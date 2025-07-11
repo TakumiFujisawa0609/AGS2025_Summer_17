@@ -77,7 +77,7 @@ public:
     bool GetCollisionPlant();
     void SetCollisionPlant(bool collisionPlant);
 
-    // アニメーションフレーム数カウント
+	// アニメーションフレーム数カウントの取得・更新
     bool GetAnimFramePlant();
     void SetAnimFramePlant(int animFrame);
 

@@ -104,6 +104,10 @@ private:
     float topAttackPos;
     float bottomAttackPos;
 
+    // “–‚½‚è”»’è’²®—p
+	float leftControl_;
+	float rightControl_;
+
     // ˆÚ“®‘¬“x
     float moveSpeed_;
     int moveMax_;

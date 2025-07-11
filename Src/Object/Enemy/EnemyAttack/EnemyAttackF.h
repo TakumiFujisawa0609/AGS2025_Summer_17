@@ -49,6 +49,11 @@ public:
 	// 攻撃のクールタイムの取得・更新
     int GetAttackCnt();
 	void SetAttackCnt(int attackCnt);
+
+	// アニメーションフレーム数カウントの取得・更新
+	int GetAnimFrameAttackF();
+	void SetAnimFrameAttackF(int animFrame);
+
 private:
 
     EnemyFire* enemyFire_;

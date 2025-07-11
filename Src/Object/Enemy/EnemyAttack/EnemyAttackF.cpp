@@ -83,6 +83,7 @@ void EnemyAttackF::Draw()
                     isAlive_ = false;
                     isAttack_ = false;
                     attackCnt_ = 0;
+                    animFrame_ = 4;
                 }
             }
         }
@@ -182,4 +183,14 @@ int EnemyAttackF::GetAttackCnt()
 void EnemyAttackF::SetAttackCnt(int attackCnt)
 {
 	attackCnt_ = attackCnt;
+}
+
+int EnemyAttackF::GetAnimFrameAttackF()
+{
+    return animFrame_;
+}
+
+void EnemyAttackF::SetAnimFrameAttackF(int animFrame)
+{
+	animFrame_ = animFrame;
 }
