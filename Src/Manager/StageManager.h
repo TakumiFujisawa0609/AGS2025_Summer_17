@@ -76,6 +76,8 @@ private:
 
 	int BackSoundHandle3_; // 3ステ背景BGMのハンドル
 
+	int closeSoundHandle_;
+
 public:
 
 	StageManager();

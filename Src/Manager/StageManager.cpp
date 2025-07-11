@@ -56,6 +56,8 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* e
 	BackSoundHandle_ = LoadSoundMem("Data/Sound/BGM/BackSound.mp3");
 	
 	
+	closeSoundHandle_ = LoadSoundMem("Data/Sound/SE/Close.mp3");
+
 	//if (BackSoundHandle3_ == -1) {
 	//	printfDx("BackSound3.mp3のロードに失敗しました\n");
 	//}
@@ -96,6 +98,7 @@ void StageManager::Update()
 	{
 		StopSoundMem(BackSoundHandle_);
 		DeleteSoundMem(BackSoundHandle_);
+		DeleteSoundMem(closeSoundHandle_);
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAMEOVER);
 	}
 
@@ -119,12 +122,14 @@ void StageManager::Update1()
 	// シーン遷移
 	if (player_->GetPlayerPos().x > 64 * 78)
 	{
+		
 		isChange_ = true;
 		if (isChange_ == true)
 		{
 			changeCnt_++;
 			if (changeCnt_ >= 60)
 			{
+				
 				ChangeStage(STAGE_TYPE::STAGE2);
 			}
 		}
@@ -250,7 +255,9 @@ void StageManager::Draw1()
 	stage_->DrawStage1();
 	if (isChange_ == false)
 	{
+		PlaySoundMem(closeSoundHandle_, DX_PLAYTYPE_BACK);
 		DrawGraph(64 * 76 - camera_->GetCameraPos().x, 64 * 9 - camera_->GetCameraPos().y, doaImg_[0], true);
+		
 	}
 	// プレイヤーの描画
 	player_->Draw();
@@ -278,6 +285,8 @@ void StageManager::Draw2()
 	
 	if (isChange_ == false)
 	{
+		
+		PlaySoundMem(closeSoundHandle_, DX_PLAYTYPE_BACK);
 		DrawGraph(64 * 88 - camera_->GetCameraPos().x, 64 * 9 - camera_->GetCameraPos().y, doaImg_[0], true);
 	}
 	// プレイヤーの描画
@@ -312,6 +321,7 @@ void StageManager::Draw3()
 	
 	if (isChange_ == false)
 	{
+		PlaySoundMem(closeSoundHandle_, DX_PLAYTYPE_BACK);
 		DrawGraph(64 * 95 - camera_->GetCameraPos().x, 64 * 10 - camera_->GetCameraPos().y, doaImg_[0], true);
 	}
 	// プレイヤーの描画
