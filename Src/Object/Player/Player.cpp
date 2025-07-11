@@ -1991,6 +1991,16 @@ void Player::SetHitFoot(bool isHitFoot)
 	isHitFoot_ = isHitFoot;
 }
 
+bool Player::GetSword()
+{
+	return isSword_;
+}
+
+void Player::SetSword(bool isSword)
+{
+	isSword_ = isSword;
+}
+
 Vector2 Player::GetCamera()
 {
 	return cameraPos_;

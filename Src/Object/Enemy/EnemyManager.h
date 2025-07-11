@@ -1,12 +1,10 @@
 #pragma once
 #include <vector>
-#include "EnemyBase.h"
 #include "EnemyFire.h"
 #include "EnemyPlant.h"
 #include "EnemyAttack/EnemyAttackF.h"
 #include "EnemyAttack/EnemyAttackP.h"
 #include "../../Common/Vector2.h"
-class EnemyBase;
 class EnemyFire;
 class EnemyPlant;
 class EnemyWater;
@@ -42,7 +40,6 @@ public:
 
 private:
 
-    EnemyBase* enemyBase_;
     EnemyFire* enemyFire_;
     EnemyPlant* enemyPlant_;
     EnemyWater* enemyWater_;

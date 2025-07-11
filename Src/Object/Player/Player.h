@@ -301,6 +301,9 @@ public:
 	bool GetHitFoot();
 	void SetHitFoot(bool isHitFoot);
 
+	bool GetSword();
+	void SetSword(bool isSword);
+
 	// ƒJƒƒ‰ˆÊ’uæ“¾
 	Vector2 GetCamera();
 

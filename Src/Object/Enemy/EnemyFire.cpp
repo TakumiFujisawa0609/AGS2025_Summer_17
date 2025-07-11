@@ -89,6 +89,7 @@ void EnemyFire::InitStage2()
 
             // UŒ‚ŠÔŠu
             enemyAttackF_->SetAttackIntervalF(110);
+            enemyAttackF_->SetAttackCnt(0);
 
             // –³“GŽžŠÔ
             invincibleMax_ = 45;
@@ -153,6 +154,7 @@ void EnemyFire::InitStage3()
 
             // UŒ‚ŠÔŠu
             enemyAttackF_->SetAttackIntervalF(45);
+            enemyAttackF_->SetAttackCnt(0);
 
             // –³“GŽžŠÔ
             invincibleMax_ = 60;
@@ -218,7 +220,7 @@ void EnemyFire::Draw()
     int attackInterval = enemyAttackF_->GetAttackIntervalF();
 
     // ƒAƒjƒ[ƒVƒ‡ƒ“ˆ—
-    if (!enemyAttackF_->GetAlive() && attackCnt <= attackInterval - 18)
+    if (!enemyAttackF_->GetAlive() && attackCnt <= attackInterval - 15)
     {
         animCnt_++;
         if (animCnt_ >= ANIM_INTERVAL) {
@@ -366,7 +368,7 @@ void EnemyFire::CollisionPlayerAttack()
         // Œ•UŒ‚
         else if (magicColoer == normalCr_ && CheckHitKey(KEY_INPUT_K))
         {
-            isSword_ = true;
+            player_->GetSword();
             // ƒJƒƒ‰À•W‚ÌŽæ“¾
             Vector2 cameraPos = camera_->GetCameraPos();
             // Œ•‚ÌÀ•W‚ðŽæ“¾
@@ -385,6 +387,10 @@ void EnemyFire::CollisionPlayerAttack()
             {
                 // UŒ‚ƒqƒbƒgÏ
                 collisionDamage_ = true;
+            }
+            else
+            {
+                collisionDamage_ = false;
             }
         }
     }
@@ -478,12 +484,12 @@ void EnemyFire::Damage()
     // UŒ‚‘®«‚ðŽæ“¾
     int magicColoer = player_->GetCr();
     // UŒ‚’†‚©‚Ç‚¤‚©‚ðŽæ“¾
-    bool isAttack = player_->GetAttack();
+    bool isAttack = !player_->GetAttack();
     // –‚–@‚ÌÀ•W‚ðŽæ“¾
     Vector2 magicPos = player_->GetAttackPos();
 
     // UŒ‚’†‚Å‚È‚¢
-    if (isAttack && !isSword_)
+    if (!isAttack && !player_->GetSword())
     {
         collisionDamage_ = false;
         return;
@@ -536,8 +542,6 @@ void EnemyFire::Damage()
         player_->SetPoint(false);
         // ÄUŒ‚‰Â”\
         player_->SetAttack(true);
-        // Œ•”»’è•œŠˆ
-        isSword_ = false;
     }
 
     // HP‚ª0‚É‚È‚Á‚½‚çŒ‚”j

@@ -1,5 +1,4 @@
 #include "EnemyManager.h"
-#include "EnemyBase.h"
 #include "EnemyFire.h"
 #include "EnemyPlant.h"
 #include "EnemyWater.h"
@@ -32,9 +31,6 @@ void EnemyManager::Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyWater
 
 	collisionEnemy_ = false;
 
-	/*enemyBase_ = new EnemyBase();
-	enemyBase_->Init(player_, camera_, stage_);*/
-
 	enemyFire_ = new EnemyFire();
 	enemyFire_->Init(enemyFire_, enemyAttackF_, player_, camera_, stage_, blast_, plants_, water_);
 	enemyPlant_ = new EnemyPlant();
@@ -46,7 +42,6 @@ void EnemyManager::Init(EnemyFire* enemyFire, EnemyPlant* enemyPlant, EnemyWater
 void EnemyManager::Update()
 {
 	CollisionAttack();
-	enemyBase_->Update();
 	enemyFire_->Update();
 	enemyPlant_->Update();
 	enemyWater_->Update();
@@ -55,7 +50,6 @@ void EnemyManager::Update()
 
 void EnemyManager::Draw()
 {
-	enemyBase_->Draw();
 	enemyFire_->Draw();
 	enemyPlant_->Draw();
 	enemyWater_->Draw();

@@ -1,5 +1,6 @@
 #pragma once
-#include "EnemyBase.h"
+#include "../../Common/Vector2.h"
+#include "../../Common/Vector2F.h"
 #include <DxLib.h>
 class EnemyManager;
 class EnemyAttackW;
@@ -173,7 +174,5 @@ private:
     bool isInvincible_;
     // –³“G•`‰æ”»’è
     bool isVisible_;
-    // Œ•UŒ‚
-    bool isSword_;
 
 };

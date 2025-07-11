@@ -153,7 +153,6 @@
     <ClInclude Include="Src\Object\Attack\Water.h" />
     <ClInclude Include="Src\Scene\ClearScene.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyFire.h" />
-    <ClInclude Include="Src\Object\Enemy\EnemyBase.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyManager.h" />
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Common\Fader.h" />
@@ -188,7 +187,6 @@
     <ClCompile Include="Src\Object\Attack\Water.cpp" />
     <ClCompile Include="Src\Scene\ClearScene.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyFire.cpp" />
-    <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Common\Fader.cpp" />

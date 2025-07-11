@@ -404,7 +404,7 @@ void EnemyPlant::CollisionPlayerAttack()
         // 剣攻撃
         else if (magicColoer == normalCr_ && CheckHitKey(KEY_INPUT_K))
         {
-            isSword_ = true;
+            player_->GetSword();
             // カメラ座標の取得
             Vector2 cameraPos = camera_->GetCameraPos();
             // 剣の座標を取得
@@ -423,6 +423,10 @@ void EnemyPlant::CollisionPlayerAttack()
             {
                 // 攻撃ヒット済
                 collisionDamage_ = true;
+			}
+            else
+            {
+                collisionDamage_ = false;
             }
         }
     }
@@ -430,19 +434,20 @@ void EnemyPlant::CollisionPlayerAttack()
 
 void EnemyPlant::CollisionEnemyAttack()
 {
-    if (isAlive_) {
-        // エネミーの衝突用半径
-        float enemyRadius = 32.0f;
-        // 魔法の衝突用半径
-        float magicRadius = 5.0f;
-        // 剣の衝突用半径
-        float swordRadius = 32.0f;
-        // プレイヤーの衝突用半径
-        float playerRadius = 32.0f;
+    // エネミーの衝突用半径
+    float enemyRadius = 32.0f;
+    // 魔法の衝突用半径
+    float magicRadius = 5.0f;
+    // 剣の衝突用半径
+    float swordRadius = 32.0f;
+    // プレイヤーの衝突用半径
+    float playerRadius = 32.0f;
 
+    //プレイヤー座標の取得
+    Vector2F playerPos = player_->GetPlayerPos();
+
+    if (isAlive_) {
         // プレイヤーとエネミーの衝突判定
-        //プレイヤー座標の取得
-        Vector2F playerPos = player_->GetPlayerPos();
         // 球体同士の衝突判定
         bool ret = false;
         // お互いの半径の合計
@@ -458,70 +463,70 @@ void EnemyPlant::CollisionEnemyAttack()
             // 衝突した
             collisionPlant_ = true;
         }
+    }
 
-        // プレイヤーとエネミーの攻撃の衝突判定
-        // エネミーの攻撃座標の取得
-        Vector2F attackPos = enemyAttackP_->GetPos();
-        // エネミーの攻撃画像のサイズ取得
-        int attackSizeX = enemyAttackP_->GetSizeX();
-        int attackSizeY = enemyAttackP_->GetSizeY();
-        // カメラ座標の取得
-        Vector2 cameraPos = camera_->GetCameraPos();
-        // エネミーの攻撃のフレーム数取得
-        int attackFrame = enemyAttackP_->GetAnimFrameAttackP();
+    // プレイヤーとエネミーの攻撃の衝突判定
+    // エネミーの攻撃座標の取得
+    Vector2F attackPos = enemyAttackP_->GetPos();
+    // エネミーの攻撃画像のサイズ取得
+    int attackSizeX = enemyAttackP_->GetSizeX();
+    int attackSizeY = enemyAttackP_->GetSizeY();
+    // カメラ座標の取得
+    Vector2 cameraPos = camera_->GetCameraPos();
+    // エネミーの攻撃のフレーム数取得
+    int attackFrame = enemyAttackP_->GetAnimFrameAttackP();
 
-        if (enemyAttackP_->GetAlive()) {
-            // 上部当たり判定調整
-            if (attackFrame == 2)
-            {
-                topControl_ = 72.0f;
-            }
-            else if (attackFrame == 3)
-            {
-                topControl_ = 60.0f;
-            }
-            else if (attackFrame == 4)
-            {
-                topControl_ = 48.0f;
-            }
-            else if (attackFrame == 5)
-            {
-                topControl_ = 36.0f;
-            }
-            else if (attackFrame == 6)
-            {
-                topControl_ = 24.0f;
-            }
-            else if (attackFrame == 7)
-            {
-                topControl_ = 12.0f;
-            }
-            else if (attackFrame == 8)
-            {
-                topControl_ = 0.0f;
-            }
-            
-            // エネミーの攻撃の当たり判定座標
-            leftAttackPos = attackPos.x - attackSizeX / 2 - cameraPos.x;
-            // 左
-            rightAttackPos = attackPos.x + attackSizeX / 2 - cameraPos.x;
-            // 上
-            topAttackPos = attackPos.y - attackSizeY / 2 - cameraPos.y + topControl_;
-            // 下
-            bottomAttackPos = attackPos.y + attackSizeY / 2 - cameraPos.y;
+    if (enemyAttackP_->GetAlive()) {
+        // 上部当たり判定調整
+        if (attackFrame == 2)
+        {
+            topControl_ = 72.0f;
+        }
+        else if (attackFrame == 3)
+        {
+            topControl_ = 60.0f;
+        }
+        else if (attackFrame == 4)
+        {
+            topControl_ = 48.0f;
+        }
+        else if (attackFrame == 5)
+        {
+            topControl_ = 36.0f;
+        }
+        else if (attackFrame == 6)
+        {
+            topControl_ = 24.0f;
+        }
+        else if (attackFrame == 7)
+        {
+            topControl_ = 12.0f;
+        }
+        else if (attackFrame == 8)
+        {
+            topControl_ = 0.0f;
+        }
 
-            // プレイヤー画像のサイズ
-            float playrSize = 58.0f;
-            // 衝突判定
-            if (leftAttackPos + 32.0f < playerPos.x + playrSize - cameraPos.x &&
-                rightAttackPos + 32.0f > playerPos.x - cameraPos.x &&
-                topAttackPos + 32.0f < playerPos.y + playrSize - cameraPos.y &&
-                bottomAttackPos + 32.0f > playerPos.y - cameraPos.y &&
-                attackFrame >= 2)
-            {
-                // 衝突した
-                collisionPlant_ = true;
-            }
+        // エネミーの攻撃の当たり判定座標
+        leftAttackPos = attackPos.x - attackSizeX / 2 - cameraPos.x;
+        // 左
+        rightAttackPos = attackPos.x + attackSizeX / 2 - cameraPos.x;
+        // 上
+        topAttackPos = attackPos.y - attackSizeY / 2 - cameraPos.y + topControl_;
+        // 下
+        bottomAttackPos = attackPos.y + attackSizeY / 2 - cameraPos.y;
+
+        // プレイヤー画像のサイズ
+        float playrSize = 58.0f;
+        // 衝突判定
+        if (leftAttackPos + 32.0f < playerPos.x + playrSize - cameraPos.x &&
+            rightAttackPos + 32.0f > playerPos.x - cameraPos.x &&
+            topAttackPos + 32.0f < playerPos.y + playrSize - cameraPos.y &&
+            bottomAttackPos + 32.0f > playerPos.y - cameraPos.y &&
+            attackFrame >= 2)
+        {
+            // 衝突した
+            collisionPlant_ = true;
         }
     }
 }
@@ -536,7 +541,7 @@ void EnemyPlant::Damage()
     bool isAttack = player_->GetAttack();
 
     // 攻撃中でない
-    if (isAttack && !isSword_)
+    if (isAttack && !player_->GetSword())
     {
         collisionDamage_ = false;
         return;
@@ -589,8 +594,6 @@ void EnemyPlant::Damage()
         player_->SetPoint(false);
         // 再攻撃可能
         player_->SetAttack(true);
-        // 剣判定復活
-        isSword_ = false;
     }
 
     // HPが0になったら撃破

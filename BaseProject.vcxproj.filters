@@ -66,9 +66,6 @@
     <ClInclude Include="Src\Object\Enemy\EnemyManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Enemy\EnemyBase.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Object\Enemy\EnemyFire.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -109,12 +106,11 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Enemy\EnemyWater.h">
-		<Filter>ヘッダー ファイル</Filter>
-	</ClInclude>
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Object\Enemy\EnemyAttack\EnemyAttackW.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Common\Fader.cpp">
@@ -168,9 +164,6 @@
     <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Object\Enemy\EnemyFire.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -211,8 +204,8 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Enemy\EnemyWater.cpp">
-		<Filter>ソース ファイル</Filter>
-	</ClCompile>
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Object\Enemy\EnemyAttack\EnemyAttackW.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>

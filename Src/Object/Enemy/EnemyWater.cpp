@@ -169,7 +169,7 @@ void EnemyWater::InitStage3()
             attackPosX_ = 0.0f;
             attackPosY_ = 0.0f;
             attackSpeed_ = 10.0;
-            attackMax_ = 90.0f;
+            attackMax_ = 100.0f;
             attackInterval_ = 95;
             attackAnimCnt_ = 0;
 
@@ -470,7 +470,7 @@ void EnemyWater::CollisionPlayerAttack()
         // 剣攻撃
         else if (magicColoer == normalCr_ && CheckHitKey(KEY_INPUT_K))
         {
-            isSword_ = true;
+            player_->GetSword();
             // カメラ座標の取得
             Vector2 cameraPos = camera_->GetCameraPos();
             // 剣の座標を取得
@@ -489,6 +489,10 @@ void EnemyWater::CollisionPlayerAttack()
             {
                 // 攻撃ヒット済
                 collisionDamage_ = true;
+			}
+            else
+            {
+                collisionDamage_ = false;
             }
         }
     }
@@ -496,19 +500,21 @@ void EnemyWater::CollisionPlayerAttack()
 
 void EnemyWater::CollisionEnemyAttack()
 {
+    // エネミーの衝突用半径
+    float enemyRadius = 32.0f;
+    // 魔法の衝突用半径
+    float magicRadius = 5.0f;
+    // 剣の衝突用半径
+    float swordRadius = 32.0f;
+    // プレイヤーの衝突用半径
+    float playerRadius = 32.0f;
+
+    //プレイヤー座標の取得
+    Vector2F playerPos = player_->GetPlayerPos();
+
     if (isAlive_) {
-        // エネミーの衝突用半径
-        float enemyRadius = 32.0f;
-        // 魔法の衝突用半径
-        float magicRadius = 5.0f;
-        // 剣の衝突用半径
-        float swordRadius = 32.0f;
-        // プレイヤーの衝突用半径
-        float playerRadius = 32.0f;
 
         // プレイヤーとエネミーの衝突判定
-        //プレイヤー座標の取得
-        Vector2F playerPos = player_->GetPlayerPos();
         // 球体同士の衝突判定
         bool ret = false;
         // お互いの半径の合計
@@ -524,25 +530,25 @@ void EnemyWater::CollisionEnemyAttack()
             // 衝突した
             collisionWater_ = true;
         }
+    }
 
-        // プレイヤーとエネミーの攻撃の衝突判定
-        if (isAttackAlive_)
+    // プレイヤーとエネミーの攻撃の衝突判定
+    if (isAttackAlive_)
+    {
+        // 球体同士の衝突判定
+        bool ret = false;
+        // お互いの半径の合計
+        float radius = playerRadius + attackRadius_;
+        // ２つの座標間の距離をピタゴラスの定理で算出
+        VECTOR distance = VECTOR();
+        distance.x = playerPos.x - attackPosX_;
+        distance.y = playerPos.y - attackPosY_;
+        float dis = distance.x * distance.x + distance.y * distance.y;
+        // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
+        if (dis < (radius * radius))
         {
-            // 球体同士の衝突判定
-            bool ret = false;
-            // お互いの半径の合計
-            float radius = playerRadius + attackRadius_;
-            // ２つの座標間の距離をピタゴラスの定理で算出
-            VECTOR distance = VECTOR();
-            distance.x = playerPos.x - attackPosX_;
-            distance.y = playerPos.y - attackPosY_;
-            float dis = distance.x * distance.x + distance.y * distance.y;
-            // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
-            if (dis < (radius * radius))
-            {
-                // 攻撃ヒット済
-                collisionWater_ = true;
-            }
+            // 攻撃ヒット済
+            collisionWater_ = true;
         }
     }
 }
@@ -557,7 +563,7 @@ void EnemyWater::Damage()
     bool isAttack = player_->GetAttack();
 
     // 攻撃中でない
-    if (isAttack && !isSword_)
+    if (isAttack && !player_->GetSword())
     {
         collisionDamage_ = false;
         return;
@@ -610,8 +616,6 @@ void EnemyWater::Damage()
         player_->SetPoint(false);
         // 再攻撃可能
         player_->SetAttack(true);
-        // 剣判定復活
-        isSword_ = false;
     }
 
     // HPが0になったら撃破
