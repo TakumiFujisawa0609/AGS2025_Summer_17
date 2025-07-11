@@ -263,12 +263,9 @@ void EnemyWater::Draw()
 #endif // _DEBUG
 
     // アニメーション処理
-    if (attackAnimCnt_ <= 30)
+    if (isAttackAlive_)
     {
-        if (isAttackAlive_)
-        {
-            animFrame_ = ATTACK_ANIM;
-        }
+        animFrame_ = ATTACK_ANIM;
     }
     else
     {
@@ -330,7 +327,7 @@ void EnemyWater::Draw()
 
 void EnemyWater::Move()
 {
-    if (isAlive_ && attackAnimCnt_ >= 30)
+    if (isAlive_ && !isAttackAlive_)
     {
         // 発見中でないなら動かす
         if (!isFind_)
