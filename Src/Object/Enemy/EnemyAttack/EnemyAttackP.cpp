@@ -62,20 +62,11 @@ void EnemyAttackP::Draw()
     }
     else if (animFrame_ > 1 && isCntUp_)
     {
-        animInterval_ = 5;
+        animInterval_ = 4;
     }
     else if (!isCntUp_ && animFrame_ != 8)
     {
-        animInterval_ = 4;
-    }
-
-    if (isCntUp_ && animFrame_ == 1)
-    {
-        animInterval_ = 60;
-    }
-    else if (animFrame_ > 1)
-    {
-        animInterval_ = 8;
+        animInterval_ = 3;
     }
 
     // アニメーション処理
@@ -92,7 +83,7 @@ void EnemyAttackP::Draw()
                 if (animFrame_ >= 8)
                 {
                     isCntUp_ = false;
-                    animInterval_ = 60;
+                    animInterval_ = 35;
                 }
             }
             else

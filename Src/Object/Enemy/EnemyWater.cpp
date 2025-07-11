@@ -174,10 +174,10 @@ void EnemyWater::InitStage3()
             attackAnimCnt_ = 0;
 
             attackSize1_ = 10.0f;
-            attackSize2_ = 20.0f;
-            attackSize3_ = 32.0f;
-            attackSize4_ = 45.0f;
-            attackSize5_ = 64.0f;
+            attackSize2_ = 19.0f;
+            attackSize3_ = 28.0f;
+            attackSize4_ = 37.0f;
+            attackSize5_ = 46.0f;
 
             // エネミー座標取得済み判定
             isGetPos_ = false;
