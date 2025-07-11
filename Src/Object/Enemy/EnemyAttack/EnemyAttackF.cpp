@@ -54,7 +54,7 @@ void EnemyAttackF::Draw()
 
     if (animFrame_ == 0)
     {
-        animInterval_ = 60;
+        animInterval_ = 45;
     }
     else
     {
@@ -172,4 +172,14 @@ int EnemyAttackF::GetAttackIntervalF()
 void EnemyAttackF::SetAttackIntervalF(int attackInterval)
 {
     attackInterval_ = attackInterval;
+}
+
+int EnemyAttackF::GetAttackCnt()
+{
+    return attackCnt_;
+}
+
+void EnemyAttackF::SetAttackCnt(int attackCnt)
+{
+	attackCnt_ = attackCnt;
 }

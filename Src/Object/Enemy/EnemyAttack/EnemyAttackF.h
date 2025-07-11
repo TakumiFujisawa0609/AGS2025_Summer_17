@@ -45,8 +45,10 @@ public:
     // 攻撃間隔の取得・更新
     int GetAttackIntervalF();
     void SetAttackIntervalF(int attackInterval);
-
-
+    
+	// 攻撃のクールタイムの取得・更新
+    int GetAttackCnt();
+	void SetAttackCnt(int attackCnt);
 private:
 
     EnemyFire* enemyFire_;

@@ -87,6 +87,9 @@ void EnemyFire::InitStage2()
             // 被ダメージ数
             damage_ = 10.0f;
 
+            // 攻撃間隔
+            enemyAttackF_->SetAttackIntervalF(110);
+
             // 無敵時間
             invincibleMax_ = 45;
             // 無敵時間のカウント
@@ -149,7 +152,7 @@ void EnemyFire::InitStage3()
             damage_ = 10.0f;
 
             // 攻撃間隔
-            enemyAttackF_->SetAttackIntervalF(30);
+            enemyAttackF_->SetAttackIntervalF(45);
 
             // 無敵時間
             invincibleMax_ = 60;
@@ -210,18 +213,12 @@ void EnemyFire::Draw()
     Vector2F playerPos = player_->GetPlayerPos();
     // カメラ座標
     Vector2 cameraPos = camera_->GetCameraPos();
-
-#ifdef _DEBUG
-
-    // プレイヤー当たり判定円描画
-    DrawCircle(playerPos.x - cameraPos.x, playerPos.y - cameraPos.y, 32, (0x000000), false);
-    // エネミー当たり判定円描画
-    DrawCircle(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 32, (0x000000), false);
-
-#endif // _DEBUG
+    // 攻撃間隔
+    int attackCnt = enemyAttackF_->GetAttackCnt();
+    int attackInterval = enemyAttackF_->GetAttackIntervalF();
 
     // アニメーション処理
-    if (!enemyAttackF_->GetAlive())
+    if (!enemyAttackF_->GetAlive() && attackCnt <= attackInterval - 18)
     {
         animCnt_++;
         if (animCnt_ >= ANIM_INTERVAL) {
@@ -281,6 +278,15 @@ void EnemyFire::Draw()
             }
         }
     }
+
+#ifdef _DEBUG
+
+    // プレイヤー当たり判定円描画
+    DrawCircle(playerPos.x - cameraPos.x, playerPos.y - cameraPos.y, 32, (0x000000), false);
+    // エネミー当たり判定円描画
+    DrawCircle(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 32, (0x000000), false);
+
+#endif // _DEBUG
 }
 
 void EnemyFire::Move()
