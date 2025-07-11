@@ -376,13 +376,11 @@ void EnemyWater::Attack()
                 {
                     attackPosX_ = pos_.x - SIZE_X;
                     attackPosY_ = pos_.y;
-					attackLeft_ = true;
                 }
                 else
                 {
                     attackPosX_ = pos_.x + SIZE_X;
                     attackPosY_ = pos_.y;
-					attackLeft_ = false;
                 }
                 isGetPos_ = true;
             }
@@ -623,13 +621,13 @@ void EnemyWater::Damage()
     // HP‚ª0‚É‚È‚Á‚½‚çŒ‚”j
     if (hp_ <= 0.0f)
     {
+        hp_ = 0.0f;
+
         if (isAlive_)
         {
             // MP‰ñ•œ
             player_->DownMp(-30);
         }
-        hp_ = 0.0f;
-        isAlive_ = false;
     }
 }
 
@@ -644,6 +642,12 @@ void EnemyWater::InvincibleWater()
         {
             isInvincible_ = false;
             invincibleCnt_ = 0;
+
+            // HP‚ª0‚È‚çŒ‚”j
+            if (hp_ <= 0.0f)
+            {
+                isAlive_ = false;
+            }
         }
 
         if (invincibleCnt_ % 5 >= 3 && invincibleCnt_ > 4)
