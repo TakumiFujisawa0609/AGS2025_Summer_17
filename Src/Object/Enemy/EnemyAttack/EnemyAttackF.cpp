@@ -47,7 +47,7 @@ void EnemyAttackF::Update()
 void EnemyAttackF::Draw()
 {
     // 発見中のみ攻撃クールダウン消費
-    if (enemyFire_->GetFind() && enemyFire_->GetAlive())
+    if (enemyFire_->GetFind() && enemyFire_->GetAlive() && !enemyFire_->GetDeadFire())
     {
         attackCnt_++;
     }

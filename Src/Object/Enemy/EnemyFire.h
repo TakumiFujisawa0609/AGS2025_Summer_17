@@ -76,6 +76,10 @@ public:
     bool GetAnimFrameFire();
     void SetAnimFrameFire(int animFrame);
 
+    // €–S”»’è
+    bool GetDeadFire();
+    void SetDeadFire(bool isDead);
+
 private:
 
     // ƒGƒlƒ~[
@@ -162,5 +166,7 @@ private:
     bool isInvincible_;
     // –³“G•`‰æ”»’è
     bool isVisible_;
+    // €–S”»’è
+    bool isDead_;
 
 };

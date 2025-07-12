@@ -74,6 +74,8 @@ void EnemyPlant::InitStage2()
             isInvincible_ = false;
             // –³“GŽž•`‰æ”»’è
             isVisible_ = true;
+            // Ž€–S”»’è
+            isDead_ = false;
 
             // ƒAƒjƒ[ƒVƒ‡ƒ“ƒtƒŒ[ƒ€”ƒJƒEƒ“ƒg
             animFrame_ = WALK_ANIM_MIN;
@@ -139,6 +141,8 @@ void EnemyPlant::InitStage3()
             isInvincible_ = false;
             // –³“GŽž•`‰æ”»’è
             isVisible_ = true;
+            // Ž€–S”»’è
+            isDead_ = false;
 
             // ƒAƒjƒ[ƒVƒ‡ƒ“ƒtƒŒ[ƒ€”ƒJƒEƒ“ƒg
             animFrame_ = WALK_ANIM_MIN;
@@ -210,6 +214,7 @@ void EnemyPlant::Update()
         hp_ = 45.0f;
         isAlive_ = true;
         collisionPlant_ = false;
+		isDead_ = false;
     }
 
 #endif // DEBUG
@@ -293,7 +298,7 @@ void EnemyPlant::Draw()
                 // ¶Œü‚«‚É•`‰æ
                 DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, isLeft_);
 
-                if (!enemyAttackP_->GetAlive())
+                if (!enemyAttackP_->GetAlive() && !isDead_)
                 {
                     isLeft_ = true;
                 }
@@ -303,7 +308,7 @@ void EnemyPlant::Draw()
                 // ‰EŒü‚«‚É•`‰æ
                 DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, isLeft_);
 
-                if (!enemyAttackP_->GetAlive())
+                if (!enemyAttackP_->GetAlive() && !isDead_)
                 {
                     isLeft_ = false;
                 }
@@ -329,7 +334,7 @@ void EnemyPlant::Draw()
 
 void EnemyPlant::Move()
 {
-    if (isAlive_ && !enemyAttackP_->GetAlive())
+    if (isAlive_ && !enemyAttackP_->GetAlive() && !isDead_)
     {
         // ”­Œ©’†‚Å‚È‚¢‚È‚ç“®‚©‚·
         if (!isFind_)
@@ -600,12 +605,7 @@ void EnemyPlant::Damage()
     if (hp_ <= 0.0f)
     {
         hp_ = 0.0f;
-
-        if (isAlive_)
-        {
-            // MP‰ñ•œ
-            player_->DownMp(-30);
-        }
+		isDead_ = true;
     }
 }
 
@@ -622,8 +622,17 @@ void EnemyPlant::InvinciblePlant()
             invincibleCnt_ = 0;
 
             // HP‚ª0‚È‚çŒ‚”j
-            if (hp_ <= 0.0f)
+            if (isDead_)
             {
+                // MP‰ñ•œ
+                player_->DownMp(-30);
+                // MP‚ªãŒÀ(100)‚ð’´‚¦‚½‚ç–ß‚·
+                if (player_->GetMp() >= 100)
+                {
+                    player_->SetMp(100);
+                }
+
+                // Œ‚”j
                 isAlive_ = false;
             }
         }
@@ -702,4 +711,14 @@ bool EnemyPlant::GetAnimFramePlant()
 void EnemyPlant::SetAnimFramePlant(int animFrame)
 {
     animFrame_ = animFrame;
+}
+
+bool EnemyPlant::GetDeadPlant()
+{
+    return isDead_;
+}
+
+void EnemyPlant::SetDeadPlant(bool isDead)
+{
+	isDead_ = isDead;
 }

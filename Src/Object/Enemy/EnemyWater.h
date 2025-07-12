@@ -131,8 +131,6 @@ private:
     float attackSize4_;
     float attackSize5_;
 
-    bool AttackLegt_;
-
     // エネミー座標取得済み判定
     bool isGetPos_;
 
@@ -176,5 +174,15 @@ private:
     bool isInvincible_;
     // 無敵時描画判定
     bool isVisible_;
+    // 死亡判定
+	bool isDead_;
+    // 左右取得判定
+    bool getLeft_;
+    // 攻撃の左右判定
+	bool attackLeft_;
+    // チャージ中判定
+    bool isCharge_;
+    // 攻撃初期化
+	bool attackInit_;
 
 };

@@ -81,6 +81,10 @@ public:
     bool GetAnimFramePlant();
     void SetAnimFramePlant(int animFrame);
 
+    // €–S”»’è
+    bool GetDeadPlant();
+	void SetDeadPlant(bool isDead);
+
 private:
 
     // ƒGƒlƒ~[
@@ -166,5 +170,7 @@ private:
     bool isInvincible_;
     // –³“G•`‰æ”»’è
     bool isVisible_;
+    // €–S”»’è
+	bool isDead_;
 
 };

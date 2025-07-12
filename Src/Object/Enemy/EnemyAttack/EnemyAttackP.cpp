@@ -51,7 +51,7 @@ void EnemyAttackP::Update()
 void EnemyAttackP::Draw()
 {
     // 発見中のみ攻撃クールダウン消費
-    if (enemyPlant_->GetFind() && enemyPlant_->GetAlive())
+    if (enemyPlant_->GetFind() && enemyPlant_->GetAlive() && !enemyPlant_->GetDeadPlant())
     {
         attackCnt_++;
     }

@@ -73,6 +73,8 @@ void EnemyFire::InitStage2()
             isInvincible_ = false;
             // ñ≥ìGéûï`âÊîªíË
             isVisible_ = true;
+            // éÄñSîªíË
+            isDead_ = false;
 
             // ÉAÉjÉÅÅ[ÉVÉáÉìÉtÉåÅ[ÉÄêîÉJÉEÉìÉg
             animFrame_ = 0;
@@ -138,6 +140,8 @@ void EnemyFire::InitStage3()
             isInvincible_ = false;
             // ñ≥ìGéûï`âÊîªíË
             isVisible_ = true;
+            // éÄñSîªíË
+            isDead_ = false;
 
             // ÉAÉjÉÅÅ[ÉVÉáÉìÉtÉåÅ[ÉÄêîÉJÉEÉìÉg
             animFrame_ = 0;
@@ -202,6 +206,7 @@ void EnemyFire::Update()
         hp_ = 45.0f;
         isAlive_ = true;
         collisionFire_ = false;
+        isDead_ = false;
     }
 
 #endif // DEBUG
@@ -247,7 +252,7 @@ void EnemyFire::Draw()
                 // ç∂å¸Ç´Ç…ï`âÊ
                 DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, isLeft_);
 
-                if (!enemyAttackF_->GetAlive())
+                if (!enemyAttackF_->GetAlive() && !isDead_)
                 {
                     isLeft_ = true;
                 }
@@ -257,7 +262,7 @@ void EnemyFire::Draw()
                 // âEå¸Ç´Ç…ï`âÊ
                 DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, isLeft_);
 
-                if (!enemyAttackF_->GetAlive())
+                if (!enemyAttackF_->GetAlive() && !isDead_)
                 {
                     isLeft_ = false;
                 }
@@ -295,8 +300,8 @@ void EnemyFire::Move()
 {
     if (isAlive_ && !enemyAttackF_->GetAlive())
     {
-        // î≠å©íÜÇ≈Ç»Ç¢Ç»ÇÁìÆÇ©Ç∑
-        if (!isFind_)
+        // î≠å©íÜÇ≈Ç»Ç¢Ç©Ç¬éÄñSÇµÇƒÇ»Ç¢Ç»ÇÁìÆÇ©Ç∑
+        if (!isFind_ && !isDead_)
         {
             moveCnt_++;
             // ç∂Ç÷à⁄ìÆ
@@ -494,8 +499,7 @@ void EnemyFire::CollisionEnemyAttack()
                 bottomAttackPos > playerPos.y)
             {
                 // è’ìÀÇµÇΩ
-                //collisionFire_ = true;
-                isAlive_ = false;
+                collisionFire_ = true;
             }
         }
     }
@@ -570,12 +574,7 @@ void EnemyFire::Damage()
     if (hp_ <= 0.0f)
     {
         hp_ = 0.0f;
-
-        if (isAlive_)
-        {
-            // MPâÒïú
-            player_->DownMp(-30);
-        }
+        isDead_ = true;
     }
 }
 
@@ -591,8 +590,20 @@ void EnemyFire::InvincibleFire()
             invincibleCnt_ = 0;
 
             // HPÇ™0Ç»ÇÁåÇîj
-            if (hp_ <= 0.0f)
+            if (isDead_)
             {
+                if (isAlive_)
+                {
+                    // MPâÒïú
+                    player_->DownMp(-30);
+                    // MPÇ™è„å¿(100)Çí¥Ç¶ÇΩÇÁñﬂÇ∑
+                    if (player_->GetMp() >= 100)
+                    {
+                        player_->SetMp(100);
+                    }
+                }
+
+                // åÇîj
                 isAlive_ = false;
             }
         }
@@ -671,4 +682,14 @@ bool EnemyFire::GetAnimFrameFire()
 void EnemyFire::SetAnimFrameFire(int animFrame)
 {
     animFrame_ = animFrame;
+}
+
+bool EnemyFire::GetDeadFire()
+{
+    return isDead_;
+}
+
+void EnemyFire::SetDeadFire(bool isDead)
+{
+	isDead_ = isDead;
 }

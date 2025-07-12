@@ -72,6 +72,8 @@ void EnemyWater::InitStage2()
             isInvincible_ = false;
             // 無敵時描画判定
             isVisible_ = true;
+            // 死亡判定
+			isDead_ = false;
 
             // アニメーションフレーム数カウント
             animFrame_ = WALK_ANIM_MIN;
@@ -155,6 +157,8 @@ void EnemyWater::InitStage3()
             isInvincible_ = false;
             // 無敵時描画判定
             isVisible_ = true;
+            // 死亡判定
+            isDead_ = false;
 
             // アニメーションフレーム数カウント
             animFrame_ = WALK_ANIM_MIN;
@@ -239,6 +243,7 @@ void EnemyWater::Update()
         hp_ = 45.0f;
         isAlive_ = true;
         collisionWater_ = false;
+		isDead_ = false;
     }
 
 #endif // DEBUG
@@ -263,7 +268,7 @@ void EnemyWater::Draw()
 #endif // _DEBUG
 
     // アニメーション処理
-    if (isAttackAlive_)
+    if (isCharge_)
     {
         animFrame_ = ATTACK_ANIM;
     }
@@ -290,7 +295,8 @@ void EnemyWater::Draw()
                 // 左向きに描画
                 DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, isLeft_);
 
-                if (!isAttackAlive_)
+				// 攻撃中でないかつ死亡してないなら
+                if (!isCharge_ && !isDead_)
                 {
                     isLeft_ = true;
                 }
@@ -300,7 +306,8 @@ void EnemyWater::Draw()
                 // 右向きに描画
                 DrawRotaGraphF(pos_.x - cameraPos.x, pos_.y - cameraPos.y, 1.0f, 0.0f, Array_[animFrame_], true, isLeft_);
 
-                if (!isAttackAlive_)
+				// 攻撃中でないかつ死亡してないなら
+                if (!isCharge_ && !isDead_)
                 {
                     isLeft_ = false;
                 }
@@ -327,7 +334,7 @@ void EnemyWater::Draw()
 
 void EnemyWater::Move()
 {
-    if (isAlive_ && !isAttackAlive_)
+    if (isAlive_ && !isDead_ && !isCharge_)
     {
         // 発見中でないなら動かす
         if (!isFind_)
@@ -358,11 +365,12 @@ void EnemyWater::Move()
 void EnemyWater::Attack()
 {
     Vector2 cameraPos = camera_->GetCameraPos();
-    // 発見中のみ攻撃クールダウン消費
-    if (isFind_ && isAlive_)
+    // 発見中かつ死亡してないなら攻撃クールダウン消費
+    if (isFind_ && isAlive_ && !isDead_)
     {
         attackCnt_++;
     }
+
     // アニメーション処理
     if (attackCnt_ >= attackInterval_)
     {
@@ -388,6 +396,7 @@ void EnemyWater::Attack()
             if (attackAnimCnt_ == 4)
             {
                 attackRadius_ = attackSize1_;
+                isCharge_ = true;
             }
             else if (attackAnimCnt_ == 8)
             {
@@ -407,7 +416,20 @@ void EnemyWater::Attack()
             }
             else if (attackAnimCnt_ >= 26)
             {
-                if (isLeft_)
+                if (!getLeft_)
+                {
+                    if (isLeft_)
+                    {
+                        attackLeft_ = true;
+                    }
+                    else
+                    {
+                        attackLeft_ = false;
+                    }
+					getLeft_ = true;
+                }
+
+                if (attackLeft_)
                 {
                     attackPosX_ -= attackSpeed_;
                 }
@@ -416,17 +438,31 @@ void EnemyWater::Attack()
                     attackPosX_ += attackSpeed_;
                 }
             }
+            if (attackAnimCnt_ >= 50)
+            {
+                isCharge_ = false;
+            }
 
-            if (attackAnimCnt_ == attackMax_)
+            if (attackAnimCnt_ >= attackMax_)
+            {
+                attackInit_ = true;
+            }
+
+            if (attackInit_)
             {
                 isAttackAlive_ = false;
                 isGetPos_ = false;
                 attackAnimCnt_ = 0;
                 attackCnt_ = 0;
                 attackRadius_ = 5;
+                getLeft_ = false;
+                attackInit_ = false;
             }
 
-            DrawCircle(attackPosX_ - cameraPos.x, attackPosY_ - cameraPos.y, attackRadius_, 0x0072ff, true);
+            if (isAttackAlive_)
+            {
+                DrawCircle(attackPosX_ - cameraPos.x, attackPosY_ - cameraPos.y, attackRadius_, 0x0072ff, true);
+            }
         }
     }
 }
@@ -549,6 +585,7 @@ void EnemyWater::CollisionEnemyAttack()
         {
             // 攻撃ヒット済
             collisionWater_ = true;
+            attackInit_ = true;
         }
     }
 }
@@ -622,12 +659,7 @@ void EnemyWater::Damage()
     if (hp_ <= 0.0f)
     {
         hp_ = 0.0f;
-
-        if (isAlive_)
-        {
-            // MP回復
-            player_->DownMp(-30);
-        }
+		isDead_ = true;
     }
 }
 
@@ -644,8 +676,17 @@ void EnemyWater::InvincibleWater()
             invincibleCnt_ = 0;
 
             // HPが0なら撃破
-            if (hp_ <= 0.0f)
+            if (isDead_)
             {
+                // MP回復
+                player_->DownMp(-30);
+                // MPが上限(100)を超えたら戻す
+                if (player_->GetMp() >= 100)
+                {
+                    player_->SetMp(100);
+                }
+
+                // 撃破
                 isAlive_ = false;
             }
         }
