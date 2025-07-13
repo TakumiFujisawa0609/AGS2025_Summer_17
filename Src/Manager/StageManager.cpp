@@ -49,6 +49,11 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* e
 	Img_ = LoadDivGraph("Data/Image/Stage/Doa.png", 3, 3, 1, 64 * 4, 64 * 2, doaImg_);
 
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
+	backGrassImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackGras.png").c_str());
+	backSkyImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackSki.png").c_str());
+
+
+
 	back3Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/StarSky.jpg").c_str());
 		
 	//BackSoundHandle3_ = LoadSoundMem("Data/Sound/BGM//BackSound3.mp3");
@@ -64,6 +69,9 @@ void StageManager::Init(Player* player, EnemyManager* enemyManager, EnemyFire* e
 	isChange_ = false;
 	changeCnt_ = 0;
 	animCnt_ = 0;
+
+
+	skuroru_ = 0;
 }
 void StageManager::Update()
 {
@@ -240,6 +248,17 @@ void StageManager::Draw1()
 	}
 
 	DrawGraph(0, 0, backImg_, true);
+	DrawGraph(0, 0, backGrassImg_, true);
+	skuroru_--;
+	Vector2 cameraPos = camera_->GetCameraPos();
+	for (int i = 0; i <= 100; ++i) {
+		DrawGraph((1920 * i - cameraPos.x) + skuroru_, 0, backSkyImg_, true);
+	}
+
+
+
+
+
 	//•Ç‚Ì•`‰æ
 	wall_->Draw1();
 	
@@ -266,6 +285,12 @@ void StageManager::Draw2()
 {
 	
 	DrawGraph(0, 0, backImg_, true);
+	DrawGraph(0, 0, backGrassImg_, true);
+	skuroru_--;
+	Vector2 cameraPos = camera_->GetCameraPos();
+	for (int i = 0; i <= 100; ++i) {
+		DrawGraph((1920 * i - cameraPos.x) + skuroru_, 0, backSkyImg_, true);
+	}
 
 	////•Ç‚Ì•`‰æ
 	//wall_->Draw();
@@ -300,7 +325,16 @@ void StageManager::Draw3()
 	if (CheckSoundMem(BackSoundHandle3_) == 0) {
 		PlaySoundMem(BackSoundHandle3_, DX_PLAYTYPE_LOOP);
 	}
-	DrawGraph( 0, 0,back3Img_, true);
+	Vector2 cameraPos = camera_->GetCameraPos();
+	DrawGraph( 0 - cameraPos.x, 0 - cameraPos.y,back3Img_, true);
+	DrawGraph(0 - cameraPos.x, 1080 - cameraPos.y, back3Img_, true);
+	DrawGraph(1920 - cameraPos.x, 0  - cameraPos.y, back3Img_, true);
+	DrawGraph(1920 - cameraPos.x, 1080 - cameraPos.y, back3Img_, true);
+	DrawGraph(1920*2 - cameraPos.x, 0 - cameraPos.y, back3Img_, true);
+	DrawGraph(1920*2 - cameraPos.x, 1080 - cameraPos.y, back3Img_, true);
+	DrawGraph(1920 * 3 - cameraPos.x, 0 - cameraPos.y, back3Img_, true);
+	DrawGraph(1920 * 3 - cameraPos.x, 1080 - cameraPos.y, back3Img_, true);
+
 	//•Ç‚Ì•`‰æ
 	wall_->Draw2();
 	
