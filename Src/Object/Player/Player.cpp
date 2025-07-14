@@ -736,12 +736,14 @@ void Player::Attack()
 				if (armAngle_ <= AsoUtility::Deg2RadF(0.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(180.0f); // 剣振りの開始角度
+					DownMp(1);
 					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
 				}
 				armAngle_ += AsoUtility::Deg2RadF(7.0f); // 回転速度で腕を動かす
 				if (armAngle_ >= AsoUtility::Deg2RadF(315.0f)) // 1周したらリセット
 				{
 					armAngle_ = AsoUtility::Deg2RadF(180.0f);
+					DownMp(1);
 					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
 				}
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100; // 攻撃方向のX座標
@@ -761,12 +763,14 @@ void Player::Attack()
 				if (armAngle_ >= AsoUtility::Deg2RadF(0.0f))
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
+					DownMp(1);
 					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
 				}
 				armAngle_ -= AsoUtility::Deg2RadF(7.0f); // 左方向に回転
 				if (armAngle_ <= AsoUtility::Deg2RadF(-315.0f)) // -360度を超えたらリセット
 				{
 					armAngle_ = AsoUtility::Deg2RadF(-180.0f);
+					DownMp(1);
 					PlaySoundMem(swingSoundHandle_, DX_PLAYTYPE_BACK);
 				}
 				attckAnglePoint_.x = pos_.x - sinf(armAngle_) * 100;

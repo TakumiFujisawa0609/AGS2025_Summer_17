@@ -68,7 +68,7 @@ void GameScene::Init(void)
 	backImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/BackBue.png").c_str());
 
 	
-
+	
 	
 
 

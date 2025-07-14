@@ -19,7 +19,11 @@ void GameOverScene::Init(void)
 {//画像読み込み
 	img_ = LoadGraph((Application::PATH_IMAGE + "Scene/false.png").c_str());
 
+	soundImg_ = LoadSoundMem("Data/Sound/BGM/Lose.mp3");
+
 	successSound = LoadSoundMem("Data/Sound/SE/success.mp3");
+
+	PlaySoundMem(soundImg_, DX_PLAYTYPE_LOOP); // 効果音をループ再生
 
 	// 点滅させたい周期（例：30フレームで切り替え、約0.5秒）
 	blinkCycle = 90;
@@ -30,10 +34,13 @@ void GameOverScene::Init(void)
 
 void GameOverScene::Update(void)
 {
+	
+
 	// シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsTrgDown(KEY_INPUT_SPACE))
 	{
+		StopSoundMem(soundImg_); // 効果音を停止
 		PlaySoundMem(successSound, DX_PLAYTYPE_BACK); // 成功音を再生
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
 	}
@@ -42,8 +49,8 @@ void GameOverScene::Update(void)
 void GameOverScene::Draw(void)
 {
 	frameCount++;
-
-
+	
+	
 	// 画像描画  
 	DrawGraph(0, 0, img_, TRUE);
 

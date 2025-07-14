@@ -8,9 +8,12 @@ void ClearScene::Init(void)
 {
 	Img_ = LoadGraph((Application::PATH_IMAGE + "Scene/castle.jpg").c_str());
 
+	SoundImg_ = LoadSoundMem("Data/Sound/SE/Clear.mp3");
+
 	clearImg_ = LoadGraph((Application::PATH_IMAGE + "Scene/Clear.png").c_str());
 
 	successSound = LoadSoundMem("Data/Sound/SE/success.mp3");
+	PlaySoundMem(SoundImg_, DX_PLAYTYPE_BACK); // 効果音をループ再生
 
 	// 点滅させたい周期（例：30フレームで切り替え、約0.5秒）
 	blinkCycle = 60;

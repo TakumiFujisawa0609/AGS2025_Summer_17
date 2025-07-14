@@ -19,6 +19,8 @@ private:
 
 	int Img_; // 背景画像
 
+	int SoundImg_; // 効果音ハンドル
+
 	int clearImg_; // クリア画像
 
 	int  blinkCycle; // 点滅周期

@@ -27,6 +27,8 @@ private:
 
 	int img_;  // 画像ハンドル
 
+	int soundImg_; // 効果音ハンドル
+
 	int  blinkCycle; // 点滅周期
 
 	float frameCount;
