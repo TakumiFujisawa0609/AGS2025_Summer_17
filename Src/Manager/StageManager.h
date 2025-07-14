@@ -55,6 +55,10 @@ private:
 	//”wŒi
 	int backImg_;
 
+	int backGrassImg_;
+
+	int backSkyImg_;
+
 	int Img_;
 
 	int doaImg_[3];
@@ -64,6 +68,8 @@ private:
 	int changeCnt_;
 
 	int animCnt_;
+
+	int skuroru_;
 
 	// ƒV[ƒ“‘JˆÚ’†”»’è
 	bool isSceneChanging_;
