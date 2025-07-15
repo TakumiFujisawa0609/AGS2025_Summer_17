@@ -31,6 +31,8 @@ void EnemyWater::Init(EnemyWater* enemyWater, EnemyAttackW* enemyAttackW, Player
     // 画像の読み込み
     img_ = LoadDivGraph
     ("Data/Image/Enemy/EnemyW.png", ANIM_MAX, ANIM_X, ANIM_Y, SIZE_X, SIZE_Y, Array_);
+
+	waterSound_ = LoadSoundMem("Data/Sound/SE/Water.mp3");
 }
 
 void EnemyWater::InitStage2()
@@ -549,6 +551,7 @@ void EnemyWater::CollisionEnemyAttack()
     Vector2F playerPos = player_->GetPlayerPos();
 
     if (isAlive_) {
+       
 
         // プレイヤーとエネミーの衝突判定
         // 球体同士の衝突判定
@@ -571,6 +574,9 @@ void EnemyWater::CollisionEnemyAttack()
     // プレイヤーとエネミーの攻撃の衝突判定
     if (isAttackAlive_)
     {
+        if (CheckSoundMem(waterSound_) == 0) {
+            PlaySoundMem(waterSound_, DX_PLAYTYPE_BACK);
+        }
         // 球体同士の衝突判定
         bool ret = false;
         // お互いの半径の合計

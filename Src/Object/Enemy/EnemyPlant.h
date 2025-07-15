@@ -124,6 +124,8 @@ private:
     // 画像のハンドルID
     int img_;
 
+	int plantSound_;
+
     // アニメーション数
     int Array_[ANIM_MAX];
     // アニメーションフレーム数カウント

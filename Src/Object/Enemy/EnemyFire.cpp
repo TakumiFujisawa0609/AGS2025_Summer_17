@@ -33,6 +33,8 @@ void EnemyFire::Init(EnemyFire* enemyFire, EnemyAttackF* enemyAttackF, Player* p
     // 画像の読み込み
     img_ = LoadDivGraph
     ("Data/Image/Enemy/EnemyF.png", ANIM_MAX, ANIM_X, ANIM_Y, SIZE_X, SIZE_Y, Array_);
+
+	fireSound_ = LoadSoundMem("Data/Sound/SE/FireMagic.mp3");
 }
 
 void EnemyFire::InitStage2()
@@ -336,6 +338,8 @@ void EnemyFire::Attack()
 
 void EnemyFire::CollisionPlayerAttack()
 {
+
+	
     // エネミーの衝突用半径
     float enemyRadius = 32.0f;
     // 魔法の衝突用半径
@@ -405,6 +409,9 @@ void EnemyFire::CollisionEnemyAttack()
 {
     if (isAlive_)
     {
+        
+
+        
         // エネミーの衝突用半径
         float enemyRadius = 32.0f;
         // 魔法の衝突用半径
@@ -429,6 +436,7 @@ void EnemyFire::CollisionEnemyAttack()
         // 半径の２乗よりも、２つの座標間の距離が小さければ球体は衝突している
         if (dis < (radius * radius))
         {
+            
             // 衝突した
             collisionFire_ = true;
         }
@@ -446,6 +454,9 @@ void EnemyFire::CollisionEnemyAttack()
 
         if (enemyAttackF_->GetAlive())
         {
+            if (CheckSoundMem(fireSound_) == 0) {
+                PlaySoundMem(fireSound_, DX_PLAYTYPE_BACK);
+            }
             // 当たり判定調整
             if (attackFrame == 4)
             {

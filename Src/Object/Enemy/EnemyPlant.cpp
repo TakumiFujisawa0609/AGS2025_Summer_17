@@ -33,6 +33,8 @@ void EnemyPlant::Init(EnemyPlant* enemyPlant, EnemyAttackP* enemyAttackP, Player
     // ‰æ‘œ‚Ì“Ç‚İ‚İ
     img_ = LoadDivGraph
     ("Data/Image/Enemy/EnemyP.png", ANIM_MAX, ANIM_X, ANIM_Y, SIZE_X, SIZE_Y, Array_);
+
+	plantSound_ = LoadSoundMem("Data/Sound/SE/Sorn.mp3");
 }
 
 void EnemyPlant::InitStage2()
@@ -482,6 +484,10 @@ void EnemyPlant::CollisionEnemyAttack()
     int attackFrame = enemyAttackP_->GetAnimFrameAttackP();
 
     if (enemyAttackP_->GetAlive()) {
+
+        if (CheckSoundMem(plantSound_) == 0) {
+            PlaySoundMem(plantSound_, DX_PLAYTYPE_BACK);
+        }
         // ã•”“–‚½‚è”»’è’²®
         if (attackFrame == 2)
         {
