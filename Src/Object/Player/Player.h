@@ -40,10 +40,12 @@ public:
 	static constexpr int HALF_COL_SIZE_X = COL_SIZE_X / 2; // 横半分（中心基準計算用）
 	static constexpr int HALF_COL_SIZE_Y = COL_SIZE_Y / 2; // 縦半分（中心基準計算用）
 	static constexpr int COL_OFFSET = 1; // 当たり判定の誤差補正用
+	static constexpr float COL_POSITION_ADJUST_Y = 3.0f; // ブロックめり込み補正用Yオフセット
 
 	// 移動に関する定数
 	static constexpr float MOVE_SPEED = 2.0f;       // 基本移動速度
 	static constexpr float MOVE_POWER = 5.0f;       // 移動時の力（加速初期値）
+	static constexpr float DASH_SPEED_MULTIPLIER = 3.0f; // ダッシュ時の速度倍率
 
 	// 重力
 	static constexpr float GRAVITY = 0.3f;          // 毎フレーム加算する重力
@@ -57,9 +59,66 @@ public:
 	static constexpr float MOVE_DEC_POW = 0.05f;    // 減速度
 	static constexpr float MAX_MOVE_SPEED = 2.0f;   // 最大移動速度
 
-	// HP・MP 最大値
+	// HP・MP・ステータス関連
 	static constexpr int MAX_HP = 100;              // 最大HP
 	static constexpr int MAX_MP = 100;              // 最大MP
+	static constexpr int ATTACK_MP_COST = 10;       // 属性攻撃時のMP消費量
+	static constexpr int SWORD_MP_COST = 1;         // 剣攻撃時のMP消費量
+	static constexpr int DAMAGE_WALL_HP = 50;       // 壁接触時のダメージ量
+	static constexpr int RESPAWN_FALL_DAMAGE = 10;  // 落下死亡時の復帰ダメージ量
+
+	// タイマー・フレーム数関連
+	static constexpr int RESPAWN_INVINCIBLE_TIME = 60; // 復活時の無敵フレーム数
+	static constexpr int REGENE_INTERVAL = 30;         // 自動回復間隔（フレーム）
+	static constexpr int REGENE_MP_AMOUNT = 1;         // 自動回復MP量
+	static constexpr int HIT_STOP_FRAME = 30;          // ヒットストップ時間
+
+	// ステージマップチップ位置（マス単位）
+	static constexpr int INITIAL_POS_CHIP_X = 2;       // 初期位置X（マップチップ単位）
+	static constexpr int INITIAL_POS_CHIP_Y = 8;       // 初期位置Y（マップチップ単位）
+	static constexpr int FALL_LIMIT_CHIP_Y_NORMAL = 13; // 落下判定限界Y（ステージ1,2）
+	static constexpr int FALL_LIMIT_CHIP_Y_STAGE3 = 25; // 落下判定限界Y（ステージ3）
+	static constexpr int ATTACK_LIMIT_CHIP_Y_NORMAL = 12; // 攻撃消滅Y判定（ステージ1,2）
+	static constexpr int ATTACK_LIMIT_CHIP_Y_STAGE3 = 24; // 攻撃消滅Y判定（ステージ3）
+
+	// アニメーション関連
+	static constexpr float ANIME_SPEED_MOVE = 0.1f;    // 移動アニメ更新速度
+	static constexpr float ANIME_SPEED_STOP = 0.05f;   // 静止アニメ更新速度
+	static constexpr int ANIME_IDLE_FRAME_MAX = 2;     // 待機アニメ枚数
+	static constexpr int ANIME_MOVE_FRAME_START = 6;   // 走りアニメ開始インデックス
+	static constexpr int ANIME_MOVE_FRAME_MAX = 11;    // 走りアニメ終了インデックス
+
+	// 攻撃・角度関連
+	static constexpr float SWORD_ATTACK_RADIUS = 100.0f;  // 剣攻撃の判定距離
+	static constexpr float ATTACK_TARGET_RADIUS = 30.0f;  // 属性攻撃ターゲットの距離
+	static constexpr float SWORD_ROTATION_SPEED = 7.0f;   // 剣の振り回転速度（度）
+	static constexpr float SWORD_DRAW_ANGLE_OFFSET = 130.0f; // 剣描画時の角度オフセット（度）
+	static constexpr float CHARGE_ANGLE_STEP = 5.0f;      // 溜め時の腕の回転速度（度）
+	static constexpr float CHARGE_ANGLE_LIMIT = 120.0f;   // 溜め角度の最大値（度）
+	static constexpr float CHARGE_CHECK_ANGLE = 10.0f;    // 溜めカウント計算時の単位角度（度）
+	static constexpr int CHARGE_LEVEL_MAX = 11;           // 溜めカウントの最大レベル
+
+	// エフェクト描画関連
+	static constexpr float EF_RADIUS_ADD = 3.0f;         // エフェクト半径の毎フレーム増加量
+	static constexpr float EF_MAX_RADIUS = 60.0f;         // エフェクトの最大半径
+	static constexpr float EF_SPHERE_DEBUG_RADIUS = 32.0f;// デバッグ用円半径
+
+	// カラー定数
+	static constexpr unsigned int COLOR_WHITE = 0xffffff;
+	static constexpr unsigned int COLOR_RED = 0xff0000;
+	static constexpr unsigned int COLOR_BLUE = 0x0000ff;
+	static constexpr unsigned int COLOR_GREEN = 0x00ff00;
+	static constexpr unsigned int COLOR_PURPLE = 0xff00ff;
+	static constexpr unsigned int COLOR_BLACK = 0x000000;
+
+	// アニメーション用パーツインデックス
+	static constexpr int ARM_IMG_NORMAL = 0;
+	static constexpr int ARM_IMG_WATER = 1;
+	static constexpr int ARM_IMG_PLANT = 2;
+	static constexpr int ARM_IMG_FIRE = 3;
+
+	// Stage ID
+	static constexpr int STAGE_ID_3 = 3;
 
 	// ============================= メンバ変数 =============================
 private:
@@ -308,6 +367,10 @@ public:
 	Vector2 GetCamera();
 
 
+	void UpdateElementSelectInputs(); // 属性切り替えキー入力の更新
+	void HandleFireAttack();          // 火属性攻撃の判定処理
+	void HandleWaterAttack();         // 水属性攻撃の判定処理
+	void HandlePlantAttack();         // 植物属性攻撃の判定処理
+	void HandleNormalAttack();        // ノーマル属性（剣）攻撃処理
 
 };
-
